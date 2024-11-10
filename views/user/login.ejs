@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="description" content="">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <!-- The above 4 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+
+    <!-- Title  -->
+    <title>login</title>
+
+    <!-- Favicon  -->
+    <link rel="icon" href="/img/core-img/favicon.png">
+
+   <style>
+      @import url(https://fonts.googleapis.com/css?family=Roboto:300);
+
+.login-page {
+  width: 360px;
+  padding: 8% 0 0;
+  margin: auto;
+  background: #FFFFFF;
+
+}
+.form {
+  position: relative;
+  z-index: 1;
+  background: #F5F7FA;
+  max-width: 360px;
+  margin: 0 auto 100px;
+  padding: 45px;
+  text-align: center;
+  box-shadow: 0 0 20px 0 rgba(0, 0, 0, 0.2), 0 5px 5px 0 rgba(0, 0, 0, 0.24);
+}
+.form input {
+  font-family: "Roboto", sans-serif;
+  outline: 0;
+  background: #E7D4A4;
+  width: 100%;
+  border: 0;
+  margin: 0 0 15px;
+  padding: 15px;
+  box-sizing: border-box;
+  font-size: 14px;
+  border-radius: 10px;
+}
+.button-login {
+  font-family: "Roboto", sans-serif;
+  text-transform: uppercase;
+  outline: 0;
+  background: #FBB710;
+  width: 100%;
+  border: 0;
+  padding: 12px;
+  padding-left: 100px;
+  padding-right: 100px;
+  color: #FFFFFF;
+  font-size: 14px;
+  -webkit-transition: all 0.3 ease;
+  transition: all 0.3 ease;
+  cursor: pointer;
+  border-radius: 20px;
+  margin-bottom: 9px;
+}
+.button-login:hover,.button-login:active,.form button:focus {
+  background: #eeba36;
+}
+.form .message {
+  margin: 15px 0 0;
+  color: #8888CE;
+  font-size: 12px;
+}
+.form .message a {
+  color: #FBB710;
+  text-decoration: none;
+}
+.form .register-form {
+  display: none;
+}
+.container {
+  position: relative;
+  z-index: 1;
+  max-width: 300px;
+  margin: 0 auto;
+}
+.container:before, .container:after {
+  content: "";
+  display: block;
+  clear: both;
+}
+.container .info {
+  margin: 50px auto;
+  text-align: center;
+}
+.container .info h1 {
+  margin: 0 0 15px;
+  padding: 0;
+  font-size: 36px;
+  font-weight: 300;
+  color: #1a1a1a;
+}
+.container .info span {
+  color: #4d4d4d;
+  font-size: 12px;
+}
+.container .info span a {
+  color: #000000;
+  text-decoration: none;
+}
+.container .info span .fa {
+  color: #EF3B3A;
+}
+body {
+
+  font-family: "Roboto", sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;      
+}
+
+h6{
+  color:#8888CE ;
+  text-align: left;
+  padding: 0px;
+  font-size: small;
+  margin-top: 0px;
+  margin-bottom: 10px;
+}
+   </style>
+
+</head>
+<body>
+  <div class="login-page">
+
+     <% if (error) { %>
+      <p style="color: red;"><%= error %></p>
+    <% } %>
+
+    <div class="form">
+        <form class="login-form" action="/login" method="POST" onsubmit="return validateForm()">
+            <h6>Username</h6>
+            <input type="text" name="username" placeholder="Username" />
+            <span id="username-error" style="color: red; display: none; font-size: 12px;">Please enter your username.</span>
+            
+            <h6>Email</h6>
+            <input type="text" name="email" placeholder="Email" />
+            <span id="email-error" style="color: red; display: none; font-size: 12px;">Please enter a valid email.</span>
+            
+            <h6>Password</h6>
+            <input type="password" name="password" placeholder="Password" />
+            <span id="password-error" style="color: red; display: none; margin-top: -10px; font-size: 12px;">password incorrect</span>
+           
+            <button type="submit" class="button-login"> 
+             Login</button>
+
+            <p class="message">Don't have an account? <a href="/signup">Sign up</a></p>
+        </form>
+    </div>
+</div>
+
+<script>
+    function validateForm() {
+        let isValid = true;
+        const username = document.getElementsByName('username')[0];
+        const email = document.getElementsByName('email')[0];
+        const password = document.getElementsByName('password')[0];
+    
+        // Username validation
+        if (username.value.trim() === '') {
+            document.getElementById('username-error').style.display = 'block';
+            isValid = false;
+        } else {
+            document.getElementById('username-error').style.display = 'none';
+        }
+
+        // Email validation
+        if (email.value.trim() === '' || !isValidEmail(email.value)) {
+            document.getElementById('email-error').style.display = 'block';
+            isValid = false;
+        } else {
+            document.getElementById('email-error').style.display = 'none';
+        }
+
+        // Password strength validation
+        if (!isStrongPassword(password.value)) {
+            document.getElementById('password-error').style.display = 'block';
+            isValid = false;
+        } else {
+            document.getElementById('password-error').style.display = 'none';
+        }
+    
+        return isValid;
+    }
+
+    function isValidEmail(email) {
+        const re = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
+        return re.test(email);
+    }
+
+    function isStrongPassword(password) {
+    // Password must be at least 8 characters long and contain both letters and numbers
+    const re = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[!@#$%^&*])[A-Za-z\d!@#$%^&*]{8,}$/;
+
+    return re.test(password);
+  }
+</script>
+</body>
+</html>
