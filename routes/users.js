@@ -6,9 +6,7 @@ router.get('/home',(req,res)=>{
   res.render('user/home')
 })
 
-router.get('/signup',(req,res)=>{
-  res.render('user/signup')
-})
+router.get('/signup',userController.getSignup)
 router.post('/signup',userController.signup)
 
 router.post('/verify-otp',userController.verifyOtp)

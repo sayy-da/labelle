@@ -129,8 +129,11 @@ h6{
 </head>
 <body>
   <div class="login-page">
-    <!-- <p style="color: red;"></p> -->
+
     <div class="form">
+      <% if (error) { %>
+        <div style="color: red;"><%= error %></div>
+      <% } %>
         <form class="login-form" action="/admin/login" method="POST" onsubmit="return validateForm()">
             <h6>Username</h6>
             <input type="text" name="username" placeholder="Username" />
@@ -140,7 +143,7 @@ h6{
             <input type="password" name="password" placeholder="Password" />
             <span id="password-error" style="color: red; display: none;">password is incorrect</span>
             
-           <a href="/user/home"> <button type="submit">Login</button></a>
+           <button type="submit">Login</button>
         </form>
     </div>
 </div>
@@ -156,13 +159,6 @@ h6{
             }
             return true;
         }
-    
-
-    // function isStrongPassword(password) {
-    //     // Example strong password criteria: at least 8 characters, including one uppercase, one lowercase, and one number
-    //     const re = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}$/;
-    //     return re.test(password);
-    // }
 </script>
 </body>
 </html>

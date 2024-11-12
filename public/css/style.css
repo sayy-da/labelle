@@ -1010,12 +1010,46 @@ a:hover, a:focus {
   line-height: 17px;
   margin-left: 120px;
 }
+.body-title-9 {
+  color: var(--Heading);
+  font-size: 14px;
+  font-weight: 700;
+  line-height: 20px;
+  margin-left: -45px;
+}
+/* Initially hide all submenus */
+.upload-image {
+  display: flex;
+  /* flex-direction: column; */
+  gap: 16px; /* space between rows */
+}
+
+.upload-column {
+  text-align: center;
+}
+
+
+
+.upload-column label {
+  cursor: pointer;
+  display: block;
+  padding: 10px;
+  border: 2px dashed #ccc;
+  border-radius: 8px;
+  transition: border-color 0.3s;
+}
+
+.upload-column label:hover {
+  border-color: #007bff;
+}
+
 
 .body-text {
   color: var(--Body-Text);
   font-size: 14px;
   font-weight: 400;
   line-height: 20px;
+
 }
 .body-text-1 {
   color: var(--Body-Text);

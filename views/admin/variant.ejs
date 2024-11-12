@@ -44,14 +44,6 @@
         <div id="page" class="">
             <!-- layout-wrap -->
            <div class="layout-wrap">
-                <!-- preload -->
-                <!-- <div id="preload" class="preload-container">
-                    <div class="preloading">
-                        <span></span>
-                    </div>
-                </div> -->
-                <!-- /preload -->
-                <!-- section-menu-left -->
                 <div class="section-menu-left">
                     <div class="box-logo">
                         <a href="index.html" id="site-logo-inner">
@@ -113,19 +105,19 @@
                         <div class="center-item">
                             <div class="center-heading">All page</div>
                             <ul class="menu-list">
-                                <li class="menu-item has-children active">
+                                <li class="menu-item has-children">
                                     <a href="javascript:void(0);" class="menu-item-button">
                                         <div class="icon"><i class="icon-shopping-cart"></i></div>
                                         <div class="text">Ecommerce</div>
                                     </a>
-                                    <ul class="sub-menu" style="display: block;">
+                                    <ul class="sub-menu">
                                         <li class="sub-menu-item">
                                             <a href="add-product.html" class="">
                                                 <div class="text">Add Product</div>
                                             </a>
                                         </li>
                                         <li class="sub-menu-item">
-                                            <a href="product-list.html" class="active">
+                                            <a href="product-list.html" class="">
                                                 <div class="text">Product List</div>
                                             </a>
                                         </li>
@@ -149,14 +141,14 @@
                                         </li>
                                     </ul>
                                 </li>
-                                <li class="menu-item has-children">
+                                <li class="menu-item has-children active">
                                     <a href="javascript:void(0);" class="menu-item-button">
                                         <div class="icon"><i class="icon-box"></i></div>
                                         <div class="text">Attributes</div>
                                     </a>
-                                    <ul class="sub-menu">
+                                    <ul class="sub-menu" style="display: block;">
                                         <li class="sub-menu-item">
-                                            <a href="attributes.html" class="">
+                                            <a href="attributes.html" class="active">
                                                 <div class="text">Attributes</div>
                                             </a>
                                         </li>
@@ -838,7 +830,7 @@
                             <!-- main-content-wrap -->
                             <div class="main-content-wrap">
                                 <div class="flex items-center flex-wrap justify-between gap20 mb-27">
-                                    <h3>Product List</h3>
+                                    <h3>All Attributes</h3>
                                     <ul class="breadcrumbs flex items-center flex-wrap justify-start gap10">
                                         <li>
                                             <a href="index.html"><div class="text-tiny">Dashboard</div></a>
@@ -847,22 +839,18 @@
                                             <i class="icon-chevron-right"></i>
                                         </li>
                                         <li>
-                                            <a href="#"><div class="text-tiny">Ecommerce</div></a>
+                                            <a href="#"><div class="text-tiny">Attributes</div></a>
                                         </li>
                                         <li>
                                             <i class="icon-chevron-right"></i>
                                         </li>
                                         <li>
-                                            <div class="text-tiny">Product List</div>
+                                            <div class="text-tiny">All attributes</div>
                                         </li>
                                     </ul>
                                 </div>
-                                <!-- product-list -->
+                                <!-- all-attribute -->
                                 <div class="wg-box">
-                                    <div class="title-box">
-                                        <i class="icon-coffee"></i>
-                                        <div class="body-text">Tip search by Product ID: Each product is provided with a unique ID, which you can rely on to find the exact product you need.</div>
-                                    </div>
                                     <div class="flex items-center justify-between gap10 flex-wrap">
                                         <div class="wg-filter flex-grow">
                                             <div class="show">
@@ -885,71 +873,43 @@
                                                 </div>
                                             </form>
                                         </div>
-                                        <a class="tf-button style-1 w208" href="/admin/add-product"><i class="icon-plus"></i>Add new</a>
                                     </div>
-                                    <div class="wg-table table-product-list">
+                                    <div class="wg-table table-all-attribute">
                                         <ul class="table-title flex gap20 mb-14">
                                             <li>
-                                                <div class="body-title">Product ID</div>
-                                            </li>
-                                            <li>
-                                                <div class="body-title">Product Name</div>
+                                                <div class="body-title">productID</div>
                                             </li>    
                                             <li>
-                                                <div class="body-title">Frangrance Type</div>
+                                                <div class="body-title">Milliliters</div>
                                             </li>
                                             <li>
-                                                <div class="body-title">Gender</div>
-                                            </li>
+                                                <div class="body-title">price</div>
+                                            </li>  
                                             <li>
-                                                <div class="body-title">Occasion</div>
-                                            </li>
-                                            <!-- <li>
-                                                <div class="body-title">Description</div>
-                                            </li> -->
-                                            <li>
-                                                <div class="body-title">Start date</div>
-                                            </li>
-                                            <li>
-                                                <div class="body-title">Action</div>
-                                            </li>
+                                              <div class="body-title">stock</div>
+                                          </li>
+                                          <li>
+                                              <div class="body-title">createdAt</div>
+                                          </li>
                                         </ul>
-                                        <ul class="flex flex-column">
-                                            <% products.forEach(product => { %>
-                                              <li class="product-item gap14">
-                                                <div class="image no-bg">
-                                                    <% if (product.images && product.images.length > 0) { %>
-                                                        <img src="<%= product.images[0] %>" alt="Product Image">
-                                                        <% } %>
-                                                    </div>
-                                                    <div class="flex items-center justify-between gap20 flex-grow">
-                                                        <div class="name">
-                                                    <a href="product-list.html" class="body-title-2"><%= product._id %></a>
-                                                  </div>
-                                                  <div class="body-text"><%= product.name %></div> <!-- Assuming the product ID is to be shown -->
-                                                  <div class="body-text"><%= product.fragranceType %></div>
-                                                  <div class="body-text"><%= product.gender %></div>
-                                                  <div class="body-text"><%= product.occasions %></div>
-                                                  <div class="body-text"><%= new Date(product.createdAt).toLocaleDateString() %></div>
-                                                  
-                                                  
-                                                  
-                                                  <div class="list-icon-function">
-                                                    <div class="item eye">
-                                                      <i class="icon-eye"></i>
-                                                    </div>
-                                                    <div class="item edit">
-                                                      <i class="icon-edit-3"></i>
-                                                    </div>
-                                                    <div class="item trash">
-                                                      <i class="icon-trash-2"></i>
-                                                    </div>
-                                                  </div>
-                                                </div>
-                                              </li>
-                                            <% }) %>
-                                          </ul>
-                                          
+                                        <ul class="table-title flex gap20 mb-14">
+                                            <%= variants.forEach(variant =>{  %>
+                                          <li>
+                                              <div class="body-title-2"><%= product._id %></div>
+                                          </li>    
+                                          <li>
+                                              <div class="body-text"><%= variant.milliliter %></div>
+                                          </li>
+                                          <li>
+                                              <div class="body-text"><%= variant.price %></div>
+                                          </li>  
+                                          <li>
+                                            <div class="body-text"><%= product.stock %></div>
+                                        </li>
+                                        <li>
+                                            <div class="body-text"><%= product.createdAt %></div>
+                                        </li>
+                                        <% })  %>
                                     </div>
                                     <div class="divider"></div>
                                     <div class="flex items-center justify-between flex-wrap gap10">
@@ -973,7 +933,7 @@
                                         </ul>
                                     </div>
                                 </div>
-                                <!-- /product-list -->
+                                <!-- /all-attribute -->
                             </div>
                             <!-- /main-content-wrap -->
                         </div>

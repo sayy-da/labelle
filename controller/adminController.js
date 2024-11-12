@@ -1,36 +1,52 @@
 const User =require('../models/users')
+const mongoose = require('mongoose')
+const bcrypt =require('bcrypt')
 
 
-const adminCredentials={
-  username:'sayyida',
-  password:'sayyida123'
-}
+const adminCredentials = {
+  username: 'sayyida',
+  password: 'sayyida123'
+};
 
-exports.showAdminLogin =(req,res)=>{
-  if(req.session.isAdmin){
-    return res.redirect('/admin/dashboard')
+// Display login page without error on initial load
+exports.showAdminLogin = (req, res) => {
+  if (req.session.isAdmin) {
+    return res.redirect('/admin/dashboard');
   }
-  res.render('admin/login',{userType:'admin'})
-}
 
-exports.handleAdminLogin = (req,res)=>{
-  const {username,password}=req.body
   
-  if(username === adminCredentials.username && password === adminCredentials.password){
-    req.session.isAdmin = true
+  res.setHeader('Cache-Control', 'no-store');
+  res.setHeader('Pragma', 'no-cache');
+  res.setHeader('Expires', '0');
+  const error = req.session.error;
+  req.session.error = null;
+
+  // Set error to null to prevent showing any message on initial load
+  res.render('admin/login', { error });
+};
+
+// Handle login attempts and display error if login fails
+exports.handleAdminLogin = (req, res) => {
+  const { username, password } = req.body;
+
+  if (username === adminCredentials.username && password === adminCredentials.password) {
+    req.session.isAdmin = true;
     console.log(req.session);
     
-     return res.redirect('/admin/dashboard')
-  }else{
-    res.send('invalide credentials.please try again')
+    return res.redirect('/admin/dashboard');
+  } else {
+    req.session.error = 'Invalid credentials';
+    // Send error message to the login view on failed login
+   return res.redirect('/admin/login');
   }
-}
+};
+
 
 exports.adminDashboard =(req,res)=>{
-  if(req.session.isAdmin){
-    res.render('admin/dashboard')
+  if(!req.session.isAdmin){
+   return res.redirect('/admin/login')
   }else{
-    res.redirect('/admin/login')
+    res.render('admin/dashboard')
   }
 }
 
@@ -77,3 +93,4 @@ exports.toggleStatus = async (req, res) => {
     res.status(500).json({ success: false, message: 'Server error' });
   }
 };
+

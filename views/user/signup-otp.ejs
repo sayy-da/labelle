@@ -56,6 +56,12 @@
     background-color: #f8c033;
 }
 
+#resend {
+    color: rgb(244, 219, 58);
+    font-size: 15px;
+    cursor: pointer;
+}
+
 </style>
     
 </head>
@@ -72,12 +78,16 @@
                 <input type="text" id="otp-4" maxlength="1" name="otp4" class="otp-input" required>
             </div>
             <button type="submit">Verify OTP</button>
+            <% if (error) { %>
+                <p style="color: red; font-size: 12px;"><%= error %></p>
+              <% } %>        
         </form>
         
 
         <!-- Timer and reset button -->
         <div id="timer">00:30</div>
-        <button id="reset-btn" onclick="resetOTP()">Reset OTP</button>
+        <button id="reset-btn">verify OTP</button>
+        <p id="resend" onclick="resendOTP()">Resend OTP</p>
     </div>
 
     <script src="script.js"></script>

@@ -1,35 +1,35 @@
 const express = require('express');
 const router = express.Router();
-const adminController = require('../controller/adminController')
-const adminMiddleware = require('../middleware/adminmiddleware')
+const adminController = require('../controller/adminController');
+const productController = require('../controller/productController');
+const adminMiddleware = require('../middleware/adminmiddleware');
 
-/* GET home page. */
+
 router.get('/login', adminController.showAdminLogin);
-router.post('/login',adminController.handleAdminLogin)
+router.post('/login', adminController.handleAdminLogin);
 
-
-router.get('/dashboard',adminMiddleware,adminController.adminDashboard);
-
+router.get('/dashboard', adminMiddleware, adminController.adminDashboard);
 
 router.get('/all-user',adminController.viewUsers);
-// router.get('/all-user',adminMiddleware,adminController.viewUsersProfile);
-// router.get('/edit-user/:id',adminController.editUser)
-// router.post('/delete/:id',adminMiddleware,adminController.deleteUser)
 router.post('/toggle-status/:id',adminController.toggleStatus)
 
 
+router.get('/product-list',productController.getProductList)
+router.get('/add-product',productController.getAddProduct )
+router.post('/add-product',productController.addProduct)
 
 
-// router.get('/edit-user', (req, res) =>{
-//   res.render('admin/edit-user');
+// router.get('/variant',productController.getVarientList)
+// router.get('/add-variant',productController.getAddVarient)
+// // router.get('/product-list',(req,res)=>{
+// //   res.render('admin/product-list')
+// // })
+
+// router.get('/variant', (req, res) =>{
+//   res.render('admin/variant');
 // });
-
-// router.get('/product-list', (req, res) =>{
-//   res.render('admin/product-list');
-// });
-
-// router.get('/add-product', (req, res) =>{
-//   res.render('admin/add-product');
+// router.get('/add-variant', (req, res) =>{
+//   res.render('admin/add-variant');
 // });
 
 // router.get('/edit-product', (req, res) =>{

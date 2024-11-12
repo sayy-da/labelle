@@ -132,92 +132,89 @@ h6{
 </head>
 <body>
 
-<div class="login-page">
-  <% if (error) { %>
-    <p style="color: red; font-size: 12px;"><%= error %></p>
-  <% } %>
-
-  <div class="form">
-    <form class="login-form" action="/signup" method="POST" onsubmit="return validateForm()">
-      <h6>Username</h6>
-      <input type="text" name="name" placeholder="username" value="<%= name || '' %> />
-      <span id="username-error" style="color: red; display: none; font-size: 12px;">Please enter your username.</span>
-      
-      <h6>Email</h6>
-      <input type="email" name="email" placeholder="Email" value="<%= email || '' %> />
-      <span id="email-error" style="color: red; display: none; font-size: 12px;">Please enter a valid email.</span>
-      
-      <h6>Password</h6>
-      <input type="password" name="password" placeholder="Password" />
-      <span id="password-error" style="color: red; display: none; font-size: 12px;">Password must contain a letter, number and special character</span>
-
-       
-      <h6>confirm Password</h6>
-      <input type="password" name="confirmPassword" placeholder="confirm password" id="confirmPassword" />
-      <span id="confirm-password-error" style="color: red; display: none; font-size: 12px;">Password do not match</span>
-      
-      <button class="button-signup" type="submit" >sign up</button>
-      <p class="message">Already have an account? <a href="/login" >login</a></p>
-    </form>
+  <div class="login-page">
+    <div class="form">
+      <% if (error) { %>
+        <p style="color: red; font-size: 12px;"><%= error %></p>
+      <% } %>
+  
+      <form class="login-form" action="/signup" method="POST" onsubmit="return validateForm()">
+        <h6>Username</h6>
+        <input type="text" name="name" placeholder="username"/>
+        <span id="username-error" style="color: red; display: none; font-size: 12px;">Enter your username.</span>
+        
+        <h6>Email</h6>
+        <input type="email" name="email" placeholder="Email"/>
+        <span id="email-error" style="color: red; display: none; font-size: 12px;">Enter a valid email.</span>
+        
+        <h6>Password</h6>
+        <input type="password" name="password" id="password" placeholder="Password" />
+        <span id="password-error" style="color: red; display: none; font-size: 12px;">Password must contain a letter, number, and special character</span>
+  
+        <h6>Confirm Password</h6>
+        <input type="password" name="confirmPassword" id="confirmPassword" placeholder="Confirm password" />
+        <span id="confirm-password-error" style="color: red; display: none; font-size: 12px;">Passwords do not match.</span>
+  
+        <button class="button-signup" type="submit">Sign Up</button>
+        <p class="message">Already have an account? <a href="/login">Login</a></p>
+      </form>
+    </div>
   </div>
-</div>
-<script>
-  function validateForm() {
-    let isValid = true;
-    const username = document.getElementsByName('username')[0];
-    const email = document.getElementsByName('email')[0];
-    const password = document.getElementsByName('password')[0];
-    const confirmPassword = document.getElementsByName('confirmPassword')[0];
-
-    // Validate username
-    if (username.value.trim() === '') {
-      document.getElementById('username-error').style.display = 'block';
-      isValid = false;
-    } else {
-      document.getElementById('username-error').style.display = 'none';
+  
+  <script>
+    function validateForm() {
+      let isValid = true;
+      const username = document.getElementsByName('name')[0];
+      const email = document.getElementsByName('email')[0];
+      const password = document.getElementById('password');
+      const confirmPassword = document.getElementById('confirmPassword');
+  
+      // Validate username
+      if (username.value.trim() === '') {
+        document.getElementById('username-error').style.display = 'block';
+        isValid = false;
+      } else {
+        document.getElementById('username-error').style.display = 'none';
+      }
+  
+      // Validate email
+      if (email.value.trim() === '' || !isValidEmail(email.value)) {
+        document.getElementById('email-error').style.display = 'block';
+        isValid = false;
+      } else {
+        document.getElementById('email-error').style.display = 'none';
+      }
+  
+      // Validate password
+      if (!isStrongPassword(password.value)) {
+        document.getElementById('password-error').style.display = 'block';
+        isValid = false;
+      } else {
+        document.getElementById('password-error').style.display = 'none';
+      }
+  
+      // Confirm password
+      if (password.value !== confirmPassword.value) {
+        document.getElementById('confirm-password-error').style.display = 'block';
+        isValid = false;
+      } else {
+        document.getElementById('confirm-password-error').style.display = 'none';
+      }
+  
+      return isValid;
     }
-
-    // Validate email
-    if (email.value.trim() === '' || !isValidEmail(email.value)) {
-      document.getElementById('email-error').style.display = 'block';
-      isValid = false;
-    } else {
-      document.getElementById('email-error').style.display = 'none';
+  
+    function isValidEmail(email) {
+      const re = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
+      return re.test(email);
     }
-
-    // Validate password
-    if (!isStrongPassword(password.value)) {
-      document.getElementById('password-error').style.display = 'block';
-      isValid = false;
-    } else {
-      document.getElementById('password-error').style.display = 'none';
+  
+    function isStrongPassword(password) {
+      const re = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[!@#$%^&*])[A-Za-z\d!@#$%^&*]{8,}$/;
+      return re.test(password);
     }
-
-    //confirm password
-if(password.value !== confirmPassword.value){
-  document.getElementById('confirm-password-error').style.display = 'block';
-  isValid = false;
-}else{
-  document.getElementById('confirm-password-error').style.display = 'none';
-}
-
-
-    return isValid;
-  }
-
-  function isValidEmail(email) {
-    const re = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
-
-    return re.test(email);
-  }
-
-  function isStrongPassword(password) {
-    // Password must be at least 8 characters long and contain both letters and numbers
-    const re = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[!@#$%^&*])[A-Za-z\d!@#$%^&*]{8,}$/;
-
-    return re.test(password);
-  }
-</script>
+  </script>
+  
   
 </body>
 </html>

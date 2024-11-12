@@ -4,8 +4,6 @@ const bcrypt = require('bcryptjs');
 const User = require('../models/users'); // Import the User model
 const { error } = require('console');
 
-
-
 // Setup Nodemailer transport
 
 const transporter = nodemailer.createTransport({
@@ -17,24 +15,31 @@ const transporter = nodemailer.createTransport({
 })
 
 
-// Controller for handling user signup
-exports.signup = async (req, res) => {
-  const { name, email, password } = req.body;
-
-if (!name || !email || !password) {
-  return res.render('user/signup', { error: 'All fields are required',name, email});
+exports.getSignup = (req,res)=>{
+  res.render('user/signup',{error:''})
 }
 
 
+// Controller for handling user signup
+exports.signup = async (req, res) => {
+  const { name, email, password ,confirmPassword} = req.body;
+
+if (!name || !email || !password || !confirmPassword) {
+  return res.render('user/signup', { error: 'All fields are required',name, email});
+}
+if(confirmPassword!==password){
+  return res.render('user/signup', { error: 'password do not match',name, email});
+}
+
   try {
     // Hash the password
+    
     const hashedPassword = await bcrypt.hash(password, 8);
 
     // Create a new user instance
     const newUser = new User({ name, email, password: hashedPassword });
 
     // Save the user to the database
- 
 
     req.session.user = newUser
     
@@ -44,30 +49,31 @@ if (!name || !email || !password) {
     res.status(500).send('Error signing up');
   }
 
-
-try {
-  const otp =crypto.randomBytes(2).toString('hex')
-  const otpExpiry =Date.now()+(5*60*1000)
-
-  req.session.otp =otp
-  req.session.otpExpiry=otpExpiry
-  req.session.email=email
-
-  const mailOptions ={
-    from:process.env.EMAIL_USER,
-    to:email,
-    subject:'Your OTP for signup',
-    text:`Your OTP for signup is :${otp}`
+  try {
+    const otp = Math.floor(1000 + Math.random() * 9000); // 4-digit numeric OTP
+    const otpExpiry = Date.now() + (5 * 60 * 1000);
+  
+    req.session.otp = otp;
+    req.session.otpExpiry = otpExpiry;
+    req.session.email = email;
+  
+    const mailOptions = {
+      from: process.env.EMAIL_USER,
+      to: email,
+      subject: 'Your OTP for signup',
+      text: `Your OTP for signup is: ${otp}`
+    };
+  
+    console.log(otp);
+    await transporter.sendMail(mailOptions);
+    console.log(mailOptions);
+  
+    res.redirect('/signup-otp');
+  } catch (error) {
+    console.error('Error during signup:', error);
+    res.render('signup', { error: 'Error signing up. Please try again later.', name, email });
   }
-
-  await transporter.sendMail(mailOptions)
- 
-  res.redirect('/signup-otp')
-} catch (error) {
-  console.error('Error during signup:',error)
-  res.render('signup', { error: 'Error signing up. Please try again later.' ,name,email});
 }
-};
 
 exports.verifyOtp =(req,res)=>{
   console.log("verify page")
@@ -85,7 +91,7 @@ exports.verifyOtp =(req,res)=>{
     res.redirect('/login')
 
   }else{
-    res.status(400).send('Incorrect OTP')
+    res.render('signup-otp',{error:'Incorrect/Invalid OTP'})
   }
 }
 
