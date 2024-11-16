@@ -3,6 +3,7 @@ const express = require('express');
 const session = require('express-session');
 const mongoose = require('mongoose');
 const path = require('path');
+const passport = require('./config/passport')
 require('dotenv').config();
 
 const app = express();
@@ -26,6 +27,10 @@ app.use(session({
   cookie: { maxAge: 3600000 }  // 1 hour expiry time for session cookie
 }));
 
+
+app.use(passport.initialize());
+app.use(passport.session())
+
 // Middleware to handle error messages
 app.use((req, res, next) => {
   res.locals.message = req.session.message;
@@ -33,9 +38,9 @@ app.use((req, res, next) => {
   next();
 });
 ``
-app.get('/',(req,res)=>{
-  res.render('user/home')
-})
+// app.get('/',(req,res)=>{
+//   res.render('user/home')
+// })
 // Set view engine
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));

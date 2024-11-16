@@ -19,8 +19,18 @@ router.get('/add-product',productController.getAddProduct )
 router.post('/add-product',productController.addProduct)
 
 
-// router.get('/variant',productController.getVarientList)
-// router.get('/add-variant',productController.getAddVarient)
+router.get('/variant/:productId',productController.getVariantList)
+router.get('/add-variant/:productId',productController.getAddVariant)
+router.post('/add-variant/:productId',productController.addVariant)
+
+router.get('/fragrance-list',productController.getFragranceList)
+router.get('/add-fragrance',productController.getAddFragrance)
+router.post('/add-fragrance',productController.addFragrance)
+
+router.get('/occasion-list',productController.getOccasionList)
+router.get('/add-occasion',productController.getAddOccasion)
+router.post('/add-occasion',productController.addOccasion)
+// router.post('')
 // // router.get('/product-list',(req,res)=>{
 // //   res.render('admin/product-list')
 // // })

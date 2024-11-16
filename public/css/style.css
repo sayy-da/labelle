@@ -281,7 +281,7 @@ acronym {
   cursor: help;
 }
 
-.btn-link:focus,
+.tfn-link:focus,
 .btn-link:hover,
 mark,
 ins {
@@ -1073,6 +1073,13 @@ a:hover, a:focus {
   font-weight: 400;
   line-height: 20px;
   margin-left: 100px;
+}
+.body-text-4 {
+  color: var(--Body-Text);
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 20px;
+margin-left: 100px;
 }
 
 .icon-more {
@@ -3003,6 +3010,27 @@ a:hover, a:focus {
 .tf-button-download i {
   color: #000000;
   font-size: 20px;
+}
+
+.tt-button-small {
+  width: max-content;
+  height: 15px; /* Reduced height */
+  padding: 8px 16px; /* Reduced padding */
+  font-size: 12px; /* Smaller font size */
+  font-weight: 600; /* Adjusted weight if needed */
+  line-height: 18px;
+  background-color: #fbb710;
+  border-radius: 8px; /* Reduced radius for a smaller button */
+  /* transition: all 0.3s ease; */
+  /* color: #000000;   */
+}
+
+.tf-button-small i {
+  font-size: 16px; /* Smaller icon size */
+  
+}
+.item-vatiant {
+  margin-left:  -100px;
 }
 
 form {

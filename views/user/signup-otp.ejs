@@ -4,71 +4,69 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>OTP Verification</title>
-<style>
-  body {
-    font-family: Arial, sans-serif;
-    background-color: #f7f7f7;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-    margin: 0;
-}
-
-.otp-container {
-    background-color: #fff;
-    padding: 20px;
-    border-radius: 8px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    text-align: center;
-    width: 250px;
-}
-
-.otp-inputs {
-    margin-bottom: 20px;
-}
-
-.otp-input {
-    width: 40px;
-    height: 40px;
-    font-size: 18px;
-    text-align: center;
-    margin: 0 5px;
-    border: 2px solid #ccc;
-    border-radius: 4px;
-}
-
-#timer {
-    font-size: 18px;
-    margin-bottom: 10px;
-}
-
-#reset-btn {
-    padding: 10px 20px;
-    background-color: #fbb710;
-    color: white;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-}
-
-#reset-btn:hover {
-    background-color: #f8c033;
-}
-
-#resend {
-    color: rgb(244, 219, 58);
-    font-size: 15px;
-    cursor: pointer;
-}
-
-</style>
-    
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f7f7f7;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .otp-container {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            width: 250px;
+        }
+        .otp-inputs {
+            margin-bottom: 20px;
+        }
+        .otp-input {
+            width: 40px;
+            height: 40px;
+            font-size: 18px;
+            text-align: center;
+            margin: 0 5px;
+            border: 2px solid #ccc;
+            border-radius: 4px;
+        }
+        #timer {
+            font-size: 18px;
+            margin-bottom: 10px;
+        }
+        #resendOtpBtn {
+            padding: 5px 10px;
+            background-color: #fbb710;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        #verify {
+            padding: 10px 20px;
+            background-color: #fbb710;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-bottom: 5px;
+        }
+        #resendOtpBtn:hover {
+            background-color: #f8c033;
+        }
+        #countdown {
+            color: rgb(244, 219, 58);
+            font-size: 15px;
+        }
+    </style>
 </head>
 <body>
     <div class="otp-container">
         <h2>Enter OTP</h2>
-
         <!-- OTP input fields -->
         <form action="/verify-otp" method="post">
             <div class="otp-inputs">
@@ -77,19 +75,87 @@
                 <input type="text" id="otp-3" maxlength="1" name="otp3" class="otp-input" required>
                 <input type="text" id="otp-4" maxlength="1" name="otp4" class="otp-input" required>
             </div>
-            <button type="submit">Verify OTP</button>
+            <button id="verify" type="submit">Verify OTP</button>
             <% if (error) { %>
                 <p style="color: red; font-size: 12px;"><%= error %></p>
-              <% } %>        
+            <% } %>
         </form>
         
-
         <!-- Timer and reset button -->
-        <div id="timer">00:30</div>
-        <button id="reset-btn">verify OTP</button>
-        <p id="resend" onclick="resendOTP()">Resend OTP</p>
+        <button id="resendOtpBtn" onclick="resendOtp()" disabled>Resend OTP</button>
+        <p id="countdown"></p>
     </div>
 
-    <script src="script.js"></script>
+    <script>
+        let countdown = 30; // 30-second countdown
+        const countdownEl = document.getElementById('countdown');
+        const resendOtpBtn = document.getElementById('resendOtpBtn');
+
+        // Function to start the countdown
+        function startCountdown() {
+            resendOtpBtn.disabled = true;
+            countdownEl.innerText = `You can resend OTP in ${countdown} seconds.`;
+
+            const interval = setInterval(() => {
+                countdown -= 1;
+                countdownEl.innerText = `You can resend OTP in ${countdown} seconds.`;
+
+                if (countdown <= 0) {
+                    clearInterval(interval);
+                    countdownEl.innerText = '';
+                    resendOtpBtn.disabled = false; // Enable the button
+                    countdown = 30; // Reset countdown
+                }
+            }, 1000);
+        }
+
+        // Call startCountdown immediately when the page loads
+        startCountdown();
+
+        // Function to handle OTP resend
+        async function resendOtp() {
+            try {
+                const response = await fetch('/resend-otp', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' }
+                });
+                const result = await response.json();
+
+                if (result.success) {
+                    alert('OTP resent successfully');
+                    startCountdown(); // Restart the countdown
+                } else {
+                    alert(result.message);
+                }
+            } catch (error) {
+                console.error('Error resending OTP:', error);
+                alert('Error resending OTP. Please try again.');
+            }
+        }
+    </script>
+
+    <script>
+        // Get all the OTP input fields
+        const otpInputs = document.querySelectorAll('.otp-input');
+
+        // Add event listener for keyup event on each input field
+        otpInputs.forEach((input, index) => {
+            input.addEventListener('keyup', (e) => {
+                // Check if the input field is not empty
+                if (e.target.value.trim() !== '') {
+                    // Move to the next input field
+                    if (index < otpInputs.length - 1) {
+                        otpInputs[index + 1].focus();
+                    }
+                } else {
+                    // If the input field is empty and the user presses backspace,
+                    // move to the previous input field
+                    if (index > 0 && e.key === 'Backspace') {
+                        otpInputs[index - 1].focus();
+                    }
+                }
+            });
+        });
+    </script>
 </body>
 </html>

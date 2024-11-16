@@ -126,6 +126,35 @@ h6{
   margin-top: 0px;
   margin-bottom: 10px;
 }
+
+.signup-google{
+  margin-top: -30px;
+  font-size: 12px;
+  color: #8888CE;
+}
+
+.google-button {
+          
+            display: inline-flex;
+            align-items: center;
+            background-color: #4285f4;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            font-size: 16px;
+            cursor: pointer;
+            text-decoration: none;
+            transition: background-color 0.3s;
+        }
+        .google-button:hover {
+            background-color: #357ae8;
+        }
+        .google-button img {
+            width: 20px;
+            height: 20px;
+            margin-right: 10px;
+        }
    </style>
     
 
@@ -133,7 +162,15 @@ h6{
 <body>
 
   <div class="login-page">
+   
     <div class="form">
+      <div class="signup-container">
+        <p class="signup-google">Sign up with your Google account to get started.</p>
+        <a href="/auth/google" class="google-button">
+          <img src="/images/logo/avfci721i.png" alt="Google logo" width="20" height="20">
+            Sign up with Google
+        </a>
+    </div>
       <% if (error) { %>
         <p style="color: red; font-size: 12px;"><%= error %></p>
       <% } %>
