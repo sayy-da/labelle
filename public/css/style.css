@@ -1023,11 +1023,22 @@ a:hover, a:focus {
   /* flex-direction: column; */
   gap: 16px; /* space between rows */
 }
+.upload-columns {
+  text-align: center;
+}
+
 
 .upload-column {
   text-align: center;
 }
 
+.image-size{
+margin-top: 10px;
+margin-left:25px ;
+margin-bottom: 10px;
+width: 100px;
+height: 100px;
+}
 
 
 .upload-column label {

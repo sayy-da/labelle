@@ -760,6 +760,11 @@
                                 </div>
                                 <!-- new-category -->
                                 <div class="wg-box">
+                                    <% if (error) { %>
+                                        <div style="color: red; padding: 10px; border: 1px solid red; background-color: #fdd;"> 
+                                          <%= error %>
+                                        </div>
+                                      <% } %>
                                     <form class="form-new-product form-style-1" method="POST" action="/admin/add-occasion" >
                                         <fieldset class="name-safa">
                                             <div class="body-title">Occasion <span class="tf-color-1">*</span></div>

@@ -763,109 +763,210 @@
                                     </ul>
                                 </div>
                                 <!-- form-add-product -->
-                                <form class="tf-section-2 form-add-product" >
-                                    <div class="wg-box">
-                                        <fieldset class="name">
-                                            <div class="body-title mb-10">Product name <span class="tf-color-1">*</span></div>
-                                            <input class="mb-10" type="text" placeholder="Enter product name" name="text" tabindex="0" value="" aria-required="true" required="">
-                                            <div class="text-tiny">Do not exceed 20 characters when entering the product name.</div>
-                                        </fieldset>
-                                        <div class="gap22 cols">
-                                            <fieldset class="category">
-                                                <div class="body-title mb-10">Category <span class="tf-color-1">*</span></div>
-                                                <div class="select">
-                                                    <select class="">
-                                                        <option>Choose category</option>
-                                                        <option>Shop</option>
-                                                        <option>Product</option>
-                                                    </select>
-                                                </div>
-                                            </fieldset>
-                                            <fieldset class="male">
-                                                <div class="body-title mb-10">Gender <span class="tf-color-1">*</span></div>
-                                                <div class="select">
-                                                    <select class="">
-                                                        <option>Male</option>
-                                                        <option>Female</option>
-                                                        <option>Other</option>
-                                                    </select>
-                                                </div>
-                                            </fieldset>
-                                        </div>
-                                        <fieldset class="brand">
-                                            <div class="body-title mb-10">Brand <span class="tf-color-1">*</span></div>
+                                  <!-- form-add-product -->
+                                  <form class="tf-section-2 form-add-product" action="/admin/edit-product/<%= id %>" method="POST"
+                                  enctype="multipart/form-data">
+                                    <input type="hidden" name="id" value="<%= id %>">
+                                  <div class="wg-box">
+                                      <fieldset class="name">
+                                          <div class="body-title mb-10">Product name <span class="tf-color-1">*</span>
+                                          </div>
+                                          <input class="mb-10" type="text" value="<%= name %>"
+                                              name="name" id="name" >
+                                          <div class="text-tiny">Do not exceed 20 characters when entering the product
+                                              name.</div>
+                                      </fieldset>
+                                      <div class="gap22 cols">
+                                        <fieldset class="category">
+                                            <label for="fragranceType" class="body-title mb-10">
+                                                Fragrance Type <span class="tf-color-1">*</span>
+                                            </label>
                                             <div class="select">
-                                                <select class="">
-                                                    <option>Choose category</option>
-                                                    <option>Shop</option>
-                                                    <option>Product</option>
+                                                <select name="fragranceType" id="fragranceType">
+                                                    <!-- The selected fragrance type value can be passed in case of an existing selection -->
+                                                    <option value="<%= fragranceType %>" selected><%= fragranceType %></option>
+                                                    
+                                                    <!-- Iterate over the fragrances array and populate the options dynamically -->
+                                                    <% fragrances.forEach(fragrance => { %>
+                                                        <option value="<%= fragrance.name %>"><%= fragrance.name %></option>
+                                                    <% }); %>
                                                 </select>
                                             </div>
                                         </fieldset>
-                                        <fieldset class="description">
-                                            <div class="body-title mb-10">Description <span class="tf-color-1">*</span></div>
-                                            <textarea class="mb-10" name="description" placeholder="Description" tabindex="0" aria-required="true" required=""></textarea>
-                                            <div class="text-tiny">Do not exceed 100 characters when entering the product name.</div>
-                                        </fieldset>
-                                    </div>
-                                    <div class="wg-box">
-                                        <fieldset>
-                                            <div class="body-title mb-10">Upload images</div>
-                                            <div class="upload-image mb-16">
-                                                <div class="item">
-                                                    <img src="images/upload/upload-1.png" alt="">
-                                                </div>
-                                                <div class="item">
-                                                    <img src="images/upload/upload-2.png" alt="">
-                                                </div>
-                                                <div class="item up-load">
-                                                    <label class="uploadfile" for="myFile">
-                                                        <span class="icon">
-                                                            <i class="icon-upload-cloud"></i>
-                                                        </span>
-                                                        <span class="text-tiny">Drop your images here or select <span class="tf-color">click to browse</span></span>
-                                                        <input type="file" id="myFile" name="filename">
-                                                    </label>
-                                                </div>
-                                            </div>
-                                            <div class="body-text">You need to add at least 4 images. Pay attention to the quality of the pictures you add, comply with the background color standards. Pictures must be in certain dimensions. Notice that the product shows all the details</div>
-                                        </fieldset>
-                                        <div class="cols gap22">
-                                            <fieldset class="name">
-                                                <div class="body-title mb-10">Add size</div>
-                                                <div class="select mb-10">
-                                                    <select class="">
-                                                        <option>EU - 44</option>
-                                                        <option>EU - 40</option>
-                                                        <option>EU - 50</option>
+                                        
+
+                                         <fieldset class="category">
+                                            <fieldset class="male">
+                                                <label for="gender" class="body-title mb-10">Gender<span class="tf-color-1">*</span></label>
+                                                <div class="select">
+                                                    <select id="gender" name="gender" >
+                                                        <!-- Use the 'selected' attribute to pre-select a gender if needed -->
+                                                        <option value="Male" <%= gender === 'Male' ? 'selected' : '' %>>Male</option>
+                                                        <option value="Female" <%= gender === 'Female' ? 'selected' : '' %>>Female</option>
+                                                        <option value="Other" <%= gender === 'Other' ? 'selected' : '' %>>Other</option>
                                                     </select>
                                                 </div>
-                                                <div class="list-box-value mb-10">
-                                                    <div class="box-value-item"><div class="body-text">EU - 38.5</div></div>
-                                                    <div class="box-value-item"><div class="body-text">EU - 39</div></div>
-                                                    <div class="box-value-item"><div class="body-text">EU - 40</div></div>
-                                                </div>
-                                                <div class="list-box-value">
-                                                    <div class="box-value-item"><div class="body-text">EU - 41.5</div></div>
-                                                    <div class="box-value-item"><div class="body-text">EU - 42</div></div>
-                                                    <div class="box-value-item"><div class="body-text">EU - 43</div></div>
-                                                </div>
                                             </fieldset>
-                                            <fieldset class="name">
-                                                <div class="body-title mb-10">Product date</div>
-                                                <div class="select">
-                                                    <input type="date" name="date" value="2023-11-20">
+                                            
+                                      </div>
+                                      <fieldset class="category">
+                                        <label for="occasions" class="body-title mb-10">
+                                            Occasion <span class="tf-color-1">*</span>
+                                        </label>
+                                        <div class="select">
+                                            <select name="occasions" id="occasions" >
+                                                <!-- The selected fragrance type value can be passed in case of an existing selection -->
+                                                <option value="<%= occasions %>" selected><%= occasions %></option>
+                                                
+                                                <!-- Iterate over the fragrances array and populate the options dynamically -->
+                                                <% occasiones.forEach(occasion => { %>
+                                                    <option value="<%= occasion.name %>"><%= occasion.name %></option>
+                                                <% }); %>
+                                            </select>
+                                        </div>
+                                    </fieldset>
+                                    
+                                    
+                                      <fieldset class="description">
+                                          <div class="body-title mb-10">Description <span class="tf-color-1">*</span>
+                                          </div>
+                                          <textarea class="mb-10" id="description" name="description"
+                                              tabindex="0"><%= description %></textarea>
+                                          <div class="text-tiny">Do not exceed 100 characters when entering the
+                                              product name.</div>
+                                      </fieldset>
+                                  </div>
+                                  <div class="wg-box">
+                                      <fieldset>
+                                          <div class="body-title mb-10">Upload images</div>
+                                          <div class="upload-image mb-16">
+                                              <div class="form-group">
+                                                  <!-- Image 1 -->
+                                                  <div class="upload-column d-flex">
+                                                    <label for="image1">
+                                                        <span class="icon">📤</span><br>
+                                                        <span class="text">Image 1 (click to upload)</span>
+                                                        <input type="file" name="images" id="image1" accept="image/*" onchange="previewImage(event, 'image1')">
+                                                    </label>
+                                                    <img class="image-size" id="preview1" src="<%= images[0] %>" alt="image1">
                                                 </div>
-                                            </fieldset>
-                                        </div>
-                                        <div class="cols gap10">
-                                            <button class="tf-button w-full" type="submit">Add product</button>
-                                            <button class="tf-button style-1 w-full" type="submit">Save product</button>
-                                            <a href="#" class="tf-button style-2 w-full">Schedule</a>
-                                        </div>
-                                    </div>
-                                </form>
-                                <!-- /form-add-product -->
+                                                
+                                                <!-- Image 2 -->
+                                                <div class="upload-column d-flex">
+                                                    <label for="image2">
+                                                        <span class="icon">📤</span><br>
+                                                        <span class="text">Image 2 (click to upload)</span>
+                                                        <input type="file" name="images" id="image2" accept="image/*" onchange="previewImage(event, 'image2')">
+                                                    </label>
+                                                    <img class="image-size" id="preview2" src="<%= images[1] %>" alt="image2">
+                                                </div>
+                                                
+                                                <!-- Image 3 -->
+                                                <div class="upload-column d-flex">
+                                                    <label for="image3">
+                                                        <span class="icon">📤</span><br>
+                                                        <span class="text">Image 3 (click to upload)</span>
+                                                        <input type="file" name="images" id="image3" accept="image/*" onchange="previewImage(event, 'image3')">
+                                                    </label>
+                                                    <img class="image-size" id="preview3" src="<%= images[2] %>" alt="image3">
+                                                </div>
+                                                
+                                              
+                                              <!-- Modal for Image Cropping (for any of the images) -->
+                                              <!-- <div id="cropperModal">
+                                                  <div class="modal-content"> -->
+                                                      <!-- Image container -->
+                                                      <!-- <div class="image-container">
+                                                          <img id="imageToCrop" src="" alt="Image to Crop">
+                                                      </div> -->
+                                                      
+                                                      <!-- Action buttons -->
+                                                      <!-- <div class="button-container">
+                                                          <button id="cropButton">Crop</button>
+                                                          <button id="closeModalButton">Close</button>
+                                                      </div> -->
+                                                  <!-- </div> -->
+                                              </div>
+                                              <!-- <script>
+                                                  let cropper; // To store the Cropper.js instance
+                                                  let currentImageId; // To keep track of which image is being cropped
+
+                                                  // Function to preview and crop the image
+                                                  function previewImage(event, imageId) {
+                                                      currentImageId = imageId; // Set the current image id
+
+                                                      var input = event.target;
+                                                      var file = input.files[0];
+                                                      var reader = new FileReader();
+
+                                                      reader.onload = function (e) {
+                                                          var imgElement = document.getElementById('imageToCrop');
+                                                          imgElement.src = e.target.result;
+
+                                                          // Show modal for cropping
+                                                          document.getElementById('cropperModal').style.display = 'flex';
+
+                                                          // Initialize the cropper instance on the selected image
+                                                          if (cropper) {
+                                                              cropper.destroy(); // Destroy the previous cropper instance
+                                                          }
+                                                          cropper = new Cropper(imgElement, {
+                                                              aspectRatio: 1,
+                                                              viewMode: 1,
+                                                              autoCropArea: 0.65
+                                                          });
+                                                      };
+
+                                                      reader.readAsDataURL(file);
+                                                  }
+
+                                                  // Crop and save functionality
+                                                  document.getElementById('cropButton').addEventListener('click', function () {
+                                                      var croppedCanvas = cropper.getCroppedCanvas();
+                                                      var croppedImage = croppedCanvas.toDataURL();
+
+                                                      // Store the cropped image in a hidden input or handle it as needed
+                                                      var inputField = document.createElement('input');
+                                                      inputField.type = 'hidden';
+                                                      inputField.name = 'croppedImages[]';  // For multiple images, use an array name
+                                                      inputField.value = croppedImage;
+                                                      document.body.appendChild(inputField); // Append hidden input to form or body
+
+                                                      // Optionally, display cropped image as a preview or elsewhere
+                                                      console.log(croppedImage); // You can use this data URL for uploading or previewing
+
+                                                      // Close the modal after cropping
+                                                      document.getElementById('cropperModal').style.display = 'none';
+                                                      cropper.destroy();
+                                                  });
+
+                                                  // Close modal without saving
+                                                  document.getElementById('closeModalButton').addEventListener('click', function () {
+                                                      document.getElementById('cropperModal').style.display = 'none';
+                                                      cropper.destroy();
+                                                  });
+
+                                              </script> -->
+                                          </div>
+                                          <div class="body-text">You need to add at least 3 images. Pay attention to
+                                              the quality of the pictures you add, comply with the background color
+                                              standards. Pictures must be in certain dimensions. Notice that the
+                                              product shows all the details</d>
+                                              <fieldset class="name">
+                                                  <div class="body-title mb-10">Product date</div>
+                                                  <div class="select">
+                                                       <input type="date" name="date">
+                                                  </div>
+                                              </fieldset>
+                                          </div>
+                                          <div class="cols gap10">
+                                              <button class="tf-button w-full" type="submit">Edit product</button>
+                                            <!-- <button class="tf-button style-1 w-full" type="submit">Save product</button> -->
+                                          </div>
+                                      </fieldset>
+                                  </div>
+                              </form>
+                              <!-- /form-add-product -->
                             </div>
                             <!-- /main-content-wrap -->
                         </div>

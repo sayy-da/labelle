@@ -3,7 +3,8 @@ const Variant = require('../models/variant')
 const multer = require('multer');
 const path = require('path');
 const Fragrance = require('../models/fragrance');
-const Occasion = require('../models/occasion')
+const Occasion = require('../models/occasion');
+const { error } = require('console');
 exports.getProductList = async (req, res) => {
   try {
     // Fetch all products from the database
@@ -21,7 +22,7 @@ exports.getProductList = async (req, res) => {
 exports.getAddProduct = async (req,res)=>{
   const fragrances = await Fragrance.find().sort({ createdAt: -1 });
   const occasions = await Occasion.find().sort({ createdAt: -1 });
-  console.log(fragrances)
+  
   res.render('admin/add-product',{error:'',fragrances,occasions})
 }
 
@@ -69,6 +70,88 @@ exports.addProduct = [uploads.array('images', 3), async (req, res) => {
   }
 }];
 
+exports.getEditProduct = async (req,res) => {
+  const {id} = req.params
+  try{
+    const product = await Product.findById(id)
+    const fragrances = await Fragrance.find().sort({ createdAt: -1 });
+    const occasiones = await Occasion.find().sort({ createdAt: -1 });
+    // const images = req.files.map(file => '/uploads/' + file.filename);  
+    if(!product){
+      return res.render('product-list',{error:'Product not found' })
+    }
+    res.render('admin/edit-product',{
+      name:product.name,
+      fragranceType:product.fragranceType,
+      gender:product.gender,
+      occasions:product.occasions,
+      description:product.description,
+      images:product.images,
+      id:product._id,
+      error:null,
+      fragrances,
+      occasiones
+    })
+  }catch(error){
+    console.error('Error fetching product:', error);
+    res.status(500).json({ message: 'Failed to fetch product details' });
+  }
+
+}
+exports.editProduct =async (req,res) => {
+  const { name,fragranceType,gender,occasions,description} =req.body
+  const { id } = req.params;
+  const fragrances = await Fragrance.find().sort({ createdAt: -1 });
+  const occasiones = await Occasion.find().sort({ createdAt: -1 });
+  let images= req.files? req.files.map(file=> file.filename): [] ; 
+  console.log('Editing product with ID:', id); 
+
+  try {
+    const product = await Product.findById(id)
+
+    if(images.length>0){
+      product.images=images
+    }
+   product.name = name;
+   console.log('name',name);
+   
+   product.fragranceType=fragranceType;
+   console.log('fragrance',fragranceType);
+
+   product.gender=gender;
+   console.log('gender',gender);
+
+   product.occasions=occasions
+   console.log('occation',occasions);
+
+   product.description=description
+   console.log('des',description);
+
+
+   console.log(product);
+   
+   await product.save()
+console.log(product);
+
+res.redirect('/admin/product-list')
+  } catch (error) {
+    console.error('Error editing product:', error);
+    res.render('admin/edit-product',{
+      error:'failed to edit product.please try again.',
+      name,
+      fragranceType,
+      fragrances,
+      gender,
+      occasions,
+      occasiones,
+      description,
+      images : images,
+      id
+   })
+  }
+};
+
+
 // Controller to get the list of variants
 
 exports.addVariant = async (req,res) => {
@@ -113,20 +196,34 @@ exports.getAddVariant = async  (req,res)=>{
   res.render('admin/add-variant',{productId,error:''})
 }
 
-exports.addFragrance = async (req, res) => {
+ // Assuming the model is located here
+
+ exports.addFragrance = async (req, res) => {
   const { name } = req.body;
-  console.log('Received fragrance name:', name); // This should log the received name
+  console.log('Received fragrance name:', name); // Log the received name
 
   try {
-      const newFragrance = new Fragrance({ name });
-      await newFragrance.save();
-      res.redirect('/admin/fragrance-list')
+    const newFragrance = new Fragrance({ name });
+
+    const existingFragrance = await Fragrance.findOne({ name: { $regex: new RegExp('^' + name + '$', 'i') } });
+
+    if (existingFragrance) {
+      // If an occasion with the same name exists (case-insensitive), return a message
+      return res.render('admin/add-fragrance', { 
+       error: 'Fragrance name already exists (case-insensitive)', 
+        name
+       })
+    }
+    // Save the fragrance to the database
+    await newFragrance.save();
+
+    // Redirect to the fragrance list page after successful creation
+    res.redirect('/admin/fragrance-list');
   } catch (error) {
-      console.error('Error adding fragrance:', error);
-      res.status(500).json({ success: false, message: 'Failed to add fragrance' });
+    console.error('Error adding fragrance:', error);
+    res.status(500).send({ success: false, message: 'Failed to add fragrance' });
   }
 };
-
 
 
 exports.getAddFragrance = (req,res)=>{
@@ -147,15 +244,25 @@ exports.getFragranceList = async (req, res) => {
 
 exports.addOccasion = async (req, res) => {
   const { name } = req.body;
-  console.log('Received fragrance name:', name); // This should log the received name
+  console.log('Received occasion name:', name);
 
   try {
-      const newOccasion = new Occasion({ name });
-      await newOccasion.save();
-      res.redirect('/admin/occasion-list')
+
+    const existingOccasion = await Occasion.findOne({ name: { $regex: new RegExp('^' + name + '$', 'i') } });
+
+    if (existingOccasion) {
+      // If an occasion with the same name exists (case-insensitive), return a message
+      return res.render('admin/add-occasion', {  
+        error: 'Occasion name already exists (case-insensitive)', 
+        name
+       })
+    }
+    const newOccasion = new Occasion({ name });
+    await newOccasion.save();
+    res.redirect('/admin/occasion-list');
   } catch (error) {
-      console.error('Error adding occasion:', error);
-      res.status(500).json({ success: false, message: 'Failed to add occasion' });
+    console.error('Error adding occasion:', error);
+    res.status(500).json({ success: false, message: 'Failed to add occasion' });
   }
 };
 

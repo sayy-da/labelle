@@ -17,6 +17,9 @@ router.post('/toggle-status/:id',adminController.toggleStatus)
 router.get('/product-list',productController.getProductList)
 router.get('/add-product',productController.getAddProduct )
 router.post('/add-product',productController.addProduct)
+router.get('/edit-product/:id',productController.getEditProduct)
+router.post('/edit-product/:id',productController.editProduct)
+
 
 
 router.get('/variant/:productId',productController.getVariantList)
