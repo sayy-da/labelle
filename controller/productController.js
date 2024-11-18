@@ -8,10 +8,30 @@ const { error } = require('console');
 exports.getProductList = async (req, res) => {
   try {
     // Fetch all products from the database
-    const products = await Product.find().sort({ createdAt: -1 });
-    
+    const page = parseInt(req.query.page) || 1
+    const limit = parseInt(req.query.limit) ||10
+    const skip =(page-1)*limit
+    const query =  req.query.query ? req.query.query.trim() : ''
+
+
+    const filter = query
+    ? {
+        $or: [
+          { name: { $regex: query, $options: 'i' } },    // Search for name
+          { Fragrance: { $regex: query, $options: 'i' } },  // Search for fragrance
+          { Occasion: { $regex: query, $options: 'i' } },   // Search for occasion
+          { gender: { $regex: query, $options: 'i' } },     // Search for gender
+        ],
+      }
+    : {};
+
+    const products = await Product.find(filter).sort({ createdAt: -1 }).skip(skip).limit(limit)
+
+    const totalProducts = await Product.countDocuments(filter)
+
+    const totalPages = Math. ceil(totalProducts/limit) 
     // Render the product list page
-    res.render('admin/product-list', { products });
+    res.render('admin/product-list', { products ,page,totalProducts,totalPages,limit,query});
   } catch (error) {
     console.error('Error fetching product list', error);
     res.status(500).send('Error fetching product list');
@@ -28,6 +48,7 @@ exports.getAddProduct = async (req,res)=>{
 
 // Set up Multer storage configuration
 const storage = multer.diskStorage({
+
 
   destination: (req, file, cb) => {
     cb(null, './public/uploads/');
@@ -98,59 +119,58 @@ exports.getEditProduct = async (req,res) => {
   }
 
 }
-exports.editProduct =async (req,res) => {
-  const { name,fragranceType,gender,occasions,description} =req.body
-  const { id } = req.params;
-  const fragrances = await Fragrance.find().sort({ createdAt: -1 });
-  const occasiones = await Occasion.find().sort({ createdAt: -1 });
-  let images= req.files? req.files.map(file=> file.filename): [] ; 
-  console.log('Editing product with ID:', id); 
+exports.editProduct = [
+  uploads.array('images', 3), // Handle multiple file uploads
+  async (req, res) => {
+    const { id } = req.params;
+    const { name, fragranceType, gender, occasions, description } = req.body;
+    
+    console.log('Request body:', req.body);
+    console.log('Editing product with ID:', id);
 
-  try {
-    const product = await Product.findById(id)
+    try {
+      const product = await Product.findById(id);
+      
+      if (!product) {
+        throw new Error('Product not found');
+      }
 
-    if(images.length>0){
-      product.images=images
+      // Handle image uploads if new files were uploaded
+      if (req.files && req.files.length > 0) {
+        const newImages = req.files.map(file => '/uploads/' + file.filename);
+        product.images = newImages;
+      }
+
+      // Update product fields
+      product.name = name;
+      product.fragranceType = fragranceType;
+      product.gender = gender;
+      product.occasions = occasions;
+      product.description = description;
+
+      await product.save();
+      
+      res.redirect('/admin/product-list');
+    } catch (error) {
+      console.error('Error editing product:', error);
+      const fragrances = await Fragrance.find().sort({ createdAt: -1 });
+      const occasiones = await Occasion.find().sort({ createdAt: -1 });
+      
+      res.render('admin/edit-product', {
+        error: 'Failed to edit product. Please try again.',
+        name,
+        fragranceType,
+        fragrances,
+        gender,
+        occasions,
+        occasiones,
+        description,
+        images: product?.images || [],
+        id
+      });
     }
-   product.name = name;
-   console.log('name',name);
-   
-   product.fragranceType=fragranceType;
-   console.log('fragrance',fragranceType);
-
-   product.gender=gender;
-   console.log('gender',gender);
-
-   product.occasions=occasions
-   console.log('occation',occasions);
-
-   product.description=description
-   console.log('des',description);
-
-
-   console.log(product);
-   
-   await product.save()
-console.log(product);
-
-res.redirect('/admin/product-list')
-  } catch (error) {
-    console.error('Error editing product:', error);
-    res.render('admin/edit-product',{
-      error:'failed to edit product.please try again.',
-      name,
-      fragranceType,
-      fragrances,
-      gender,
-      occasions,
-      occasiones,
-      description,
-      images : images,
-      id
-   })
   }
-};
-
+];
 
 // Controller to get the list of variants
 
@@ -180,9 +200,30 @@ exports.getVariantList = async (req,res)=>{
   try {
      const productId = req.params.productId
      console.log(productId);
+
      
-    const variants = await Variant.find({productId}).sort({createdAt:-1})
-    res.render('admin/variant',{variants,productId})
+    const page = parseInt(req.query.page)||1
+    const limit = parseInt(req.query.limit)||10
+    const skip =(page-1)*limit
+    const query =  req.query.query ? req.query.query.trim() : ''
+
+
+    const filter = query
+    ? {
+        $or: [
+          { milliliter: { $regex: query, $options: 'i' } },    // Search for name
+          { stock: { $regex: query, $options: 'i' } },  // Search for fragrance
+          { price: { $regex: query, $options: 'i' } },   // Search for occasion
+        ],
+      }
+    : {};
+
+    const variants = await Variant.find({productId},filter).sort({createdAt:-1}).skip(skip).limit(limit)
+
+    const totalvariants = await Variant.countDocuments({productId},filter)
+
+    const totalPages = Math. ceil(totalvariants/limit) 
+    res.render('admin/variant',{variants,productId,page,totalvariants,totalPages,limit,query})
   } catch (error) {
     console.error('Error fetching variant list', error);
     res.status(500).send('Error fetching variant list');
@@ -231,11 +272,24 @@ exports.getAddFragrance = (req,res)=>{
 }
 exports.getFragranceList = async (req, res) => {
   try {
-    
-    const fragrances = await Fragrance.find().sort({ createdAt: -1 });
+    const page = parseInt(req.query.page) || 1
+    const limit = parseInt(req.query.limit) ||10
+    const skip =(page-1)*limit
+    const query = req.query.query ? req.query.query.trim() : '';
+   
+   
+    const filter = query
+      ? { name: { $regex: query, $options: 'i' }}  // Search filter
+      : {};
 
+    const fragrances = await Fragrance.find(filter).sort({ createdAt: -1 })
+    .skip(skip).limit(limit)
+
+    const totalFragrances = await Fragrance.countDocuments(filter)
+
+    const totalPages = Math.ceil(totalFragrances/limit) 
     
-    res.render('admin/fragrance-list', { fragrances });
+    res.render('admin/fragrance-list', { fragrances,page,totalFragrances,totalPages,limit,query });
   } catch (error) {
     console.error('Error fetching product list', error);
     res.status(500).send('Error fetching product list');
@@ -271,13 +325,28 @@ exports.addOccasion = async (req, res) => {
 exports.getAddOccasion = (req,res)=>{
   res.render('admin/add-occasion',{error:''})
 }
+
 exports.getOccasionList = async (req, res) => {
   try {
-    
-    const occasions = await Occasion.find().sort({ createdAt: -1 });
+     
+    const page = parseInt(req.query.page) || 1
+    const limit = parseInt(req.query.limit) ||10
+    const skip =(page-1)*limit
+  
+    const query = req.query.query ? req.query.query.trim() : '';
+   
+   
+    const filter = query
+      ? { name: { $regex: query, $options: 'i' }}  // Search filter
+      : {};
 
+    const occasions = await Occasion.find(filter).sort({ createdAt: -1 }).skip(skip).limit(limit)
+
+    const totalOccasions = await Occasion.countDocuments(filter)
+
+    const totalPages = Math. ceil(totalOccasions/limit) 
     
-    res.render('admin/occasion-list', { occasions });
+    res.render('admin/occasion-list', { occasions, page,totalOccasions,totalPages,limit,query});
   } catch (error) {
     console.error('Error fetching occasion list', error);
     res.status(500).send('Error fetching occasion list');

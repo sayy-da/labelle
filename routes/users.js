@@ -22,7 +22,7 @@ router.get('/logout',userController.logout)
 router.get('/',userController.gethome)
 router.get('/home',userController.gethome)
 
-router.get('/product-details/:productId', userController.showProducts);
+router.get('/product-details/:variantId', userController.showProducts);
 router.get('/shop', userController.showShop);
 
 // router.get('/cart',(req,res)=>{

@@ -79,7 +79,7 @@
             <!-- Button Group -->
             <div class="amado-btn-group mt-30 mb-100">
 
-                <% if (user) { %>
+                <% if (user  ) { %>
                     <!-- Show the logout button if the user is logged in -->
                     <button  class="btn amado-btn mb-15" onclick="window.location.href='/logout'">Logout</button>
                   <% } else { %>
@@ -110,22 +110,22 @@
         <!-- Product Catagories Area Start -->
         <div class="products-catagories-area clearfix">
             <div class="amado-pro-catagory clearfix">
-
-                <% products.forEach((product, index)=> { %> 
+                <% products.forEach((product) => { %>
                     <div class="single-products-catagory clearfix">
                         <a href="/product-details/<%= product._id %>">
-                            <img src="<%=product.images[0]%>" alt="">
+                            <img src="<%= product.images[0] %>" alt="">
                             <!-- Hover Content -->
                             <div class="hover-content">
                                 <div class="line"></div>
-                                <p>From <%=product.defaultVariant ? product.defaultVariant.price: ''%></p>
-                                <h4><%=product.name%></h4>
+                                <p>From <%= product.defaultVariant ? product.defaultVariant.price : '' %></p>
+                                <h4><%= product.name %></h4>
                             </div>
                         </a>
                     </div>
-                <% } ) %>
+                <% }); %>
             </div>
         </div>
+        
         <!-- Product Catagories Area End -->
     </div>
     <!-- ##### Main Content Wrapper End ##### -->

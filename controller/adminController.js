@@ -61,14 +61,38 @@ exports.handlelogout = (req,res)=>{
 
 
 // view all user
-exports.viewUsers =async (req,res)=>{
+exports.viewUsers = async (req, res)=>{    
   try{
-    const users = await User.find()
-    res.render('admin/all-user',{users}) 
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 10;
+    const skip = (page - 1) * limit;
+    const query =  req.query.query ? req.query.query.trim() : '';
+
+    const filter = query
+    ? {
+        $or: [
+          { name: { $regex: query, $options: 'i' } },    
+          { email: { $regex: query, $options: 'i' } }  
+          
+        ],
+      }
+    : {};
+        
+         
+    const users = await User.find(filter).sort({ createdAt: -1 }).skip(skip).limit(limit)
+
+    const totalUsers = await User.countDocuments(filter)
+
+    const totalPages = Math.ceil(totalUsers/limit) 
+
+    res.render('admin/all-user',{users,page,totalUsers,totalPages,limit,query}) 
   }catch (error){
     res.status(500).send('Error retrieving users')
   }
 }
+
+
+
 // block user 
 exports.toggleStatus = async (req, res) => {
   const userId = req.params.id;
@@ -92,5 +116,6 @@ exports.toggleStatus = async (req, res) => {
     console.error('Error toggling status:', error);
     res.status(500).json({ success: false, message: 'Server error' });
   }
-};
+}
+
 

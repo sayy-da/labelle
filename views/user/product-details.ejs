@@ -108,7 +108,6 @@
         <!-- Product Details Area Start -->
         <div class="single-product-area section-padding-100 clearfix">
             <div class="container-fluid">
-
                 <div class="row">
                     <div class="col-12">
                         <nav aria-label="breadcrumb">
@@ -119,36 +118,39 @@
                         </nav>
                     </div>
                 </div>
-
+                
                 <div class="row">
                     <div class="col-12 col-lg-7">
                         <div class="single_product_thumb">
                             <div id="product_details_slider" class="carousel slide" data-ride="carousel">
                                 <ol class="carousel-indicators">
-                                    
-                                    <% product.images.forEach(image => { %>
-                                        <li class="active" data-target="#product_details_slider" data-slide-to="0" style="background-image: url('<%= image %>');">
-                                        </li>
-                                    <%}) %>
+                                    <% product.images.forEach((image, index) => { %>
+                                        <li class="<%= index === 0 ? 'active' : '' %>" data-target="#product_details_slider" data-slide-to="<%= index %>" style="background-image: url('<%= image %>');"></li>
+                                    <% }) %>
                                 </ol>
                                 <div class="carousel-inner">
                                     <% product.images.forEach((image, index) => { %>
-                                      <div class="carousel-item <%= index === 0 ? 'active' : '' %>">
-                                        <a class="gallery_img" href="<%= image %>">
-                                          <img class="d-block w-100" src="<%= image %>" alt="Slide <%= index + 1 %>">
-                                        </a>
-                                      </div>
+                                        <div class="carousel-item <%= index === 0 ? 'active' : '' %>">
+                                            <a class="gallery_img" href="<%= image %>">
+                                                <img class="d-block w-100" src="<%= image %>" alt="Slide <%= index + 1 %>">
+                                            </a>
+                                        </div>
                                     <% }) %>
-                                </div>                                  
+                                </div>
                             </div>
                         </div>
                     </div>
+                
                     <div class="col-12 col-lg-5">
                         <div class="single_product_desc">
                             <!-- Product Meta Data -->
                             <div class="product-meta-data">
                                 <div class="line"></div>
-                                <p class="product-price"><%= variant ? variant.price: "1000" %></p>
+                                <div class="offer-container">
+                                    <span class="discount-rate">-49%</span>
+                                    <span class="product-price"><%= variant ? variant.price : '1000' %></span>
+                                    <span class="mrp">MRP:<s>₹7000</s></span>
+                                </div>
                                 <a href="/product-details">
                                     <h6><%= product.name %></h6>
                                 </a>
@@ -165,14 +167,28 @@
                                         <a href="#">Write A Review</a>
                                     </div>
                                 </div>
-                                <!-- Avaiable -->
-                                <p class="avaibility"><i class="fa fa-circle"></i><%= variant && variant.stock > 0 ? 'In Stock': 'Out of Stock' %> </p>
+                                <!-- Availability -->
+                                <p class="avaibility"><i class="fa fa-circle"></i><%= variant && variant.stock > 0 ? 'In Stock' : 'Out of Stock' %></p>
                             </div>
-
+                
                             <div class="short_overview my-5">
                                 <p><%= product.description %></p>
                             </div>
-
+                
+                            <fieldset class="brand">
+                                <label for="variant" class="body-title mb-10">Occasions<span class="tf-color-1">*</span></label>
+                                <div class="select">
+                                    <select id="variant" name="variant" required="true">
+                                        <% variants.forEach(variant => { %>
+                                            <option value="<%= variant._id %>"><%= variant.name %> - <%= variant.liter %></option>
+                                        <% }); %>
+                                    </select>
+                                </div>
+                            </fieldset>
+                        </div>
+                    </div>
+                </div>
+                
                             <!-- Add to Cart Form -->
                             <form class="cart clearfix" method="post">
                                 <div class="cart-btn d-flex mb-50">

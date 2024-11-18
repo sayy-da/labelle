@@ -353,19 +353,37 @@ exports.gethome = async (req, res) => {
 
 exports.showProducts = async (req, res) => {
   const user = req.session.user || null;
-  const productId = req.params.productId;
+  const variantId = req.params.variantId; // Variant ID from URL
+  
   try {
-    const product = await Product.findOne({_id: productId});
-    const variant = await Variant.findOne({ productId: product._id })
-    console.log(variant);
+    // Find the variant and populate the product details
+    const variant = await Variant.findById(variantId).populate('productId');
+    console.log(variant.price,'dskmfomklmsld');
     
-    res.render('user/product-details', { product, variant, user,error:'' })
+    if (!variant) {
+      return res.render('user/home', {
+        error: 'Variant not found. Please check your selection.'
+      });
+    } 
+    
+    
+
+    // Extract the product details from the populated field
+    const product = variant.productId;
+    console.log(product,'dskmfomklmsld');
+    // Optionally, fetch all other variants for the same product
+    const variants = await Variant.find({ productId: product._id });
+
+      
+    res.render('user/product-details', { product,variant, variants, user, error: '' });
   } catch (error) {
+    console.error('Error fetching product details:', error);
     res.render('user/home', {
       error: 'Server error. Please try again later.'
     });
   }
-}
+};
+
 
 
 exports.showShop = async (req, res) => {

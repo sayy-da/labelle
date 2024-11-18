@@ -234,7 +234,7 @@
                         <div class="col-12 col-sm-6 col-md-12 col-xl-6">
                             <div class="single-product-wrapper">
                                 <!-- Product Image -->
-                                 <a href="/product-details/<%= product._id %>">
+                                 <a href="/product-details/<%=product.defaultVariant ? product.defaultVariant._id:'0' %>">
                                 <div class="product-img">
                                     <img src="<%=product.images[0]%>" alt="">
                                     <!-- Hover Thumb -->
@@ -247,8 +247,8 @@
                                     <div class="product-meta-data">
                                         <div class="line"></div>
                                         <p class="product-price"><%=product.defaultVariant ? product.defaultVariant.price: '1000'%></p>
-                                        <a href="/product-details/<%= product._id %>">
-                                            <h6><%=product.name%></h6>
+                                        <a href="/product-details/<%= product._id %><%=product.defaultVariant ? product.defaultVariant._id:'0' %>">
+                                            <h6><%= product.name %></h6>
                                         </a>
                                     </div>
                                     <!-- Ratings & Cart -->

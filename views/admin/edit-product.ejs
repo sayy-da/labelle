@@ -764,208 +764,109 @@
                                 </div>
                                 <!-- form-add-product -->
                                   <!-- form-add-product -->
-                                  <form class="tf-section-2 form-add-product" action="/admin/edit-product/<%= id %>" method="POST"
-                                  enctype="multipart/form-data">
+                                  <form class="tf-section-2 form-add-product" action="/admin/edit-product/<%= id %>" method="POST" enctype="multipart/form-data">
                                     <input type="hidden" name="id" value="<%= id %>">
-                                  <div class="wg-box">
+                                    <div class="wg-box">
                                       <fieldset class="name">
-                                          <div class="body-title mb-10">Product name <span class="tf-color-1">*</span>
-                                          </div>
-                                          <input class="mb-10" type="text" value="<%= name %>"
-                                              name="name" id="name" >
-                                          <div class="text-tiny">Do not exceed 20 characters when entering the product
-                                              name.</div>
+                                        <div class="body-title mb-10">Product name <span class="tf-color-1">*</span></div>
+                                        <input class="mb-10" type="text" name="name" value="<%= name %>" id="name" required>
+                                        <div class="text-tiny">Do not exceed 20 characters when entering the product name.</div>
                                       </fieldset>
+                                  
                                       <div class="gap22 cols">
                                         <fieldset class="category">
-                                            <label for="fragranceType" class="body-title mb-10">
-                                                Fragrance Type <span class="tf-color-1">*</span>
-                                            </label>
-                                            <div class="select">
-                                                <select name="fragranceType" id="fragranceType">
-                                                    <!-- The selected fragrance type value can be passed in case of an existing selection -->
-                                                    <option value="<%= fragranceType %>" selected><%= fragranceType %></option>
-                                                    
-                                                    <!-- Iterate over the fragrances array and populate the options dynamically -->
-                                                    <% fragrances.forEach(fragrance => { %>
-                                                        <option value="<%= fragrance.name %>"><%= fragrance.name %></option>
-                                                    <% }); %>
-                                                </select>
-                                            </div>
+                                          <label for="fragranceType" class="body-title mb-10">
+                                            Fragrance Type <span class="tf-color-1">*</span>
+                                          </label>
+                                          <div class="select">
+                                            <select name="fragranceType" id="fragranceType" required>
+                                              <option value="<%= fragranceType %>" selected><%= fragranceType %></option>
+                                              <% fragrances.forEach(fragrance => { %>
+                                                <% if (fragrance.name !== fragranceType) { %>
+                                                  <option value="<%= fragrance.name %>"><%= fragrance.name %></option>
+                                                <% } %>
+                                              <% }); %>
+                                            </select>
+                                          </div>
                                         </fieldset>
-                                        
-
-                                         <fieldset class="category">
-                                            <fieldset class="male">
-                                                <label for="gender" class="body-title mb-10">Gender<span class="tf-color-1">*</span></label>
-                                                <div class="select">
-                                                    <select id="gender" name="gender" >
-                                                        <!-- Use the 'selected' attribute to pre-select a gender if needed -->
-                                                        <option value="Male" <%= gender === 'Male' ? 'selected' : '' %>>Male</option>
-                                                        <option value="Female" <%= gender === 'Female' ? 'selected' : '' %>>Female</option>
-                                                        <option value="Other" <%= gender === 'Other' ? 'selected' : '' %>>Other</option>
-                                                    </select>
-                                                </div>
-                                            </fieldset>
-                                            
+                                  
+                                        <fieldset class="category">
+                                          <label for="gender" class="body-title mb-10">Gender<span class="tf-color-1">*</span></label>
+                                          <div class="select">
+                                            <select id="gender" name="gender" required>
+                                              <option value="Male" <%= gender === 'Male' ? 'selected' : '' %>>Male</option>
+                                              <option value="Female" <%= gender === 'Female' ? 'selected' : '' %>>Female</option>
+                                              <option value="Other" <%= gender === 'Other' ? 'selected' : '' %>>Other</option>
+                                            </select>
+                                          </div>
+                                        </fieldset>
                                       </div>
+                                  
                                       <fieldset class="category">
                                         <label for="occasions" class="body-title mb-10">
-                                            Occasion <span class="tf-color-1">*</span>
+                                          Occasion <span class="tf-color-1">*</span>
                                         </label>
                                         <div class="select">
-                                            <select name="occasions" id="occasions" >
-                                                <!-- The selected fragrance type value can be passed in case of an existing selection -->
-                                                <option value="<%= occasions %>" selected><%= occasions %></option>
-                                                
-                                                <!-- Iterate over the fragrances array and populate the options dynamically -->
-                                                <% occasiones.forEach(occasion => { %>
-                                                    <option value="<%= occasion.name %>"><%= occasion.name %></option>
-                                                <% }); %>
-                                            </select>
+                                          <select name="occasions" id="occasions" required>
+                                            <option value="<%= occasions %>" selected><%= occasions %></option>
+                                            <% occasiones.forEach(occasion => { %>
+                                              <% if (occasion.name !== occasions) { %>
+                                                <option value="<%= occasion.name %>"><%= occasion.name %></option>
+                                              <% } %>
+                                            <% }); %>
+                                          </select>
                                         </div>
-                                    </fieldset>
-                                    
-                                    
+                                      </fieldset>
+                                  
                                       <fieldset class="description">
-                                          <div class="body-title mb-10">Description <span class="tf-color-1">*</span>
-                                          </div>
-                                          <textarea class="mb-10" id="description" name="description"
-                                              tabindex="0"><%= description %></textarea>
-                                          <div class="text-tiny">Do not exceed 100 characters when entering the
-                                              product name.</div>
+                                        <div class="body-title mb-10">Description <span class="tf-color-1">*</span></div>
+                                        <textarea class="mb-10" id="description" name="description" required><%= description %></textarea>
+                                        <div class="text-tiny">Do not exceed 100 characters when entering the product description.</div>
                                       </fieldset>
-                                  </div>
-                                  <div class="wg-box">
+                                    </div>
+                                  
+                                    <!-- Image upload section -->
+                                    <div class="wg-box">
                                       <fieldset>
-                                          <div class="body-title mb-10">Upload images</div>
-                                          <div class="upload-image mb-16">
-                                              <div class="form-group">
-                                                  <!-- Image 1 -->
-                                                  <div class="upload-column d-flex">
-                                                    <label for="image1">
-                                                        <span class="icon">📤</span><br>
-                                                        <span class="text">Image 1 (click to upload)</span>
-                                                        <input type="file" name="images" id="image1" accept="image/*" onchange="previewImage(event, 'image1')">
-                                                    </label>
-                                                    <img class="image-size" id="preview1" src="<%= images[0] %>" alt="image1">
-                                                </div>
-                                                
-                                                <!-- Image 2 -->
-                                                <div class="upload-column d-flex">
-                                                    <label for="image2">
-                                                        <span class="icon">📤</span><br>
-                                                        <span class="text">Image 2 (click to upload)</span>
-                                                        <input type="file" name="images" id="image2" accept="image/*" onchange="previewImage(event, 'image2')">
-                                                    </label>
-                                                    <img class="image-size" id="preview2" src="<%= images[1] %>" alt="image2">
-                                                </div>
-                                                
-                                                <!-- Image 3 -->
-                                                <div class="upload-column d-flex">
-                                                    <label for="image3">
-                                                        <span class="icon">📤</span><br>
-                                                        <span class="text">Image 3 (click to upload)</span>
-                                                        <input type="file" name="images" id="image3" accept="image/*" onchange="previewImage(event, 'image3')">
-                                                    </label>
-                                                    <img class="image-size" id="preview3" src="<%= images[2] %>" alt="image3">
-                                                </div>
-                                                
-                                              
-                                              <!-- Modal for Image Cropping (for any of the images) -->
-                                              <!-- <div id="cropperModal">
-                                                  <div class="modal-content"> -->
-                                                      <!-- Image container -->
-                                                      <!-- <div class="image-container">
-                                                          <img id="imageToCrop" src="" alt="Image to Crop">
-                                                      </div> -->
-                                                      
-                                                      <!-- Action buttons -->
-                                                      <!-- <div class="button-container">
-                                                          <button id="cropButton">Crop</button>
-                                                          <button id="closeModalButton">Close</button>
-                                                      </div> -->
-                                                  <!-- </div> -->
+                                        <div class="body-title mb-10">Upload images</div>
+                                        <div class="upload-image mb-16">
+                                          <div class="form-group">
+                                            <% for(let i = 0; i < 3; i++) { %>
+                                              <div class="upload-column d-flex">
+                                                <label for="image<%= i+1 %>">
+                                                  <span class="icon">📤</span><br>
+                                                  <span class="text">Image <%= i+1 %> (click to upload)</span>
+                                                  <input type="file" name="images" id="image<%= i+1 %>" accept="image/*" onchange="previewImage(event, 'image<%= i+1 %>')">
+                                                </label>
+                                                <img class="image-size" id="preview<%= i+1 %>" src="<%= images[i] || '' %>" alt="image<%= i+1 %>">
                                               </div>
-                                              <!-- <script>
-                                                  let cropper; // To store the Cropper.js instance
-                                                  let currentImageId; // To keep track of which image is being cropped
-
-                                                  // Function to preview and crop the image
-                                                  function previewImage(event, imageId) {
-                                                      currentImageId = imageId; // Set the current image id
-
-                                                      var input = event.target;
-                                                      var file = input.files[0];
-                                                      var reader = new FileReader();
-
-                                                      reader.onload = function (e) {
-                                                          var imgElement = document.getElementById('imageToCrop');
-                                                          imgElement.src = e.target.result;
-
-                                                          // Show modal for cropping
-                                                          document.getElementById('cropperModal').style.display = 'flex';
-
-                                                          // Initialize the cropper instance on the selected image
-                                                          if (cropper) {
-                                                              cropper.destroy(); // Destroy the previous cropper instance
-                                                          }
-                                                          cropper = new Cropper(imgElement, {
-                                                              aspectRatio: 1,
-                                                              viewMode: 1,
-                                                              autoCropArea: 0.65
-                                                          });
-                                                      };
-
-                                                      reader.readAsDataURL(file);
-                                                  }
-
-                                                  // Crop and save functionality
-                                                  document.getElementById('cropButton').addEventListener('click', function () {
-                                                      var croppedCanvas = cropper.getCroppedCanvas();
-                                                      var croppedImage = croppedCanvas.toDataURL();
-
-                                                      // Store the cropped image in a hidden input or handle it as needed
-                                                      var inputField = document.createElement('input');
-                                                      inputField.type = 'hidden';
-                                                      inputField.name = 'croppedImages[]';  // For multiple images, use an array name
-                                                      inputField.value = croppedImage;
-                                                      document.body.appendChild(inputField); // Append hidden input to form or body
-
-                                                      // Optionally, display cropped image as a preview or elsewhere
-                                                      console.log(croppedImage); // You can use this data URL for uploading or previewing
-
-                                                      // Close the modal after cropping
-                                                      document.getElementById('cropperModal').style.display = 'none';
-                                                      cropper.destroy();
-                                                  });
-
-                                                  // Close modal without saving
-                                                  document.getElementById('closeModalButton').addEventListener('click', function () {
-                                                      document.getElementById('cropperModal').style.display = 'none';
-                                                      cropper.destroy();
-                                                  });
-
-                                              </script> -->
+                                            <% } %>
                                           </div>
-                                          <div class="body-text">You need to add at least 3 images. Pay attention to
-                                              the quality of the pictures you add, comply with the background color
-                                              standards. Pictures must be in certain dimensions. Notice that the
-                                              product shows all the details</d>
-                                              <fieldset class="name">
-                                                  <div class="body-title mb-10">Product date</div>
-                                                  <div class="select">
-                                                       <input type="date" name="date">
-                                                  </div>
-                                              </fieldset>
-                                          </div>
-                                          <div class="cols gap10">
-                                              <button class="tf-button w-full" type="submit">Edit product</button>
-                                            <!-- <button class="tf-button style-1 w-full" type="submit">Save product</button> -->
-                                          </div>
+                                        </div>
                                       </fieldset>
-                                  </div>
-                              </form>
+                                    </div>
+                                  
+                                    <div class="cols gap10">
+                                      <button class="tf-button w-full" type="submit">Edit product</button>
+                                    </div>
+                                  </form>
+                                  
+                                  <script>
+                                  function previewImage(event, imageId) {
+                                    const input = event.target;
+                                    const preview = document.getElementById('preview' + imageId.slice(-1));
+                                    
+                                    if (input.files && input.files[0]) {
+                                      const reader = new FileReader();
+                                      
+                                      reader.onload = function(e) {
+                                        preview.src = e.target.result;
+                                      };
+                                      
+                                      reader.readAsDataURL(input.files[0]);
+                                    }
+                                  }
+                                  </script>
                               <!-- /form-add-product -->
                             </div>
                             <!-- /main-content-wrap -->

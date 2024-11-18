@@ -1383,6 +1383,29 @@ img {
     border-radius: 0;
     background-color: #f5f7fa; }
 
+    .offer-container {
+      font-family: Arial, sans-serif; /* Font style */
+      display: flex;
+      align-items: center;
+      gap: 10px; /* Space between elements */
+    }
+    
+    .discount-rate {
+      background-color: #fbb710; /* Highlight background */
+      color: white; /* Text color */
+      padding: 5px 10px; /* Padding for the discount tag */
+      border-radius: 5px; /* Rounded corners */
+      font-size: 14px; /* Font size */
+      font-weight: bold; /* Bold text */
+    }
+    
+  
+    
+    .mrp {
+      font-size: 11px; /* Smaller font for MRP */
+      color: #888; /* Gray color for MRP */
+    }
+    
 /* ##### The End ##### */
 
 /*# sourceMappingURL=core-style.css.map */
