@@ -830,6 +830,7 @@ img {
           background-size: cover;
           border: 2px solid transparent;
           cursor: pointer; }
+          
           @media only screen and (min-width: 992px) and (max-width: 1199px) {
             .main-content-wrapper .single-product-area .single_product_thumb .carousel-indicators li {
               height: 80px; } }
@@ -843,6 +844,15 @@ img {
             border: 2px solid #fbb710; }
       .main-content-wrapper .single-product-area .single_product_thumb .carousel-item a {
         cursor: zoom-in; }
+        
+        .main-content-wrapper .single-product-area .single_product_thumb .carousel-inner .carousel-item img {
+          width: 400px;  /* Set to a specific width */
+          height: 400px; /* Set to a specific height */
+          object-fit: cover; /* Ensures aspect ratio is maintained */
+      }
+      
+
+
     .main-content-wrapper .single-product-area .single_product_desc {
       position: relative;
       z-index: 1; }
@@ -1139,11 +1149,19 @@ img {
     border-bottom-right-radius: 0; }
 
 /* :: 8.0 Footer Area CSS */
+
+
+.container-fluid {
+  padding-left: 0px;
+  padding-right: 0px;
+}
+
 .footer_area {
+  width: 100%;
   position: relative;
   z-index: 1;
   background-color: #252525;
-  padding: 80px 0; }
+  padding: 80px 170px; }
   .footer_area .single_widget_area .copywrite {
     font-size: 12px;
     color: rgba(255, 255, 255, 0.4);

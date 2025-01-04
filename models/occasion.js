@@ -2,7 +2,8 @@ const mongoose = require('mongoose');
 
 const occasionSchema = new mongoose.Schema({
   name: {type: String,required: true,unique:true,trim:true},
-  createdAt:{type:Date,default:Date.now}
+  createdAt:{type:Date,default:Date.now},
+  offer:{type: Number,default:0}
 });
  
 occasionSchema.index({name:1},{unique:true,collation:{locale:'en',strength:2}})

@@ -1,0 +1,415 @@
+/* General Styles */
+.customer-reviews {
+  margin-top: 50px;
+}
+
+/* Reviews Section */
+.reviews {
+  width: 600px;
+  margin: 0 auto; /* Centers the reviews section */
+}
+
+.customer-review {
+  border-bottom: 1px solid #ddd;
+  padding: 15px 0;
+}
+
+.reviewer-info {
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.rating-stars {
+  margin-right: 10px;
+}
+
+.fas {
+  color: #FFD700; /* Gold color for stars */
+}
+
+.reviewer-name {
+  font-weight: bold;
+}
+
+.verified-badge {
+  background-color: #28a745;
+  color: white;
+  font-size: 0.9em;
+  padding: 2px 5px;
+  margin-right: 10px;
+  border-radius: 5px;
+}
+
+.review-text {
+  font-size: 1em;
+  font-weight: normal;
+}
+
+/* Comments Section */
+.comments {
+  width: 100%;
+  margin-top: 20px;
+}
+
+.comment {
+  padding: 10px;
+  border-bottom: 1px solid #ddd;
+}
+
+.review-comment {
+  font-size: 1em;
+  line-height: 1.6;
+  color: #555;
+}
+
+/* Write Review Button */
+.write-review-btn {
+  display: flex;
+  display: inline-block;
+  background-color: #007bff;
+  color: white;
+  padding: 10px 20px;
+  text-align: center;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  margin-top: 20px;
+}
+
+.write-review-btn:hover {
+  background-color: #fbb710;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+.customer-reviews-section {
+  background-color: #fff;
+  padding: 2rem;
+  border-radius: 8px;
+  /* box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); */
+  width: 600px;
+  margin-top: -200px;
+}
+
+.customer-reviews-title {
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin-bottom: 1rem;
+}
+
+.customer-reviews-summary {
+  display: flex;
+  align-items: center;
+  margin-bottom: 1.5rem;
+}
+
+.rating-stars {
+  color: #ffd700;
+  font-size: 1.2rem;
+  margin-right: 0.5rem;
+}
+
+.review-count {
+  font-size: 0.9rem;
+  color: #666;
+}
+
+.rating-breakdown {
+  margin-bottom: 1.5rem;
+}
+
+.rating-bar {
+  display: flex;
+  align-items: center;
+  margin-bottom: 0.5rem;
+}
+
+.rating-percentage {
+  background-color: #ffd700;
+  height: 1.2rem;
+  border-radius: 4px;
+}
+
+.rating-percentage-text {
+  font-size: 0.8rem;
+  margin-left: 0.5rem;
+}
+
+.product-images {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.customer-reviews {
+
+  border-top: 1px solid #e0e0e0;
+  padding-top: 1.5rem;
+  width: 100%;
+ 
+}
+
+.customer-review {
+  margin-bottom: 1.5rem;
+}
+
+.reviewer-info {
+  display: flex;
+  align-items: center;
+  margin-bottom: 0.5rem;
+}
+
+.reviewer-name {
+  display: flex;
+  align-items: center;
+  font-weight: 600;
+}
+
+.verified-badge {
+  background-color: #1976d2;
+  color: #fff;
+  font-size: 0.7rem;
+  padding: 0.2rem 0.4rem;
+  border-radius: 4px;
+  margin-right: 0.5rem;
+}
+
+.review-text {
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+}
+
+.review-comment {
+  color: #666;
+}
+
+.write-review-btn {
+  display: block;
+  margin-left: auto;
+  background-color: #1976d2;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  padding: 0.8rem 1.5rem;
+  font-size: 0.9rem;
+  cursor: pointer;
+}
+
+
+        .d-flex {
+            display: flex;
+            align-items: center;
+        }
+
+        /* Style the carousel indicators container */
+        .carousel-indicators-container {
+            flex-shrink: 0;
+            /* Prevent the container from shrinking */
+            margin-right: 15px;
+            /* Space between image and indicators */
+        }
+
+        /* Style the carousel indicators */
+        .carousel-indicators {
+            list-style-type: none;
+            padding: 0;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            /* Vertical stacking of the indicators */
+        }
+
+        .carousel-indicators li {
+            width: 50px;
+            height: 50px;
+            margin-bottom: 10px;
+            background-size: cover;
+            background-position: center;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: opacity 0.3s ease;
+        }
+
+        .carousel-indicators li.active {
+            opacity: 0.7;
+            /* Make active indicator stand out */
+        }
+
+        /* Style for the product image carousel */
+        .single_product_thumb {
+            position: relative;
+            width: 100%;
+        }
+
+        .carousel-inner {
+            width: 100%;
+            max-height: 500px;
+            /* Adjust the max height to suit the design */
+        }
+
+        .carousel-item img {
+            width: 100%;
+            height: auto;
+            object-fit: cover;
+        }
+
+
+
+
+
+        #variant-boxes {
+            display: flex;
+            /* Makes the container a flexbox */
+            gap: 10px;
+            /* Adds space between the boxes */
+            flex-wrap: wrap;
+            /* Ensures the boxes wrap to the next line if they don’t fit */
+        }
+
+        .variant-box {
+            background-color: #fbb710;
+            /* Box color */
+            padding: 6px 8px;
+            /* Adds padding inside the box */
+            border-radius: 5px;
+            /* Optional: Adds rounded corners */
+            text-align: center;
+            /* Centers the text inside */
+            cursor: pointer;
+            /* Changes the cursor to a pointer */
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+            /* Optional: Adds a subtle shadow */
+            transition: transform 0.3s, box-shadow 0.3s;
+            /* Adds a smooth animation */
+            margin-bottom: 8px;
+        }
+
+        .variant-box.active {
+            border: 2px solid #000;
+            /* Highlight the active box */
+        }
+
+        .variant-box:hover {
+            transform: scale(1.05);
+            /* Slightly enlarges the box on hover */
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+            /* Enhances shadow on hover */
+        }
+
+        .variant-box a {
+            color: #fff;
+            /* Text color */
+            text-decoration: none;
+            /* Removes underline from links */
+            font-weight: bold;
+            /* Makes the text bold */
+        }
+
+        .carousel-item {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .zoom-container {
+            position: relative;
+            cursor: zoom-in;
+            overflow: hidden;
+        }
+
+        .zoom-container img {
+            transition: transform 0.3s ease;
+        }
+
+        .zoom-container:hover img {
+            transform: scale(1.5);
+        }
+
+        .magnifier {
+            position: absolute;
+            width: 100px;
+            height: 100px;
+            border: 2px solid rgba(255, 255, 255, 0.5);
+            border-radius: 50%;
+            pointer-events: none;
+            display: none;
+            background-repeat: no-repeat;
+            background-size: 400% 400%;
+        }
+
+
+
+
+
+
+
+        /* Flexbox Container for Image and Indicators */
+.d-flex {
+    display: flex;
+    align-items: flex-start;
+}
+
+/* Carousel Indicators Container (on the left side) */
+.carousel-indicators-container {
+    display: flex;
+    margin-top:200px ;
+    flex-direction: column;
+    justify-content: center;
+    margin-right: 20px;  /* Space between the indicator and image */
+}
+
+/* Styling for the carousel indicators */
+.carousel-indicators {
+    list-style-type: none;
+    padding: 0;
+    
+    margin-top: 200px;
+    display: block;
+    margin-bottom: 395px;
+    
+}
+
+.carousel-indicators li {
+    width: 60px;
+    height: 60px;
+    background-size: cover;
+    background-position: center;
+    cursor: pointer;
+    margin-bottom: 10px;
+   
+    border-radius: 5px;
+    border: 2px solid transparent;
+    transition: border 0.3s;
+}
+
+.carousel-indicators li:hover {
+    border: 2px solid #fbb710;  /* Highlight color on hover */
+}
+
+/* Product Image Container */
+.single_product_thumb {
+    flex-grow: 1;
+    max-width: 100%;
+    margin-left: 50px;
+    position: relative;
+}
+
+.single_product_thumb img {
+    max-width: 100%;
+    height: auto;
+    display: block;
+
+}

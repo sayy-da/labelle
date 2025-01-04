@@ -1,0 +1,716 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="description" content="">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <!-- The above 4 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+
+    <!-- Title  -->
+    <title>Labelle</title>
+    <style>
+        .coupon {
+            margin-top: 10px;
+            background-color: #fbf9f4;
+            border-radius: 10px;
+
+            width: 380px;
+            text-align: center;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            margin-right: 10px;
+        }
+
+        .coupon h2 {
+            color: #ffffff;
+            margin-bottom: 10px;
+        }
+
+        .coupon p {
+            color: #333;
+            margin-bottom: 20px;
+        }
+
+        #coupon-select {
+            padding: 10px;
+            width: 70%;
+            margin-bottom: 10px;
+            border-radius: 5px;
+            border: 1px solid #ffffff;
+            font-size: 5px;
+            /* Font size for the select dropdown */
+        }
+
+        .apply-btn {
+            padding: 10px 15px;
+            background-color: #fbb710;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .apply-btn:hover {
+            background-color: black;
+        }
+
+        /* Adjusting font size for option elements */
+        #coupon-select option {
+            font-size: 3px;
+            /* Adjust this value as needed */
+        }
+    </style>
+    <!-- Favicon  -->
+    <link rel="icon" href="img/core-img/favicon.ico">
+
+    <!-- Core Style CSS -->
+    <link rel="stylesheet" href="css/core-style.css">
+    <link rel="stylesheet" href="style.css">
+
+</head>
+
+<body>
+
+
+    <!-- ##### Main Content Wrapper Start ##### -->
+    <div class="main-content-wrapper d-flex clearfix">
+        <!-- Mobile Nav (max width 767px)-->
+        <div class="mobile-nav">
+            <!-- Navbar Brand -->
+            <div class="amado-navbar-brand">
+                <!-- <a href="/"><img src="img/core-img/logo.png" alt=""></a> -->
+            </div>
+            <!-- Navbar Toggler -->
+            <div class="amado-navbar-toggler">
+                <span></span><span></span><span></span>
+            </div>
+        </div>
+    
+        <!-- Header Area Start -->
+        <header class="header-area clearfix">
+            <!-- Close Icon -->
+            <div class="nav-close">
+                <i class="fa fa-close" aria-hidden="true"></i>
+            </div>
+            <!-- Logo -->
+            <div class="logo">
+                <a href="/"><img style="width: 700px !important; height: 150px;" src="img/core-img/logo.png" alt=""></a>
+            </div>
+            <!-- Amado Nav -->
+            <nav class="amado-nav">
+                <ul>
+                    <li><a href="/">Home</a></li>
+                    <li><a href="/shop">Shop</a></li>
+                    <li><a href="/cart">Cart</a></li>
+                </ul>
+            </nav>
+            <!-- Button Group -->
+            <div class="amado-btn-group mt-30 mb-100">
+                <a href="#" class="btn"></a>
+                <a href="/user-profile" class="btn amado-btn active">profile</a>
+            </div>
+            <!-- Cart Menu -->
+            <div class="cart-fav-search mb-100">
+                <a href="/wishlist" class="fav-nav"><img src="img/core-img/favorites.png" alt=""> Favourite</a>
+            </div>
+            <!-- Social Button -->
+            <div class="social-info d-flex justify-content-between">
+            </div>
+        </header>
+        <!-- Header Area End -->
+    
+        <!-- Cart Table Area -->
+        <div class="cart-table-area section-padding-100">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-12 col-lg-8">
+                        <div class="checkout_details_area mt-50 clearfix">
+                            <div class="cart-title">
+                                <h2>Checkout</h2>
+                            </div>
+                            <div class="row">
+                                <!-- Address Selection Dropdown -->
+                                <div class="col-12 mb-3">
+                                    <select id="selectAddress" name="selectAddress"
+                                        style="width: 100%; padding: 10px; margin-bottom: 20px;">
+                                        <option value="">Select Address</option>
+                                        <% addresses.forEach(function(address) { %>
+                                            <option value="<%= address._id %>">
+                                                <%= address.addressType %> - <%= address.name %>, <%= address.landmark %>,
+                                                <%= address.city %>, <%= address.state %> - <%= address.pincode %>
+                                            </option>
+                                        <% }); %>
+                                    </select>
+                                </div>
+                            </div>
+    
+                            <form id="addressForm">
+                                <div class="row">
+                                    <div class="col-12 mb-3">
+                                        <h6>Add New Address</h6>
+                                        <input class="form-control" type="text" name="addressType"
+                                            placeholder="Address Type eg. Home, Office" />
+                                    </div>
+                                    <div class="col-12 mb-3">
+                                        <input class="form-control" type="text" name="name" placeholder="Full Name" />
+                                    </div>
+                                    <div class="col-12 mb-3">
+                                        <input class="form-control" type="text" name="streetAddress"
+                                            placeholder="streetAddress" />
+                                    </div>
+                                    <div class="col-12 mb-3">
+                                        <input class="form-control" type="text" name="city" placeholder="City" />
+                                    </div>
+                                    <div class="col-md-6 mb-3">
+                                        <input class="form-control" type="text" name="landmark"
+                                            placeholder="Landmark" />
+                                    </div>
+                                    <div class="col-md-6 mb-3">
+                                        <input class="form-control" type="text" name="state" placeholder="State" />
+                                    </div>
+                                    <div class="col-md-6 mb-3">
+                                        <input class="form-control" type="text" name="pincode" placeholder="Pincode" />
+                                    </div>
+                                    <div class="col-md-6 mb-3">
+                                        <input class="form-control" type="tel" name="phone"
+                                            placeholder="Phone Number" />
+                                    </div>
+                                    <div class="col-12"
+                                        style="display: flex; justify-content: center; align-items: center;">
+                                        <button
+                                            style="border-radius: 8px; font-size: 13px; padding: 1px 10px; text-align: center;"
+                                            type="submit" class="btn amado-btn">Save Address</button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+    
+                    <div class="col-12 col-lg-4">
+                        <!-- Order Summary -->
+                        <div class="cart-summary"
+                            style="padding: 20px; border: 1px solid #ddd; border-radius: 8px; background-color: #f9f9f9; margin: auto; margin-top: 40px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);">
+                            <h5 style="text-align: center; font-size: 18px; font-weight: bold; margin-bottom: 20px; color: #333;">
+                                Order Summary</h5>
+                            <table style="width: 100%; border-collapse: collapse; text-align: left; font-size: 14px; color: #555;">
+                                <thead>
+                                    <tr style="border-bottom: 2px solid #ddd;">
+                                        <th style="padding: 10px 5px;">Product</th>
+                                        <th style="padding: 10px 5px; text-align: center;">Quantity</th>
+                                        <th style="padding: 10px 5px; text-align: right;">Price</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <% cart.items.forEach(item=> { %>
+                                        <tr style="border-bottom: 1px solid #eee;">
+                                            <td style="padding: 10px 5px;">
+                                                <%= item.productId.name %>
+                                            </td>
+                                            <td style="padding: 10px 5px; text-align: center;">
+                                                <%= item.quantity %>
+                                            </td>
+                                            <% if(item.variantId.offer>=fragranceOffers[item.productId.fragranceType]){ %>
+                                                <td style="padding: 10px 5px; text-align: right;">₹<%= 
+                                                    (item.variantId.price-(item.variantId.price*item.variantId.offer/100))
+                                                    * item.quantity %>
+                                                </td>
+                                            <% }else{ %>
+                                                <td style="padding: 10px 5px; text-align: right;">₹<%= 
+                                                    (item.variantId.price-(item.variantId.price*fragranceOffers[item.productId.fragranceType]/100))
+                                                    * item.quantity %>
+                                                </td>
+                                            <% } %>
+                                        </tr>
+                                    <% }); %>
+                                </tbody>
+                            </table>
+                        </div>
+    
+                        <div class="coupon">
+                            <div class="coupon-content">
+                                <select id="coupon-select" onchange="updateCouponButton()">
+                                    <option value="">Choose a Coupon</option>
+                                    <% coupons.forEach(coupon=> { %>
+                                        <option value="<%= coupon.code %>">
+                                            <%= coupon.code %> - <%= coupon.discount %>% Off (Valid Until: <%= 
+                                                coupon.expireOn.toDateString() %>)
+                                        </option>
+                                    <% }) %>
+                                </select>
+                                <button class="apply-btn" id="coupon-button" onclick="applyOrCancelCoupon()">Apply
+                                    Coupon</button>
+                            </div>
+                        </div>
+    
+                        <!-- Cart Total -->
+                        <div class="cart-summary"
+                            style="padding: 20px; border: 1px solid #ddd; border-radius: 8px; background-color: #fff; margin: auto; margin-top: 20px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);">
+                            <h5 style="text-align: center; font-size: 18px; font-weight: bold; margin-bottom: 20px; color: #333;">
+                                Cart Total</h5>
+                            <ul class="summary-table"
+                                style="list-style: none; padding: 0; margin: 0; font-size: 16px; color: #555;">
+                                <li style="display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid #eee;">
+                                    <span>Subtotal:</span>
+                                    <p id="subtotall">₹<%= subtotal %></p>
+                                </li>
+                                <li style="display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid #eee;">
+                                    <span>Discount:</span> <span style="color: green; font-weight: bold;">0</span>
+                                </li>
+                                <li style="display: flex; justify-content: space-between; padding: 8px 0; font-weight: bold; font-size: 18px;">
+                                    <span>Total:</span> <span>₹<%= subtotal %></span>
+                                </li>
+                            </ul>
+    
+                            <!-- Payment Methods -->
+                            <div class="payment-method" style="margin-top: 20px;">
+                                <div class="custom-control custom-radio" style="margin-bottom: 10px;">
+                                    <input type="radio" id="cod" name="paymentMethod" value="cod"
+                                        class="custom-control-input" required>
+                                    <label class="custom-control-label" for="cod" style="font-size: 14px;">Cash on
+                                        Delivery</label>
+                                </div>
+                                <div class="custom-control custom-radio">
+                                    <input type="radio" id="razorpay" name="paymentMethod" value="razorpay"
+                                        class="custom-control-input">
+                                    <label class="custom-control-label" for="razorpay" style="font-size: 14px;">Online
+                                        Payment</label>
+                                </div>
+                                <div class="custom-control custom-radio">
+                                    <input type="radio" id="wallet" name="paymentMethod" value="wallet"
+                                        class="custom-control-input">
+                                    <label class="custom-control-label" for="wallet" style="font-size: 14px;">Using
+                                        Wallet(<%= wallet %>)</label>
+                                </div>
+                            </div>
+    
+                            <!-- Checkout Button -->
+                            <div class="cart-btn" style="margin-top: 20px; text-align: center;">
+                                <a href="#"><button id="proceedCheckout" class="btn amado-btn"
+                                        style="width: 100%; padding:1px 10px; font-size: 16px; border-radius: 8px;">Proceed
+                                        to Payment</button></a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <footer class="footer_area clearfix" style="padding: 0;">
+        <div class="container">
+            <div class="row align-items-center">
+                <!-- Single Widget Area -->
+                <div class="col-12 col-lg-4">
+                    <div class="single_widget_area">
+                        <!-- Logo -->
+                        <div class="footer-logo mr-50">
+                            <h4>labelle</h4>
+                            <a href="/"><img style="height: 250px; width: 400px; margin: 0px; padding: 0px;"
+                                    src="/img/core-img/logo2.png" alt=""></a>
+                        </div>
+                        <!-- Copywrite Text -->
+
+                    </div>
+                </div>
+                <!-- Single Widget Area -->
+                <div class="col-12 col-lg-8">
+                    <div class="single_widget_area">
+                        <!-- Footer Menu -->
+                        <div class="footer_menu">
+                            <nav class="navbar navbar-expand-lg justify-content-end">
+                                <button class="navbar-toggler" type="button" data-toggle="collapse"
+                                    data-target="#footerNavContent" aria-controls="footerNavContent"
+                                    aria-expanded="false" aria-label="Toggle navigation"><i
+                                        class="fa fa-bars"></i></button>
+                                <div class="collapse navbar-collapse" id="footerNavContent">
+                                    <ul class="navbar-nav ml-auto">
+                                        <li class="nav-item active">
+                                            <a class="nav-link" href="/">Home</a>
+                                        </li>
+                                        <li class="nav-item">
+                                            <a class="nav-link" href="/shop">Shop</a>
+                                        </li>
+                                        <li class="nav-item">
+                                            <a class="nav-link" href="/cart">Cart</a>
+                                        </li>
+
+                                    </ul>
+                                </div>
+                            </nav>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+    <!-- ##### Footer Area End ##### -->
+    <script>
+        let isCouponApplied = false;
+
+        function updateCouponButton() {
+            const couponCode = document.getElementById('coupon-select').value;
+            const couponButton = document.getElementById('coupon-button');
+            couponButton.innerText = couponCode && isCouponApplied ? 'Cancel Coupon' : 'Apply Coupon';
+        }
+
+        function applyOrCancelCoupon() {
+            const couponCode = document.getElementById('coupon-select').value;
+            if (!couponCode && !isCouponApplied) {
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Oops...',
+                    text: 'Please select a coupon',
+                    confirmButtonText: 'OK',
+                });
+                return;
+            }
+
+            if (isCouponApplied) {
+                cancelCoupon();
+
+            } else {
+
+                applyCoupon(couponCode);
+            }
+        }
+
+        function applyCoupon(couponCode) {
+            const subtotalElement = document.getElementById("subtotall");
+            const subtotal = parseFloat(subtotalElement.textContent.replace("₹", "").trim());
+
+            fetch('/apply-coupon', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ couponCode })
+            })
+                .then(response => response.json())
+
+                .then(data => {
+                    if (data.success) {
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Success!',
+                            text: 'Coupon applied successfully!',
+                            confirmButtonText: 'OK',
+                        });
+
+                        const discount = parseFloat(data.discount);
+                        document.querySelector('.summary-table li:nth-child(2) span:last-child').innerText = '₹' + discount;
+
+
+                        const total = subtotal - discount;
+                        document.querySelector('.summary-table li:nth-child(3) span:last-child').innerText = '₹' + total;
+
+                        isCouponApplied = true;
+                        updateCouponButton();
+                    } else {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error!',
+                            text: data.message,
+                            confirmButtonText: 'OK',
+                        });
+                    }
+                })
+                .catch(error => {
+                    console.error('Error applying coupon:', error);
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Oops...',
+                        text: 'There was an error applying the coupon.',
+                        confirmButtonText: 'OK',
+                    });
+                });
+        }
+
+        function cancelCoupon() {
+            fetch('/cancel-coupon', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({})
+            })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Success!',
+                            text: 'Coupon canceled successfully!',
+                            confirmButtonText: 'OK',
+                        });
+
+                        document.querySelector('.summary-table li:nth-child(2) span:last-child').innerText = '₹0';
+                        const subtotalElement = document.getElementById("subtotall");
+                        const subtotal = parseFloat(subtotalElement.textContent.replace("₹", "").trim());
+                        document.querySelector('.summary-table li:nth-child(3) span:last-child').innerText = '₹' + subtotal;
+
+                        document.getElementById('coupon-select').selectedIndex = 0;
+                        isCouponApplied = false;
+                        updateCouponButton();
+                    } else {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error!',
+                            text: data.message,
+                            confirmButtonText: 'OK',
+                        });
+                    }
+                })
+                .catch(error => {
+                    console.error('Error canceling coupon:', error);
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Oops...',
+                        text: 'There was an error canceling the coupon.',
+                        confirmButtonText: 'OK',
+                    });
+                });
+        }
+        function callRazorpayFunction(orderId, kid, ordderId) {
+            var options = {
+                key: kid,
+                amount: 1000 * 100,
+                currency: 'INR',
+                order_id: orderId,
+                handler: function (response) {
+
+                    window.location.href = `/success-order/${ordderId}`;
+                },
+                theme: {
+                    color: '#F37254',
+                },
+                modal: {
+                    escape: false,
+                    ondismiss: function () {
+                        window.location.href = `/failure-order/${ordderId}`;
+                    },
+                },
+            };
+
+
+            var rzp1 = new Razorpay(options);
+
+            rzp1.open();
+
+            rzp1.on('payment.failed', function (response) {
+                console.error('Payment Failed:', response.error);
+                Swal.fire({
+                    title: 'Payment Failed!',
+                    text: response.error.description || 'An unexpected error occurred.',
+                    icon: 'error',
+                    confirmButtonText: 'OK',
+                });
+            });
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const addressForm = document.getElementById('addressForm');
+
+            const validateField = {
+                name: (value) => /^[a-zA-Z\s]{2,50}$/.test(value),
+                addressType: (value) => /^[a-zA-Z\s]{2,20}$/.test(value),
+                streetAddress: (value) => value.trim().length >= 5 && value.trim().length <= 100,
+                city: (value) => /^[a-zA-Z\s]{2,50}$/.test(value),
+                landmark: (value) => (value.trim().length >= 2 && value.trim().length <= 50),
+                state: (value) => /^[a-zA-Z\s]{2,50}$/.test(value),
+                pincode: (value) => /^\d{6}$/.test(value),
+                phone: (value) => /^[6-9]\d{9}$/.test(value)
+            };
+
+            const showError = (input, message) => {
+                const existingError = input.parentElement.querySelector('.error-message');
+                if (existingError) {
+                    existingError.remove();
+                }
+
+                const errorMsg = document.createElement('div');
+                errorMsg.className = 'error-message text-danger small mt-1';
+                errorMsg.textContent = message;
+                input.parentElement.appendChild(errorMsg);
+                input.classList.add('is-invalid');
+            };
+
+            const clearError = (input) => {
+                const existingError = input.parentElement.querySelector('.error-message');
+                if (existingError) {
+                    existingError.remove();
+                }
+                input.classList.remove('is-invalid');
+            };
+
+            addressForm.querySelectorAll('input').forEach(input => {
+                input.addEventListener('blur', (e) => {
+                    const fieldName = e.target.name;
+                    const value = e.target.value.trim();
+
+
+
+                    if (!validateField[fieldName](value)) {
+                        switch (fieldName) {
+                            case 'name':
+                                showError(e.target, 'Please enter a valid name (2-50 letters)');
+                                break;
+                            case 'addressType':
+                                showError(e.target, 'Please enter a valid address type (2-20 letters)');
+                                break;
+                            case 'streetAddress':
+                                showError(e.target, 'Street address must be 5-100 characters');
+                                break;
+                            case 'city':
+                                showError(e.target, 'Please enter a valid city name');
+                                break;
+                            case 'landmark':
+                                showError(e.target, 'Landmark must be 2-50 characters or leave it empty');
+                                break;
+                            case 'state':
+                                showError(e.target, 'Please enter a valid state name');
+                                break;
+                            case 'pincode':
+                                showError(e.target, 'Pincode must be 6 digits');
+                                break;
+                            case 'phone':
+                                showError(e.target, 'Phone number must be 10 digits starting with 6-9');
+                                break;
+                        }
+                    } else {
+                        clearError(e.target);
+                    }
+                });
+            });
+
+            addressForm.addEventListener('submit', async (e) => {
+                e.preventDefault();
+
+                let isValid = true;
+                const formData = new FormData(e.target);
+                const data = Object.fromEntries(formData);
+
+                Object.keys(validateField).forEach(field => {
+                    const input = addressForm.querySelector(`[name="${field}"]`);
+                    const value = data[field]?.trim() || '';
+
+
+
+                    if (!validateField[field](value)) {
+                        showError(input, 'Please check this field');
+                        isValid = false;
+                    }
+                });
+
+                if (isValid) {
+                    try {
+                        const response = await fetch('/user-address-add', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json'
+                            },
+                            body: JSON.stringify(data)
+                        });
+
+                        const result = await response.json();
+
+                        if (result.success) {
+                            Swal.fire({
+                                title: 'Success!',
+                                text: result.message,
+                                icon: 'success',
+                                confirmButtonText: 'OK'
+                            }).then(() => {
+                                window.location.reload();
+                            });
+                        } else {
+                            Swal.fire({
+                                title: 'Error!',
+                                text: result.message,
+                                icon: 'error',
+                                confirmButtonText: 'OK'
+                            });
+                        }
+                    } catch (error) {
+                        console.error('Error:', error);
+                        Swal.fire({
+                            title: 'Error!',
+                            text: 'An unexpected error occurred',
+                            icon: 'error',
+                            confirmButtonText: 'OK'
+                        });
+                    }
+                }
+            });
+        });
+
+        document.getElementById('proceedCheckout').addEventListener('click', async () => {
+            const selectedAddress = document.getElementById('selectAddress');
+            const selectedPayment = document.querySelector('input[name="paymentMethod"]:checked');
+
+            if (!selectedAddress.value || !selectedPayment) {
+                Swal.fire({
+                    title: 'Warning!',
+                    text: 'Please select an address and payment method',
+                    icon: 'warning',
+                    confirmButtonText: 'OK'
+                });
+                return;
+            }
+
+            try {
+                const response = await fetch('/process-checkout', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        addressId: selectedAddress.value,
+                        paymentMethod: selectedPayment.value
+                    })
+                });
+
+                const result = await response.json();
+
+                if (response.ok) {
+
+                    if (result.paymentMethod === 'razorpay') {
+
+                        callRazorpayFunction(result.razorpayOrderId, result.razorpayKey, result.orderId);
+                    } else {
+                        window.location.href = `/success-order/${result.orderId}`;
+                    }
+                } else {
+                    Swal.fire({
+                        title: 'Error!',
+                        text: result.error,
+                        icon: 'error',
+                        confirmButtonText: 'OK'
+                    });
+                }
+            } catch (error) {
+                console.error('Checkout error:', error);
+                Swal.fire({
+                    title: 'Error!',
+                    text: 'An unexpected error occurred during checkout',
+                    icon: 'error',
+                    confirmButtonText: 'OK'
+                });
+            }
+        });
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+    <!-- ##### jQuery (Necessary for All JavaScript Plugins) ##### -->
+    <script src="/js/jquery/jquery-2.2.4.min.js"></script>
+    <!-- Popper js -->
+    <script src="/js/popper.min.js"></script>
+    <!-- Bootstrap js -->
+    <script src="/js/bootstrap.min.js"></script>
+    <!-- Plugins js -->
+    <script src="/js/plugins.js"></script>
+    <!-- Active js -->
+    <script src="/js/active.js"></script>
+
+</body>
+
+
+
+
+</html>

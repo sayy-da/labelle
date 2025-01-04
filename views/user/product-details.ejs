@@ -9,15 +9,157 @@
     <!-- The above 4 meta tags *must* come first in the head; any other head content must come *after* these tags -->
 
     <!-- Title  -->
-    <title>Product Details</title>
+    <title>Labelle</title>
 
     <!-- Favicon  -->
-    <link rel="icon" href="/img/core-img/favicon.ico">
+    <link rel="icon" href="img/core-img/favicon.ico">
+
 
     <!-- Core Style CSS -->
     <link rel="stylesheet" href="/css/core-style.css">
     <link rel="stylesheet" href="/style.css">
+    <style>
+        /* General Container Styling */
+        #new-arrivals {
+            padding: 2rem 0;
+        }
 
+        #new-arrivals h6 {
+            font-size: 1.25rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            color: #333;
+            margin-bottom: 1rem;
+        }
+
+        /* Product Card Styling */
+        .single-product-wrapper {
+            width: 95%;
+            max-width: 270px;
+            margin: auto;
+            background-color: #fff;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            overflow: hidden;
+            transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+        }
+
+        .single-product-wrapper:hover {
+            transform: scale(1.05);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        /* Product Image Styling */
+        .product-img {
+            position: relative;
+            overflow: hidden;
+            height: 200px;
+            /* Fixed height for consistency */
+        }
+
+        .product-img img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            /* Ensures images fit well inside the container */
+        }
+
+        .product-img .hover-img {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .product-img:hover .hover-img {
+            opacity: 1;
+        }
+
+        /* Product Description Styling */
+        .product-description {
+            padding: 1rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            text-align: center;
+        }
+
+        .product-title {
+            font-size: 1rem;
+            font-weight: 500;
+            color: #222;
+            margin-bottom: 0.5rem;
+        }
+
+        .product-price {
+            font-size: 1rem;
+            font-weight: 600;
+            color: #e74c3c;
+            margin-bottom: 0.5rem;
+        }
+
+        .rating {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 0.2rem;
+            font-size: 0.9rem;
+        }
+
+        .rating .text-warning {
+            font-size: 1rem;
+        }
+
+        .rating .text-muted {
+            font-size: 0.8rem;
+        }
+
+        /* Buttons */
+
+
+        .btn-primary {
+            font-size: 0.85rem;
+            padding: 0.5rem 0.75rem;
+            border-radius: 20px;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+            background-color: #3498db;
+            border: none;
+            color: #fff;
+        }
+
+        .btn-primary:hover {
+            background-color: #2980b9;
+            transform: translateY(-2px);
+        }
+
+        /* Responsive Adjustments */
+        @media (max-width: 768px) {
+            .single-product-wrapper {
+                max-width: 200px;
+            }
+
+            .product-img {
+                height: 150px;
+            }
+
+            .product-title {
+                font-size: 0.9rem;
+            }
+
+            .product-price {
+                font-size: 0.85rem;
+            }
+
+            .btn {
+                font-size: 0.75rem;
+                padding: 0.4rem 0.6rem;
+            }
+        }
+    </style>
 </head>
 
 <body>
@@ -41,14 +183,14 @@
     </div>
     <!-- Search Wrapper Area End -->
 
+
     <!-- ##### Main Content Wrapper Start ##### -->
     <div class="main-content-wrapper d-flex clearfix">
-
         <!-- Mobile Nav (max width 767px)-->
         <div class="mobile-nav">
             <!-- Navbar Brand -->
             <div class="amado-navbar-brand">
-                <a href="/home"><img src="img/core-img/logo.png" alt=""></a>
+                <a href="/"><img src="/img/core-img/logo.png" alt=""></a>
             </div>
             <!-- Navbar Toggler -->
             <div class="amado-navbar-toggler">
@@ -64,155 +206,277 @@
             </div>
             <!-- Logo -->
             <div class="logo">
-                <a href="/home"><img src="img/core-img/logo.png" alt=""></a>
+                <a href="/"><img style="width: 700px !important; height: 150px;" src="/img/core-img/logo.png"
+                        alt=""></a>
             </div>
             <!-- Amado Nav -->
             <nav class="amado-nav">
                 <ul>
                     <li><a href="/">Home</a></li>
-                    <li><a href="/shop:<%=product%>">Shop</a></li>
-                    <li><a href="cart.html">Cart</a></li>
-                  
+                    <li><a href="/shop">Shop</a></li>
+                    <li><a href="/cart">Cart</a></li>
                 </ul>
             </nav>
             <!-- Button Group -->
             <div class="amado-btn-group mt-30 mb-100">
                 <% if (user) { %>
-                    <!-- Show the logout button if the user is logged in -->
-                    <button  class="btn amado-btn mb-15" onclick="window.location.href='/logout'">Logout</button>
-                  <% } else { %>
-                    <!-- Show the login button if the user is not logged in -->
-                    <button  class="btn amado-btn mb-15" onclick="window.location.href='/login'">Login</button>
-                  <% } %>
-                
 
-             
-                <a href="#" class="btn amado-btn active">New this week</a>
+                    <button class="btn amado-btn mb-15" onclick="window.location.href='/logout'">Logout</button>
+                    <% } else { %>
+
+                        <button class="btn amado-btn mb-15" onclick="window.location.href='/login'">Login</button>
+                        <% } %>
+
+                            <a href="/user-profile" class="btn amado-btn active">Profile</a>
             </div>
             <!-- Cart Menu -->
             <div class="cart-fav-search mb-100">
-                <a href="cart.html" class="cart-nav"><img src="img/core-img/cart.png" alt=""> Cart <span>(0)</span></a>
-                <a href="#" class="fav-nav"><img src="img/core-img/favorites.png" alt=""> Favourite</a>
-                <a href="#" class="search-nav"><img src="img/core-img/search.png" alt=""> Search</a>
+
+                <a href="/wishlist" class="fav-nav"><img src="/img/core-img/favorites.png" alt=""> Favourite</a>
             </div>
             <!-- Social Button -->
-            <div class="social-info d-flex justify-content-between">
-                <a href="#"><i class="fa fa-pinterest" aria-hidden="true"></i></a>
-                <a href="#"><i class="fa fa-instagram" aria-hidden="true"></i></a>
-                <a href="#"><i class="fa fa-facebook" aria-hidden="true"></i></a>
-                <a href="#"><i class="fa fa-twitter" aria-hidden="true"></i></a>
-            </div>
         </header>
         <!-- Header Area End -->
 
         <!-- Product Details Area Start -->
         <div class="single-product-area section-padding-100 clearfix">
             <div class="container-fluid">
+                <!-- Breadcrumb Navigation -->
                 <div class="row">
                     <div class="col-12">
                         <nav aria-label="breadcrumb">
                             <ol class="breadcrumb mt-50">
                                 <li class="breadcrumb-item"><a href="/">Home</a></li>
-                                <li class="breadcrumb-item active" aria-current="page"><%= product.name %></li>
+                                <li class="breadcrumb-item active" aria-current="page">
+                                    <%= product.name %>
+                                </li>
                             </ol>
                         </nav>
                     </div>
                 </div>
-                
+
+                <!-- Product Details -->
                 <div class="row">
+                    <!-- Product Images -->
                     <div class="col-12 col-lg-7">
-                        <div class="single_product_thumb">
-                            <div id="product_details_slider" class="carousel slide" data-ride="carousel">
-                                <ol class="carousel-indicators">
-                                    <% product.images.forEach((image, index) => { %>
-                                        <li class="<%= index === 0 ? 'active' : '' %>" data-target="#product_details_slider" data-slide-to="<%= index %>" style="background-image: url('<%= image %>');"></li>
-                                    <% }) %>
+                        <div class="d-flex">
+                            <!-- Carousel Indicators (on the left side) -->
+                            <div class="carousel-indicators-container">
+                                <ol class="carousel-indicators" style="margin-bottom: 300px;">
+                                    <% product.images.forEach((image, index)=> { %>
+                                        <li class="<%= index === 0 ? 'active' : '' %>"
+                                            style="background-image: url('<%= image %>');">
+                                        </li>
+                                        <% }) %>
                                 </ol>
-                                <div class="carousel-inner">
-                                    <% product.images.forEach((image, index) => { %>
-                                        <div class="carousel-item <%= index === 0 ? 'active' : '' %>">
-                                            <a class="gallery_img" href="<%= image %>">
-                                                <img class="d-block w-100" src="<%= image %>" alt="Slide <%= index + 1 %>">
-                                            </a>
-                                        </div>
-                                    <% }) %>
+                            </div>
+
+                            <!-- Product Image Carousel -->
+                            <div class="single_product_thumb">
+                                <div id="product_details_slider" data-ride="carousel">
+                                    <!-- Carousel Inner -->
+                                    <div class="carousel-inner">
+                                        <% product.images.forEach((image, index)=> { %>
+                                            <div class="carousel-item <%= index === 0 ? 'active' : '' %>">
+                                                <a class="gallery_img" href="<%= image %>">
+                                                    <img class="d-block w-100" src="<%= image %>"
+                                                        alt="Slide <%= index + 1 %>">
+                                                </a>
+                                            </div>
+                                            <% }) %>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                
+
+                    <!-- Product Description -->
                     <div class="col-12 col-lg-5">
                         <div class="single_product_desc">
                             <!-- Product Meta Data -->
                             <div class="product-meta-data">
                                 <div class="line"></div>
                                 <div class="offer-container">
-                                    <span class="discount-rate">-49%</span>
-                                    <span class="product-price"><%= variant ? variant.price : '1000' %></span>
-                                    <span class="mrp">MRP:<s>₹7000</s></span>
+                                    <% if(variant.offer> fragranceOffer){ %>
+                                        <span class="discount-rate">
+                                            <%= variant.offer %>%
+                                        </span>
+                                        <span id="price" class="price">₹<%=variant.price - (variant.price *
+                                                variant.offer/100) %></span>
+                                        <span class="mrp">MRP: <s>₹<%= variant.price %></s></span>
+                                        <% }else if(variant.offer < fragranceOffer){ %>
+                                            <span class="discount-rate">
+                                                <%= fragranceOffer %>%
+                                            </span>
+                                            <span id="price" class="price">₹<%=variant.price - (variant.price *
+                                                    fragranceOffer/100) %></span>
+                                            <span class="mrp">MRP: <s>₹<%= variant.price %></s></span>
+                                            <% }else if(variant.offer==0&& fragranceOffer==0){ %>
+                                                <span id="price" class="price">MRP: ₹<%=variant.price %></span>
+                                                <% } %>
+
                                 </div>
-                                <a href="/product-details">
-                                    <h6><%= product.name %></h6>
+                                <a href="/product-details/<%= product._id %>">
+                                    <h6>
+                                        <%= product.name %>
+                                    </h6>
                                 </a>
                                 <!-- Ratings & Review -->
                                 <div class="ratings-review mb-15 d-flex align-items-center justify-content-between">
                                     <div class="ratings">
-                                        <i class="fa fa-star" aria-hidden="true"></i>
-                                        <i class="fa fa-star" aria-hidden="true"></i>
-                                        <i class="fa fa-star" aria-hidden="true"></i>
-                                        <i class="fa fa-star" aria-hidden="true"></i>
-                                        <i class="fa fa-star" aria-hidden="true"></i>
+
                                     </div>
                                     <div class="review">
-                                        <a href="#">Write A Review</a>
+                                        <!-- <a href="#">Write A Review</a> -->
                                     </div>
                                 </div>
                                 <!-- Availability -->
-                                <p class="avaibility"><i class="fa fa-circle"></i><%= variant && variant.stock > 0 ? 'In Stock' : 'Out of Stock' %></p>
+                                <% if( variant.stock> 0){ %>
+                                    <p class="avaibility">
+                                        <i class="fa fa-circle" style="font-size: 12px;"></i>
+                                        <span id="stock">
+                                            In Stock
+                                        </span>
+                                    </p>
+                                    <% }else if(variant.stock>= 0){ %>
+                                        <p class="avaibility">
+                                            <i class="fa fa-circle" style="font-size: 12px; color: #FF6347;"></i>
+                                            <span id="stock">
+                                                Out of Stock
+                                            </span>
+                                        </p>
+                                        <% } %>
                             </div>
-                
+                            <p style=" margin-top: 17px;margin-bottom: 0;padding-bottom:0 ;">
+                                <%= product.fragranceType %>
+                            </p>
+
+                            <!-- Short Overview -->
                             <div class="short_overview my-5">
-                                <p><%= product.description %></p>
+                                <p>
+                                    <%= product.description %>
+                                </p>
                             </div>
-                
+
+
                             <fieldset class="brand">
-                                <label for="variant" class="body-title mb-10">Occasions<span class="tf-color-1">*</span></label>
-                                <div class="select">
-                                    <select id="variant" name="variant" required="true">
-                                        <% variants.forEach(variant => { %>
-                                            <option value="<%= variant._id %>"><%= variant.name %> - <%= variant.liter %></option>
+                                <label class="body-title mb-10">Variants<span class="tf-color-1">*</span></label>
+                                <div id="variant-boxes" class="variant-boxes">
+                                    <% variants.forEach((variant, index)=> { %>
+                                        <div
+                                            class="variant-box <%= variant._id.toString() === selectedVariant.toString() ? 'active' : '' %>">
+                                            <a href="/product-details/<%= variant._id %>">
+                                                <%= variant.milliliter %> ml
+                                            </a>
+                                        </div>
                                         <% }); %>
-                                    </select>
                                 </div>
                             </fieldset>
-                        </div>
-                    </div>
-                </div>
-                
-                            <!-- Add to Cart Form -->
-                            <form class="cart clearfix" method="post">
+
+
+                            <input type="hidden" name="variantId" id="variant-id-input" value="<%= variant._id %>">
+
+                            <form class="cart clearfix" id="cart-form">
+                                <input type="hidden" name="variantId" id="variant-id-input" value="<%= variant._id %>">
+
                                 <div class="cart-btn d-flex mb-50">
-                                    <p>Qty</p>
-                                    <div class="quantity">
-                                        <span class="qty-minus" onclick="var effect = document.getElementById('qty'); var qty = effect.value; if( !isNaN( qty ) &`amp;&amp; qty &gt; 1` ) effect.value--;return false;"><i class="fa fa-caret-down" aria-hidden="true"></i></span>
-                                        <input type="number" class="qty-text" id="qty" step="1" min="1" max="300" name="quantity" value="1">
-                                        <span class="qty-plus" onclick="var effect = document.getElementById('qty'); var qty = effect.value; if( !isNaN( qty )) effect.value++;return false;"><i class="fa fa-caret-up" aria-hidden="true"></i></span>
-                                    </div>
+                                    <span id="stock-quantity">Stock: <%= variant.stock %></span>
                                 </div>
-                                <button type="submit" name="addtocart" value="5" class="btn amado-btn">Add to cart</button>
+                                <div class="d-flex">
+                                    <% if(variant.stock> 0 ){ %>
+                                        <button type="button" id="add-to-cart" class="add-to-cart-btn btn amado-btn-n"
+                                            style="background-color: #fbb710;" name="addtocart"
+                                            data-variant-id="<%= variant._id %>">
+                                            Add to cart
+                                        </button>
+                                        <% } %>
                             </form>
 
+                            <a href="/wishlist/<%= variant ? variant._id : '0' %>"
+                                onclick="toggleWishlist(event, '<%= variant._id %>')" class="wishlist-toggle">
+                                <div>
+                                    <% if (wishlistItems && wishlistItems.includes(variant?._id.toString())) { %>
+                                        <button id="wishlist-button-<%= variant._id %>"
+                                            class="add-to-cart-btn btn amado-btn-n"
+                                            style=" margin-left: 8px; background-color: #fbb710;">Remove From
+                                            Wishlist</button>
+                                        <% } else { %>
+                                            <button id="wishlist-button-<%= variant._id %>"
+                                                class="add-to-cart-btn btn amado-btn-n"
+                                                style="margin-left: 8px; background-color: #fbb710; ">Add to
+                                                Wishlist</button>
+                                            <% } %>
+                                </div>
+                            </a>
                         </div>
+
+
+
                     </div>
                 </div>
             </div>
-        </div>
-        <!-- Product Details Area End -->
-    </div>
-    <!-- ##### Main Content Wrapper End ##### -->
 
-    <!-- ##### Footer Area Start ##### -->
-    <footer class="footer_area clearfix">
+
+
+            <!-- Related Products -->
+            <section id="new-arrivals" class="container my-5">
+                <h6 class="text-uppercase mb-4">Related Products</h6>
+                <div class="row g-4">
+                    <% relatedProducts.forEach((product)=> { %>
+                        <div class="col-12 col-sm-6 col-md-4">
+                            <div class="single-product-wrapper card h-100 shadow-sm">
+                                <a href="/product-details/<%= product.defaultVariant ? product.defaultVariant._id : '0' %>"
+                                    class="text-decoration-none">
+                                    <div class="product-img position-relative">
+                                        <img src="<%= product.images[1] || '/images/default.jpg' %>" alt="Product Image"
+                                            class="card-img-top">
+                                        <% if (product.images[0]) { %>
+                                            <img class="hover-img position-absolute top-0 start-0 w-100 h-100"
+                                                src="<%= product.images[0] %>" alt="Hover Image"
+                                                style="opacity: 0; transition: opacity 0.3s;">
+                                            <% } %>
+                                    </div>
+                                </a>
+                                <div class="product-description card-body d-flex flex-column">
+                                    <h6 class="product-title card-title text-truncate" title="<%= product.name %>">
+                                        <%= product.name %>
+                                    </h6>
+                                    <p class="product-price fw-bold mb-2">
+                                        ₹<%= product.defaultVariant ? product.defaultVariant.price : '1000' %>
+                                    </p>
+                                    <% if (product.description) { %>
+                                        <p class="text-muted small mb-2">
+                                            <%= product.description.slice(0, 50) %>...
+                                        </p>
+                                        <% } %>
+                                            <% if (product.rating) { %>
+                                                <div class="rating mb-2">
+                                                    <span class="text-warning">&#9733;</span>
+                                                    <span class="text-warning">&#9733;</span>
+                                                    <span class="text-warning">&#9733;</span>
+                                                    <span class="text-warning">&#9733;</span>
+                                                    <span class="text-warning">&#9734;</span>
+                                                    <span class="small text-muted">(<%= product.rating %>)</span>
+                                                </div>
+                                                <% } %>
+                                                    <a href="/product-details/<%= product.defaultVariant ? product.defaultVariant._id : '0' %>"
+                                                        class="btn btn-primary btn-sm mt-auto">View Details</a>
+                                </div>
+                            </div>
+                        </div>
+                        <% }); %>
+                </div>
+            </section>
+
+        </div>
+    </div>
+
+
+
+
+
+
+    <footer class="footer_area clearfix" style="padding: 0;">
         <div class="container">
             <div class="row align-items-center">
                 <!-- Single Widget Area -->
@@ -220,12 +484,12 @@
                     <div class="single_widget_area">
                         <!-- Logo -->
                         <div class="footer-logo mr-50">
-                            <a href="/home"><img src="img/core-img/logo2.png" alt=""></a>
+                            <h4>labelle</h4>
+                            <a href="/"><img style="height: 250px; width: 400px; margin: 0px; padding: 0px;"
+                                    src="/img/core-img/logo2.png" alt=""></a>
                         </div>
                         <!-- Copywrite Text -->
-                        <p class="copywrite"><!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
-Copyright &copy;<script>document.write(new Date().getFullYear());</script> All rights reserved | This template is made with <i class="fa fa-heart-o" aria-hidden="true"></i> by <a href="https://colorlib.com" target="_blank">Colorlib</a> & Re-distributed by <a href="https://themewagon.com/" target="_blank">Themewagon</a>
-<!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. --></p>
+
                     </div>
                 </div>
                 <!-- Single Widget Area -->
@@ -234,24 +498,26 @@ Copyright &copy;<script>document.write(new Date().getFullYear());</script> All r
                         <!-- Footer Menu -->
                         <div class="footer_menu">
                             <nav class="navbar navbar-expand-lg justify-content-end">
-                                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#footerNavContent" aria-controls="footerNavContent" aria-expanded="false" aria-label="Toggle navigation"><i class="fa fa-bars"></i></button>
+                                <button class="navbar-toggler" type="button" data-toggle="collapse"
+                                    data-target="#footerNavContent" aria-controls="footerNavContent"
+                                    aria-expanded="false" aria-label="Toggle navigation"><i
+                                        class="fa fa-bars"></i></button>
                                 <div class="collapse navbar-collapse" id="footerNavContent">
                                     <ul class="navbar-nav ml-auto">
                                         <li class="nav-item active">
-                                            <a class="nav-link" href="/home">Home</a>
+                                            <a class="nav-link" href="/">Home</a>
                                         </li>
                                         <li class="nav-item">
-                                            <a class="nav-link" href="/shop:<%=product%>">Shop</a>
+                                            <a class="nav-link" href="/shop">Shop</a>
                                         </li>
                                         <li class="nav-item">
-                                            <a class="nav-link" href="/product-details">Product</a>
+                                            <a class="nav-link" href="/cart">Cart</a>
                                         </li>
-                                        <li class="nav-item">
-                                            <a class="nav-link" href="cart.html">Cart</a>
-                                        </li>
-                                     
+
                                     </ul>
+
                                 </div>
+
                             </nav>
                         </div>
                     </div>
@@ -259,8 +525,147 @@ Copyright &copy;<script>document.write(new Date().getFullYear());</script> All r
             </div>
         </div>
     </footer>
-    <!-- ##### Footer Area End ##### -->
 
+    <script>
+        function toggleWishlist(event, variantId) {
+            event.preventDefault();
+
+            const wishlistButton = document.getElementById(`wishlist-button-${variantId}`);
+            const isInWishlist = wishlistButton.textContent.trim() === 'Remove';
+
+            const url = isInWishlist ? '/wishlist-remove' : '/wishlist-add';
+            const successMessage = isInWishlist ? 'Removed from Wishlist!' : 'Added to Wishlist!';
+
+            fetch(url, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ variantId }),
+            })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        wishlistButton.textContent = isInWishlist ? 'Add to Wishlist' : 'Remove From Wishlist';
+
+                        Swal.fire({
+                            position: 'top',
+                            icon: 'success',
+                            title: successMessage,
+                            showConfirmButton: false,
+                            timer: 1500,
+                            width: '250px',
+                        });
+                    } else {
+                        Swal.fire({
+                            icon: 'info',
+                            title: 'Action Failed!',
+                            text: data.message,
+                            confirmButtonText: 'OK',
+                            width: '350px',
+                        });
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error!',
+                        text: 'An error occurred while updating the wishlist.',
+                        confirmButtonText: 'OK',
+                        width: '250px',
+                    });
+                });
+        }
+
+        document.getElementById('add-to-cart').addEventListener('click', async function (event) {
+            const form = document.getElementById('cart-form');
+            const availableStock = document.getElementById('stock-quantity')
+
+            try {
+                const response = await fetch('/cart-add', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        variantId: form.querySelector('#variant-id-input').value,
+                        quantity: 1,
+                    }),
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    Swal.fire({
+                        title: 'Success!',
+                        text: 'Item has been added to your cart.',
+                        icon: 'success',
+                        confirmButtonText: 'Go to Cart',
+                    }).then(() => {
+                        window.location.href = '/cart';
+                    });
+                } else {
+                    Swal.fire({
+                        title: 'Error!',
+                        text: data.message,
+                        icon: 'error',
+                        confirmButtonText: 'OK',
+                    });
+                }
+            } catch (error) {
+                console.error('Error adding to cart:', error);
+                Swal.fire({
+                    title: 'Error!',
+                    text: 'There was an error adding the item to your cart. Please try again.',
+                    icon: 'error',
+                    confirmButtonText: 'OK',
+                });
+            }
+        });
+
+        document.addEventListener('DOMContentLoaded', function () {
+            const carouselItems = document.querySelectorAll('.carousel-item');
+
+            carouselItems.forEach(item => {
+                const img = item.querySelector('img');
+                const zoomContainer = document.createElement('div');
+                zoomContainer.classList.add('zoom-container');
+
+                img.parentNode.insertBefore(zoomContainer, img);
+                zoomContainer.appendChild(img);
+
+                const magnifier = document.createElement('div');
+                magnifier.classList.add('magnifier');
+                zoomContainer.appendChild(magnifier);
+
+                zoomContainer.addEventListener('mousemove', function (e) {
+                    const rect = zoomContainer.getBoundingClientRect();
+                    const x = e.clientX - rect.left;
+                    const y = e.clientY - rect.top;
+                    const xPercent = (x / rect.width) * 100;
+                    const yPercent = (y / rect.height) * 100;
+
+                    img.style.transformOrigin = `${xPercent}% ${yPercent}%`;
+                    img.style.transform = 'scale(1.5)';
+
+                    magnifier.style.display = 'block';
+                    magnifier.style.left = `${x - 50}px`;
+                    magnifier.style.top = `${y - 50}px`;
+                    magnifier.style.backgroundImage = `url(${img.src})`;
+                    magnifier.style.backgroundPosition = `${-xPercent * 3}% ${-yPercent * 3}%`;
+                });
+
+                zoomContainer.addEventListener('mouseleave', function () {
+                    img.style.transform = 'scale(1)';
+                    magnifier.style.display = 'none';
+                });
+            });
+        });
+
+    </script>
+    <!-- ##### Footer Area End ##### -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <!-- ##### jQuery (Necessary for All JavaScript Plugins) ##### -->
     <script src="/js/jquery/jquery-2.2.4.min.js"></script>
     <!-- Popper js -->

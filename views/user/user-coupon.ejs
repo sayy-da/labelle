@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <title>Labelle</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="icon" href="img/core-img/favicon.ico">
+
+    <link href="https://netdna.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        /* Keeping all existing styles */
+        body {
+            color: #797979;
+            background: #f1f2f7;
+            font-family: 'Open Sans', sans-serif;
+            padding: 0px !important;
+            margin: 0px !important;
+            font-size: 13px;
+            text-rendering: optimizeLegibility;
+            -webkit-font-smoothing: antialiased;
+            -moz-font-smoothing: antialiased;
+        }
+
+        .profile-nav,
+        .profile-info {
+            margin-top: 30px;
+        }
+
+        .profile-nav .user-heading {
+            background: #fbb710;
+            color: #fff;
+            border-radius: 4px 4px 0 0;
+            -webkit-border-radius: 4px 4px 0 0;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .profile-nav .user-heading.round a {
+            border-radius: 50%;
+            -webkit-border-radius: 50%;
+            border: 10px solid rgba(255, 255, 255, 0.3);
+            display: inline-block;
+        }
+
+        .profile-nav .user-heading a img {
+            width: 112px;
+            height: 112px;
+            border-radius: 50%;
+            -webkit-border-radius: 50%;
+        }
+
+        .profile-nav .user-heading h1 {
+            font-size: 22px;
+            font-weight: 300;
+            margin-bottom: 5px;
+        }
+
+        .profile-nav .user-heading p {
+            font-size: 12px;
+        }
+
+        .profile-nav ul {
+            margin-top: 1px;
+        }
+
+        .profile-nav ul>li {
+            border-bottom: 1px solid #ebeae6;
+            margin-top: 0;
+            line-height: 30px;
+        }
+
+        .profile-nav ul>li:last-child {
+            border-bottom: none;
+        }
+
+        .profile-nav ul>li>a {
+            border-radius: 0;
+            -webkit-border-radius: 0;
+            color: #89817f;
+            border-left: 5px solid #fff;
+        }
+
+        .profile-nav ul>li>a:hover,
+        .profile-nav ul>li>a:focus,
+        .profile-nav ul li.active a {
+            background: #f8f7f5 !important;
+            border-left: 5px solid #fbb710;
+            color: #89817f !important;
+        }
+
+        .navbar {
+            background-color: white;
+            padding: 10px 0;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            margin-bottom: 0px;
+        }
+
+        .navbar-links {
+            list-style-type: none;
+            display: flex;
+            justify-content: center;
+            padding: 15px 50px;
+            margin-left: 420px;
+        }
+
+        .navbar-links li {
+            margin: 0 20px;
+        }
+
+        .navbar-links a {
+            text-decoration: none;
+            color: black;
+            font-size: 14px;
+            transition: color 0.3s ease, background-color 0.3s ease;
+            padding: 5px 10px;
+            border-radius: 4px;
+        }
+
+        .navbar-links a:hover {
+            color: white;
+            background-color: #FBB710;
+        }
+
+        /* Sidebar Styles */
+
+        /* Updated Orders Table Styles */
+        .cart-table-area {
+            margin-left: 280px;
+            padding: 30px;
+            width: calc(100% - 280px);
+        }
+
+        .cart-title {
+            margin-bottom: 20px;
+        }
+
+        .cart-title h2 {
+            font-size: 24px;
+            font-weight: 500;
+            color: #333;
+        }
+
+        .orders-table {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+        }
+
+        .table>thead>tr>th {
+            background: #f8f9fa;
+            padding: 15px;
+            font-weight: 600;
+            color: #333;
+            border-bottom: 2px solid #ebeae6;
+        }
+
+        .table>tbody>tr>td {
+            padding: 15px;
+            vertical-align: middle;
+            color: #555;
+        }
+
+        .status-badge {
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 500;
+        }
+
+        .status-delivered {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .status-pending {
+            background: #fff3cd;
+            color: #856404;
+        }
+
+        .status-cancelled {
+            background: #f8d7da;
+            color: #721c24;
+        }
+
+        .status-returned {
+            background: #e2e3e5;
+            /* A light gray shade for neutrality */
+            color: #383d41;
+            /* A darker gray for text contrast */
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 10px;
+        }
+
+        .btn-view,
+        .btn-cancel {
+            padding: 5px 15px;
+            border-radius: 4px;
+            font-size: 13px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: none;
+        }
+
+        .btn-view {
+            background: #fbb710;
+            color: white;
+        }
+
+        .btn-cancel {
+            background: #dc3545;
+            color: white;
+        }
+
+        .btn-view:hover,
+        .btn-cancel:hover {
+            opacity: 0.9;
+        }
+
+        /* Responsive Styles */
+        @media (max-width: 1200px) {
+            .container {
+                width: 100%;
+                padding: 0 15px;
+            }
+
+            .profile-nav {
+                position: static;
+                width: 100%;
+                margin-bottom: 30px;
+            }
+
+            .cart-table-area {
+                margin-left: 0;
+                width: 100%;
+                padding: 15px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Navbar -->
+    <nav class="navbar">
+        <ul class="navbar-links">
+            <li><a href="/">Home</a></li>
+            <li><a href="/shop">Shop</a></li>
+            <li><a href="#">Contact</a></li>
+        </ul>
+    </nav>
+
+    <div class="container">
+        <div class="row">
+            <!-- Sidebar -->
+            <div class="profile-nav col-md-3">
+                <div class="panel">
+                    <div class="user-heading round">
+                        <a href="#">
+                            <img src="<%= userData.gender === 'male' 
+                        ? 'https://www.bootdey.com/img/Content/avatar/avatar2.png' 
+                        : userData.gender === 'female' 
+                        ? 'https://www.bootdey.com/img/Content/avatar/avatar3.png' 
+                        : 'https://via.placeholder.com/150' %>" alt="User Avatar" id="profileAvatar">
+                        </a>
+                        <h1>
+                            <%= userData ? userData.name : 'Guest' %>
+                        </h1>
+                        <p>
+                            <a href="mailto:<%= userData ? userData.email : 'not available' %>">
+                                <%= userData ? userData.email : 'Email not available' %>
+                            </a>
+                        </p>
+                    </div>
+
+                    <ul class="nav nav-pills nav-stacked">
+                        <li id="profile"><a href="/user-profile"> <i class="fa fa-user"></i> Profile</a></li>
+                        <li id="address-book"><a href="/user-address"> <i class="fa fa-address-book"></i> Address
+                                Book</a></li>
+                        <li id="order-details"><a href="/user-order"> <i class="fa fa-shopping-basket"></i> Order
+                                Details</a></li>
+                        <li id="coupon"><a href="/user-coupon"> <i class="fa fa-ticket-alt"></i> Coupon</a></li>
+                        <li id="wallet"><a href="/user-wallet"> <i class="fa fa-wallet"></i> Wallet</a></li>
+                        <% if (typeof user !=='undefined' && user) { %>
+                            <li id="logout"><a href="/logout"> <i class="fa fa-sign-out"></i>Logout</a></li>
+                            <% } %>
+                    </ul>
+                </div>
+            </div>
+            <script>
+                const currentPage = window.location.pathname;
+
+                const pages = {
+                    "/user-profile": "profile",
+                    "/user-address": "address-book",
+                    "/user-order": "order-details",
+                    "/user-coupon": "coupon",
+                    "/user-wallet": "wallet"
+
+                };
+
+                for (let page in pages) {
+                    if (currentPage === page) {
+                        document.getElementById(pages[page]).classList.add('active');
+                    }
+                }
+            </script>
+            <!-- Orders Area -->
+            <div class="cart-table-area">
+                <div class="cart-title">
+                    <h2>Available Coupons</h2>
+                </div>
+                <div class="orders-table">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Coupon Code</th>
+                                <th>Percentage (%) </th>
+                                <th>Expiry Date</th>
+                                <th>isActive</th>
+                                <th>Coupon Expiry Status</th>
+
+                            </tr>
+                        </thead>
+                        <h6></h6>
+
+                        <tbody>
+                            <% coupons.forEach(coupon=> { %>
+
+                                <tr>
+                                    <td>
+                                        <%=coupon.code%>
+                                    </td>
+                                    <td>
+                                        <%=coupon.discount%>(%)
+                                    </td>
+                                    <td>
+                                        <%=coupon.expiredOnFormatted%>
+                                    </td>
+                                    <td>
+                                        <%=coupon.isActive%>
+                                    </td>
+                                    <td>
+                                        <% if (coupon.isActive==true) { %>
+                                            <p> Valid</p>
+                                            <% } else { %>
+                                                <p> Expired</p>
+                                                <% } %>
+
+                                    </td>
+
+                                </tr>
+                                <% }) %>
+
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://code.jquery.com/jquery-1.10.2.min.js"></script>
+    <script src="https://netdna.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
+
+</body>
+
+</html>

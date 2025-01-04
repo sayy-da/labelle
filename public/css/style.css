@@ -1,5 +1,5 @@
 :root {
-  --Main: #2275fc;
+  --Main: #fbb710;
   --White: #fff;
   --Black: #111;
   --Heading: #111;
@@ -1587,7 +1587,7 @@ margin-left: 100px;
   gap: 10px;
   border-radius: 4px;
   background: #ECF3FF;
-  color: #2275fc;
+  color: #fbb710;
   font-size: 12px;
   font-weight: 700;
 }
@@ -1606,7 +1606,7 @@ margin-left: 100px;
   gap: 10px;
   border-radius: 4px;
   background: #ECF3FF;
-  color: #2275fc;
+  color: #fbb710;
   font-size: 12px;
   font-weight: 500;
 }
@@ -1634,10 +1634,10 @@ margin-left: 100px;
 }
 .block-warning.type-main {
   background-color: #EAF4FF;
-  color: #2275fc;
+  color: #fbb710;
 }
 .block-warning.type-main div {
-  color: #2275fc;
+  color: #fbb710;
   word-break: break-all;
 }
 
@@ -4276,7 +4276,7 @@ select.h40 {
   width: 16px;
   height: 16px;
   border-radius: 999px;
-  background: #2275fc;
+  background: #fbb710;
   color: #fff;
 }
 .popup-wrap.message > .dropdown .header-item > .text-tiny::after {
@@ -4286,7 +4286,7 @@ select.h40 {
   right: 0;
   width: 16px;
   height: 16px;
-  background-color: #2275fc;
+  background-color: #fbb710;
   border-radius: 50%;
   z-index: -1;
   animation: ping 1s cubic-bezier(0, 0, 0.2, 1) infinite;
@@ -5341,7 +5341,7 @@ select.h40 {
   background-color: #fff;
 }
 .dark-theme .tf-button.style-1:hover {
-  background-color: #2275fc;
+  background-color: #fbb710;
 }
 
 @media (max-width: 991px) {

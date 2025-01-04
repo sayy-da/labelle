@@ -5,8 +5,10 @@ const variantSchema = new mongoose.Schema({
   milliliter: {type: Number,required: true},
   price: {type: Number,required: true},
   stock: {type: Number,required: true},
+  offer:{type:Number,default:0},
   createdDate: {type: Date,default: Date.now}
 });
 
 const Variant = mongoose.model('Variant', variantSchema);
 module.exports = Variant;
+  

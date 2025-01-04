@@ -12,9 +12,14 @@ async (accessToken,refreshToken,profile,done) => {
   try {
     
     let user = await User.findOne({googleId:profile.id})
-    console.log(user);
+
 
     if(user){
+      
+      if (user.status === 'blocked') {
+        return done(null, false, { error: 'Your account is blocked. Please contact support.' });
+      }
+
       return done(null,user )
     }else{
       user = new User({
@@ -23,10 +28,6 @@ async (accessToken,refreshToken,profile,done) => {
         googleId:profile.id,
       })
       await user.save()
-
-      if (user.status === 'blocked') {
-        return done(null, false, { error: 'Your account is blocked. Please contact support.' });
-      }
 
       return done(null,user)
     }

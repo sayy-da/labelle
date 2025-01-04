@@ -4,10 +4,12 @@ const multer = require('multer');
 const path = require('path');
 const Fragrance = require('../models/fragrance');
 const Occasion = require('../models/occasion');
+const Milliliter = require('../models/milliliters')
+const Order = require('../models/order')
 const { error } = require('console');
 exports.getProductList = async (req, res) => {
   try {
-    // Fetch all products from the database
+  
     const page = parseInt(req.query.page) || 1
     const limit = parseInt(req.query.limit) ||10
     const skip =(page-1)*limit
@@ -17,20 +19,20 @@ exports.getProductList = async (req, res) => {
     const filter = query
     ? {
         $or: [
-          { name: { $regex: query, $options: 'i' } },    // Search for name
-          { Fragrance: { $regex: query, $options: 'i' } },  // Search for fragrance
-          { Occasion: { $regex: query, $options: 'i' } },   // Search for occasion
-          { gender: { $regex: query, $options: 'i' } },     // Search for gender
+          { name: { $regex: query, $options: 'i' } },   
+          { Fragrance: { $regex: query, $options: 'i' } },
+          { Occasion: { $regex: query, $options: 'i' } },   
+          { gender: { $regex: query, $options: 'i' } },     
         ],
       }
     : {};
 
     const products = await Product.find(filter).sort({ createdAt: -1 }).skip(skip).limit(limit)
 
+
     const totalProducts = await Product.countDocuments(filter)
 
-    const totalPages = Math. ceil(totalProducts/limit) 
-    // Render the product list page
+    const totalPages = Math.ceil(totalProducts/limit) 
     res.render('admin/product-list', { products ,page,totalProducts,totalPages,limit,query});
   } catch (error) {
     console.error('Error fetching product list', error);
@@ -39,14 +41,20 @@ exports.getProductList = async (req, res) => {
 };
 
 
-exports.getAddProduct = async (req,res)=>{
+
+exports.getAddProduct = async (req, res) => {
   const fragrances = await Fragrance.find().sort({ createdAt: -1 });
   const occasions = await Occasion.find().sort({ createdAt: -1 });
   
-  res.render('admin/add-product',{error:'',fragrances,occasions})
+  res.render('admin/add-product', {
+    errors: {}, 
+    formData: {},
+    fragrances,
+    occasions
+  });
 }
 
-// Set up Multer storage configuration
+
 const storage = multer.diskStorage({
 
 
@@ -60,44 +68,78 @@ const storage = multer.diskStorage({
 
 const uploads = multer({ storage: storage });
 
-// Controller to add a product
 exports.addProduct = [uploads.array('images', 3), async (req, res) => {
   try {
-    // Extract data from the form submission
+    const fragrances = await Fragrance.find().sort({ createdAt: -1 });
+    const occasions = await Occasion.find().sort({ createdAt: -1 });
+    
 
-    const { name, fragranceType, gender, occasions, description } = req.body;
-    const images = req.files.map(file => '/uploads/' + file.filename);  // Save relative path to the uploads folder
- // Extract image paths
+    const { name, fragranceType, gender, occasions: occasionName, description } = req.body;
+    const images = req.files.map(file => '/uploads/' + file.filename);
 
- 
-    // Create a new Product instance
+    const existingProduct = await Product.findOne({ name });
+    const errors = {};
+
+    if (!name || name.length > 20 ) {
+      errors.name = 'Product name is required and should not exceed 20 characters.';
+    } else if (/[^a-zA-Z0-9\s-]/.test(name) || name.trim() === '') {
+      errors.name = 'Product name should not contain special characters (except -), or be empty';
+    }else if(existingProduct){
+      errors.name = 'Product already exists.';
+    }
+
+    if (!fragranceType) {
+      errors.fragranceType = 'Invalid fragrance type selected.';
+    }
+
+    if (!gender) {
+      errors.gender = 'Invalid gender selected.';
+    }
+
+    if (!occasionName) {
+      errors.occasions = 'Invalid occasion selected.';
+    }
+
+    if (!description || description.length > 1000) {
+      errors.description = 'Description is required and should not exceed 1000 characters.';
+    }
+
+    if (req.files.length < 3) {
+      errors.images = 'You must upload exactly 3 images.';
+    }
+
+    if (Object.keys(errors).length > 0) {
+      return res.render('admin/add-product', {
+        errors: errors,
+        fragrances,
+        occasions
+      });
+    }
+
     const newProduct = new Product({
       name,
       fragranceType,
       gender,
-      occasions,
+      occasions: occasionName,
       description,
-      images  // Save the images paths in the database
+      images
     });
 
-    // Save the product to the database
     await newProduct.save();
-    
-    // Redirect to product list page
     res.redirect('/admin/product-list');
+
   } catch (error) {
     console.error('Error adding product', error);
     res.status(500).send('Error adding product');
   }
 }];
-
 exports.getEditProduct = async (req,res) => {
   const {id} = req.params
   try{
     const product = await Product.findById(id)
     const fragrances = await Fragrance.find().sort({ createdAt: -1 });
     const occasiones = await Occasion.find().sort({ createdAt: -1 });
-    // const images = req.files.map(file => '/uploads/' + file.filename);  
+    
     if(!product){
       return res.render('product-list',{error:'Product not found' })
     }
@@ -115,18 +157,50 @@ exports.getEditProduct = async (req,res) => {
     })
   }catch(error){
     console.error('Error fetching product:', error);
-    res.status(500).json({ message: 'Failed to fetch product details' });
+    res.status(500).send('Failed to fetch product details');
   }
-
 }
+
+exports.editVariant = async (req,res) => {
+  const {id} = req.params;
+  const {milliliter,price,stock,productId} = req.body;
+
+  try {
+    
+
+    const variant = await Variant.findById(id)
+    if (!variant) {
+      throw new Error('variant not found');
+    }
+
+      variant.milliliter = milliliter;
+      variant.price = price;
+      variant.stock = stock;
+      variant.productId =productId
+      await variant.save();
+      
+      res.redirect(`/admin/variant/${productId}`);
+  } catch (error) {
+    console.error('Error editing variant:', error);
+      res.render('admin/edit-variant', {
+        error: 'Failed to edit product. Please try again.',
+        milliliter,
+        price,
+        stock,
+        id,
+        productId
+
+      });
+  }
+}
+
+
 exports.editProduct = [
-  uploads.array('images', 3), // Handle multiple file uploads
+  uploads.array('images', 3),
   async (req, res) => {
     const { id } = req.params;
     const { name, fragranceType, gender, occasions, description } = req.body;
     
-    console.log('Request body:', req.body);
-    console.log('Editing product with ID:', id);
 
     try {
       const product = await Product.findById(id);
@@ -135,13 +209,12 @@ exports.editProduct = [
         throw new Error('Product not found');
       }
 
-      // Handle image uploads if new files were uploaded
+ 
       if (req.files && req.files.length > 0) {
         const newImages = req.files.map(file => '/uploads/' + file.filename);
         product.images = newImages;
       }
 
-      // Update product fields
       product.name = name;
       product.fragranceType = fragranceType;
       product.gender = gender;
@@ -165,20 +238,53 @@ exports.editProduct = [
         occasions,
         occasiones,
         description,
-        images: product?.images || [],
+        images:product.images || [],
         id
       });
     }
   }
 ];
 
-// Controller to get the list of variants
+exports.getEditVariant = async (req,res) => {
+  const {id} = req.params
 
+  try {
+    const variant = await Variant.findById(id)
+    if(!variant){
+      return res.render('variant',{error:'variant not found' })
+    }
+
+    const milliliters = await Milliliter.find().sort({ createdAt: -1 });
+    res.render('admin/edit-variant',{
+      milliliter:variant.milliliter,
+      price:variant.price,
+      stock:variant.stock,
+      id:variant._id,
+      milliliters,
+      productId:variant.productId,
+ 
+      error:null
+    })
+  } catch (error) {
+    console.error('Error fetching variarnt:', error);
+    res.status(500).send('Failed to fetch variant details');
+  }
+}
+
+
+exports.getAddVariant = async  (req,res)=>{
+  const productId = req.params.productId
+  
+  const milliliters = await Milliliter.find().sort({ createdAt: -1 });
+  
+  res.render('admin/add-variant',{productId,milliliters,error:{}})
+}
 exports.addVariant = async (req,res) => {
   try {   
     const productId = req.params.productId
     const {milliliter,price,stock} = req.body
-   console.log(productId);
+
+
    
     const newVariant = new Variant({
       productId,
@@ -186,6 +292,7 @@ exports.addVariant = async (req,res) => {
       price,
       stock
     })
+
 
    await newVariant.save();
 
@@ -199,7 +306,7 @@ exports.addVariant = async (req,res) => {
 exports.getVariantList = async (req,res)=>{
   try {
      const productId = req.params.productId
-     console.log(productId);
+   
 
      
     const page = parseInt(req.query.page)||1
@@ -211,15 +318,16 @@ exports.getVariantList = async (req,res)=>{
     const filter = query
     ? {
         $or: [
-          { milliliter: { $regex: query, $options: 'i' } },    // Search for name
-          { stock: { $regex: query, $options: 'i' } },  // Search for fragrance
-          { price: { $regex: query, $options: 'i' } },   // Search for occasion
+          { milliliter: { $regex: query, $options: 'i' } },   
+          { stock: { $regex: query, $options: 'i' } },  
+          { price: { $regex: query, $options: 'i' } },   
         ],
       }
     : {};
 
     const variants = await Variant.find({productId},filter).sort({createdAt:-1}).skip(skip).limit(limit)
 
+  
     const totalvariants = await Variant.countDocuments({productId},filter)
 
     const totalPages = Math. ceil(totalvariants/limit) 
@@ -230,35 +338,43 @@ exports.getVariantList = async (req,res)=>{
   }
 }
 
-exports.getAddVariant = async  (req,res)=>{
-  const productId = req.params.productId
-  console.log(productId);
-  
-  res.render('admin/add-variant',{productId,error:''})
-}
 
- // Assuming the model is located here
+
+
 
  exports.addFragrance = async (req, res) => {
-  const { name } = req.body;
-  console.log('Received fragrance name:', name); // Log the received name
+  let { name,offer } = req.body;  
+  
 
+  
   try {
-    const newFragrance = new Fragrance({ name });
 
-    const existingFragrance = await Fragrance.findOne({ name: { $regex: new RegExp('^' + name + '$', 'i') } });
+    if (/\d/.test(name) || /[^a-zA-Z0-9\s-]/.test(name) || name.trim() === '') {
+      return res.render('admin/add-fragrance', { 
+        error: 'Fragrance name cannot contain numbers, special characters (except -), or be empty.',
+        name 
+      });
+    }
+    
+
+
+    const lowercaseName = name.trim().toLowerCase();
+
+    const existingFragrance = await Fragrance.findOne({ name: lowercaseName });
 
     if (existingFragrance) {
-      // If an occasion with the same name exists (case-insensitive), return a message
       return res.render('admin/add-fragrance', { 
-       error: 'Fragrance name already exists (case-insensitive)', 
-        name
-       })
+        error: 'Fragrance name already exists', 
+        name 
+      });
     }
-    // Save the fragrance to the database
+
+    const newFragrance = new Fragrance({ name : name, offer:offer });
+
+    
+
     await newFragrance.save();
 
-    // Redirect to the fragrance list page after successful creation
     res.redirect('/admin/fragrance-list');
   } catch (error) {
     console.error('Error adding fragrance:', error);
@@ -279,12 +395,12 @@ exports.getFragranceList = async (req, res) => {
    
    
     const filter = query
-      ? { name: { $regex: query, $options: 'i' }}  // Search filter
+      ? { name: { $regex: query, $options: 'i' }} 
       : {};
 
     const fragrances = await Fragrance.find(filter).sort({ createdAt: -1 })
     .skip(skip).limit(limit)
-
+      
     const totalFragrances = await Fragrance.countDocuments(filter)
 
     const totalPages = Math.ceil(totalFragrances/limit) 
@@ -298,25 +414,33 @@ exports.getFragranceList = async (req, res) => {
 
 exports.addOccasion = async (req, res) => {
   const { name } = req.body;
-  console.log('Received occasion name:', name);
+
 
   try {
+    if (/\d/.test(name) || /[^a-zA-Z0-9\s/-]/.test(name) || name.trim() === '') {
+      return res.render('admin/add-occasion', { 
+        error: 'Occasion name cannot contain numbers, special characters (except - and /), or be empty.',
+        name
+      });
+    }
+    
+    const lowercaseName = name.trim().toLowerCase();
 
-    const existingOccasion = await Occasion.findOne({ name: { $regex: new RegExp('^' + name + '$', 'i') } });
+
+    const existingOccasion = await Occasion.findOne({ name: lowercaseName });
 
     if (existingOccasion) {
-      // If an occasion with the same name exists (case-insensitive), return a message
       return res.render('admin/add-occasion', {  
         error: 'Occasion name already exists (case-insensitive)', 
         name
        })
     }
-    const newOccasion = new Occasion({ name });
+    const newOccasion = new Occasion({ name : name });
     await newOccasion.save();
     res.redirect('/admin/occasion-list');
   } catch (error) {
     console.error('Error adding occasion:', error);
-    res.status(500).json({ success: false, message: 'Failed to add occasion' });
+    res.status(500).send( 'Failed to add occasion' );
   }
 };
 
@@ -337,7 +461,7 @@ exports.getOccasionList = async (req, res) => {
    
    
     const filter = query
-      ? { name: { $regex: query, $options: 'i' }}  // Search filter
+      ? { name: { $regex: query, $options: 'i' }}
       : {};
 
     const occasions = await Occasion.find(filter).sort({ createdAt: -1 }).skip(skip).limit(limit)
@@ -346,9 +470,212 @@ exports.getOccasionList = async (req, res) => {
 
     const totalPages = Math. ceil(totalOccasions/limit) 
     
-    res.render('admin/occasion-list', { occasions, page,totalOccasions,totalPages,limit,query});
+    res.render('admin/occasion-list', {occasions, page,totalOccasions,totalPages,limit,query});
   } catch (error) {
     console.error('Error fetching occasion list', error);
     res.status(500).send('Error fetching occasion list');
+  }
+};
+
+
+
+exports.getMillilitersList = async (req, res) => {
+  try {
+     
+    const page = parseInt(req.query.page) || 1
+    const limit = parseInt(req.query.limit) ||10
+    const skip =(page-1)*limit
+  
+    const query = req.query.query ? req.query.query.trim() : '';
+   
+   
+    const filter = query
+      ? { name: { $regex: query, $options: 'i' }} 
+      : {};
+
+    const milliliters = await Milliliter.find(filter).sort({ createdAt: -1 }).skip(skip).limit(limit)
+
+    const totalMilliliters = await Milliliter.countDocuments(filter)
+
+    const totalPages = Math. ceil(totalMilliliters/limit) 
+    
+    res.render('admin/milliliters-list', { milliliters, page,totalMilliliters,totalPages,limit,query});
+  } catch (error) {
+    console.error('Error fetching milliliters list', error);
+    res.status(500).send('Error fetching milliliters list');
+  }
+};
+
+
+
+exports.getAddMilliliters = (req,res)=>{
+  res.render('admin/add-milliliters',{error:''})
+}
+
+
+
+exports.addMilliliters = async (req, res) => {
+  const { milliliter } = req.body;
+
+
+  try {
+
+    if (/\D/.test(milliliter) || /[^0-9\s]/.test(milliliter) || milliliter.trim() === '') {
+      return res.render('admin/add-milliliters', { 
+        error: 'Milliliter value cannot contain letters, special characters, or be empty.',
+        milliliter 
+      });
+    }
+
+    if (parseInt(milliliter) > 1000) {
+      return res.render('admin/add-milliliters', { 
+        error: 'Milliliter value cannot exceed 1000 ml.',
+        milliliter 
+      });
+    }
+    
+    const newMilliliter = new Milliliter({ milliliter });
+    await newMilliliter.save();
+    res.redirect('/admin/milliliters-list');
+  } catch (error) {
+    console.error('Error adding milliliters:', error);
+    res.status(500).send('Failed to add milliliters' );
+  }
+};
+
+exports.getOrderList = async (req, res) => {
+  try {
+    
+    const page = parseInt(req.query.page) || 1
+    const limit = parseInt(req.query.limit) ||10
+    const skip =(page-1)*limit
+    const query =  req.query.query ? req.query.query.trim() : ''
+
+    const filter = query
+    ? {
+        $or: [
+          { orderId: { $regex: query, $options: 'i' } },   
+        ],
+      }
+    : {};
+   
+
+
+    const orders = await Order.find(filter)
+      .populate('userId', 'name email')
+      .populate({
+        path: 'orderedItems.variantId',
+        model: 'Variant',
+        populate: {
+          path: 'productId',
+          model: 'Product',
+          select: 'name'
+        }
+      })
+      .sort({ createdAt: -1 })
+      .skip(skip)
+      .limit(limit);
+
+
+
+    const totalOrders = await Order.countDocuments(filter);
+    const totalPages = Math.ceil(totalOrders / limit);
+     
+    res.render('admin/order-list', {
+      orders,
+      page,
+      totalOrders,
+      totalPages,
+      limit,
+      query
+    });
+  } catch (error) {
+    console.error('Error fetching orders:', error);
+    res.status(500).send('Server Error');
+  }
+};
+
+
+
+
+
+exports.getOrderDetails = async (req, res) => {
+  try {
+    const { orderId } = req.params; 
+   
+    const order = await Order.findOne({ _id:orderId })
+      .populate('userId', 'name email') 
+      .populate({
+        path: 'orderedItems.variantId',
+        model: 'Variant',
+        populate: {
+          path: 'productId',
+          model: 'Product',
+          select: 'name',
+        },
+      });
+
+    if (!order) {
+      return res.status(404).send('Order not found');
+    }
+
+    res.render('admin/order-details', { order });
+  } catch (error) {
+    console.error('Error fetching order details:', error);
+    res.status(500).send('Server Error');
+  }
+};
+
+
+
+exports.updateOrderStatus = async (req, res) => {
+  const { orderId, newStatus } = req.body;
+
+  try {
+    const order = await Order.findById(orderId);
+
+    if (!order) {
+      return res.status(404).json({ 
+        success: false, 
+        message: 'Order not found' 
+      });
+    }
+
+    const finalStates = ['Delivered', 'Cancelled', 'Returned'];
+    if (finalStates.includes(order.status)) {
+      return res.status(400).json({
+        success: false,
+        message: `Cannot change status from ${order.status}`
+      });
+    }
+
+    order.status = newStatus;
+
+  
+
+    await order.save();
+
+    if (req.xhr || req.headers.accept.indexOf('json') > -1) {
+      return res.json({ 
+        success: true, 
+        order: {
+          status: order.status,
+          paymentStatus: order.paymentStatus
+        }
+      });
+    }
+
+    res.redirect('/admin/order-list');
+  } catch (error) {
+    console.error('Error updating order status:', error);
+    
+    if (req.xhr || req.headers.accept.indexOf('json') > -1) {
+      return res.status(500).json({ 
+        success: false, 
+        message: 'Server error' 
+      });
+    }
+    
+    res.status(500).send('Server error');
   }
 };

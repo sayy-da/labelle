@@ -2,256 +2,369 @@
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="description" content="">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <!-- The above 4 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+  <meta charset="UTF-8">
+  <meta name="description" content="">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <!-- The above 4 meta tags *must* come first in the head; any other head content must come *after* these tags -->
 
-    <!-- Title  -->
-    <title>signup</title>
+  <!-- Title  -->
+  <title>Labelle</title>
 
-    <!-- Favicon  -->
-    <link rel="icon" href="/img/core-img/favicon.png">
+  <!-- Favicon  -->
 
-    <style>
-      @import url(https://fonts.googleapis.com/css?family=Roboto:300);
+  <link rel="icon" href="img/core-img/favicon.ico">
 
-.login-page {
-  width: 360px;
-  padding: 8% 0 0;
-  margin: auto;
-  background: #FFFFFF;
+  <style>
+    @import url(https://fonts.googleapis.com/css?family=Roboto:300);
 
-}
-.form {
-  position: relative;
-  z-index: 1;
-  background: #F5F7FA;
-  max-width: 360px;
-  margin: 0 auto 100px;
-  padding: 45px;
-  text-align: center;
-  box-shadow: 0 0 20px 0 rgba(0, 0, 0, 0.2), 0 5px 5px 0 rgba(0, 0, 0, 0.24);
-}
-.form input {
-  font-family: "Roboto", sans-serif;
-  outline: 0;
-  background: #E7D4A4;
-  width: 100%;
-  border: 0;
-  margin: 0 0 15px;
-  padding: 15px;
-  box-sizing: border-box;
-  font-size: 14px;
-  border-radius: 10px;
-}
-.button-signup {
-  font-family: "Roboto", sans-serif;
-  text-transform: uppercase;
-  outline: 0;
-  background: #FBB710;
-  width: 100%;
-  border: 0;
-  padding: 12px;
-  padding-left: 100px;
-  padding-right: 100px;
-  color: #FFFFFF;
-  font-size: 14px;
-  -webkit-transition: all 0.3 ease;
-  transition: all 0.3 ease;
-  cursor: pointer;
-  border-radius: 20px;
-}
-.button-signup:hover,.button-signup:active,.form button:focus {
-  background: #eeba36;
-}
-.form .message {
-  margin: 15px 0 0;
-  color: #8888CE;
-  font-size: 12px;
-}
-.form .message a {
-  color: #FBB710;
-  text-decoration: none;
-}
-.form .register-form {
-  display: none;
-}
-.container {
-  position: relative;
-  z-index: 1;
-  max-width: 300px;
-  margin: 0 auto;
-}
-.container:before, .container:after {
-  content: "";
-  display: block;
-  clear: both;
-}
-.container .info {
-  margin: 50px auto;
-  text-align: center;
-}
-.container .info h1 {
-  margin: 0 0 15px;
-  padding: 0;
-  font-size: 36px;
-  font-weight: 300;
-  color: #1a1a1a;
-}
-.container .info span {
-  color: #4d4d4d;
-  font-size: 12px;
-}
-.container .info span a {
-  color: #000000;
-  text-decoration: none;
-}
-.container .info span .fa {
-  color: #EF3B3A;
-}
-body {
+    .login-page {
+      width: 360px;
+      padding: 8% 0 0;
+      margin: auto;
+      background: #FFFFFF;
 
-  font-family: "Roboto", sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;      
-}
+    }
 
-h6{
-  color:#8888CE ;
-  text-align: left;
-  padding: 0px;
-  font-size: small;
-  margin-top: 0px;
-  margin-bottom: 10px;
-}
+    .form {
+      position: relative;
+      z-index: 1;
+      background: #F5F7FA;
+      max-width: 360px;
+      margin: 0 auto 100px;
+      padding: 45px;
+      text-align: center;
+      box-shadow: 0 0 20px 0 rgba(0, 0, 0, 0.2), 0 5px 5px 0 rgba(0, 0, 0, 0.24);
+    }
 
-.signup-google{
-  margin-top: -30px;
-  font-size: 12px;
-  color: #8888CE;
-}
+    .form input {
+      font-family: "Roboto", sans-serif;
+      outline: 0;
+      background: #E7D4A4;
+      width: 100%;
+      border: 0;
+      margin: 0 0 15px;
+      padding: 15px;
+      box-sizing: border-box;
+      font-size: 14px;
+      border-radius: 10px;
+    }
 
-.google-button {
-          
-            display: inline-flex;
-            align-items: center;
-            background-color: #4285f4;
-            color: white;
-            padding: 10px 20px;
-            border: none;
-            border-radius: 4px;
-            font-size: 16px;
-            cursor: pointer;
-            text-decoration: none;
-            transition: background-color 0.3s;
-        }
-        .google-button:hover {
-            background-color: #357ae8;
-        }
-        .google-button img {
-            width: 20px;
-            height: 20px;
-            margin-right: 10px;
-        }
-   </style>
-    
+    .button-signup {
+      font-family: "Roboto", sans-serif;
+      text-transform: uppercase;
+      outline: 0;
+      background: #FBB710;
+      width: 100%;
+      border: 0;
+      padding: 12px;
+      padding-left: 100px;
+      padding-right: 100px;
+      color: #FFFFFF;
+      font-size: 14px;
+      -webkit-transition: all 0.3 ease;
+      transition: all 0.3 ease;
+      cursor: pointer;
+      border-radius: 20px;
+    }
+
+    .button-signup:hover,
+    .button-signup:active,
+    .form button:focus {
+      background: #eeba36;
+    }
+
+    .form .message {
+      margin: 15px 0 0;
+      color: #8888CE;
+      font-size: 12px;
+    }
+
+    .form .message a {
+      color: #FBB710;
+      text-decoration: none;
+    }
+
+    .form .register-form {
+      display: none;
+    }
+
+    .container {
+      position: relative;
+      z-index: 1;
+      max-width: 300px;
+      margin: 0 auto;
+    }
+
+    .container:before,
+    .container:after {
+      content: "";
+      display: block;
+      clear: both;
+    }
+
+    .container .info {
+      margin: 50px auto;
+      text-align: center;
+    }
+
+    .container .info h1 {
+      margin: 0 0 15px;
+      padding: 0;
+      font-size: 36px;
+      font-weight: 300;
+      color: #1a1a1a;
+    }
+
+    .container .info span {
+      color: #4d4d4d;
+      font-size: 12px;
+    }
+
+    .container .info span a {
+      color: #000000;
+      text-decoration: none;
+    }
+
+    .container .info span .fa {
+      color: #EF3B3A;
+    }
+
+    body {
+
+      font-family: "Roboto", sans-serif;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    h6 {
+      color: #8888CE;
+      text-align: left;
+      padding: 0px;
+      font-size: small;
+      margin-top: 0px;
+      margin-bottom: 10px;
+    }
+
+    .signup-google {
+      margin-top: -30px;
+      font-size: 12px;
+      color: #8888CE;
+    }
+
+    .google-button {
+
+      display: inline-flex;
+      align-items: center;
+      background-color: #4285f4;
+      color: white;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 4px;
+      font-size: 16px;
+      cursor: pointer;
+      text-decoration: none;
+      transition: background-color 0.3s;
+      margin-bottom: 15px;
+    }
+
+    .google-button:hover {
+      background-color: #357ae8;
+    }
+
+    .google-button img {
+      width: 20px;
+      height: 20px;
+      margin-right: 10px;
+    }
+
+    .error-message {
+      background-color: #f8d7da;
+      /* Light red background */
+      color: #721c24;
+      /* Dark red text */
+      border: 1px solid #f5c6cb;
+      /* Light red border */
+      padding: 10px;
+      border-radius: 5px;
+      /* Rounded corners */
+      font-size: 10px;
+      margin-bottom: 20px;
+      /* Spacing below the message */
+    }
+
+    .error-message p {
+      margin: 0;
+      /* Remove margin from the paragraph */
+    }
+
+    .error-message .close-btn {
+      background: none;
+      border: none;
+      color: #721c24;
+      font-size: 10px;
+      cursor: pointer;
+      position: absolute;
+      top: 10px;
+      right: 10px;
+    }
+
+    .error-message .close-btn:hover {
+      color: #f5c6cb;
+    }
+  </style>
+
 
 </head>
+
 <body>
 
   <div class="login-page">
-   
+
     <div class="form">
       <div class="signup-container">
         <p class="signup-google">Sign up with your Google account to get started.</p>
         <a href="/auth/google" class="google-button">
           <img src="/images/logo/avfci721i.png" alt="Google logo" width="20" height="20">
-            Sign up with Google
+          Sign up with Google
         </a>
-    </div>
+      </div>
+
       <% if (error) { %>
-        <p style="color: red; font-size: 12px;"><%= error %></p>
-      <% } %>
-  
-      <form class="login-form" action="/signup" method="POST" onsubmit="return validateForm()">
-        <h6>Username</h6>
-        <input type="text" name="name" placeholder="username"/>
-        <span id="username-error" style="color: red; display: none; font-size: 12px;">Enter your username.</span>
-        
-        <h6>Email</h6>
-        <input type="email" name="email" placeholder="Email"/>
-        <span id="email-error" style="color: red; display: none; font-size: 12px;">Enter a valid email.</span>
-        
-        <h6>Password</h6>
-        <input type="password" name="password" id="password" placeholder="Password" />
-        <span id="password-error" style="color: red; display: none; font-size: 12px;">Password must contain a letter, number, and special character</span>
-  
-        <h6>Confirm Password</h6>
-        <input type="password" name="confirmPassword" id="confirmPassword" placeholder="Confirm password" />
-        <span id="confirm-password-error" style="color: red; display: none; font-size: 12px;">Passwords do not match.</span>
-  
-        <button class="button-signup" type="submit">Sign Up</button>
-        <p class="message">Already have an account? <a href="/login">Login</a></p>
-      </form>
+        <!-- Error message styled like a button -->
+        <div class="error-message" role="alert">
+          <%= error %>
+        </div>
+        <% } %>
+          <form class="login-form" action="/signup" method="POST" onsubmit="return validateForm()">
+            <h6>Username</h6>
+            <input type="text" name="name" placeholder="username" />
+            <span id="username-error" class="error-message" style="color: red; display: none; font-size: 12px;"></span>
+
+            <h6>Email</h6>
+            <input type="email" name="email" placeholder="Email" />
+            <span id="email-error" class="error-message" style="color: red; display: none; font-size: 12px;"></span>
+
+            <h6>Password</h6>
+            <input type="password" name="password" id="password" placeholder="Password" />
+            <span id="password-error" class="error-message" style="color: red; display: none; font-size: 12px;"></span>
+
+            <h6>Confirm Password</h6>
+            <input type="password" name="confirmPassword" id="confirmPassword" placeholder="Confirm password" />
+            <span id="confirm-password-error" class="error-message"
+              style="color: red; display: none; font-size: 12px;"></span>
+
+            <h6>Referral Code<span style="font-size: 10px;">(optional)</span></h6>
+            <input type="text" name="referralCode" id="referralCode" placeholder="Referral Code" />
+            <span id="referralcode-error" class="error-message"
+              style="color: red; display: none; font-size: 12px;"></span>
+
+            <button class="button-signup" type="submit">Sign Up</button>
+            <p class="message">Already have an account? <a href="/login">Login</a></p>
+          </form>
     </div>
   </div>
-  
-  <script>
-    function validateForm() {
+
+  <script>function validateForm() {
       let isValid = true;
+
       const username = document.getElementsByName('name')[0];
       const email = document.getElementsByName('email')[0];
       const password = document.getElementById('password');
       const confirmPassword = document.getElementById('confirmPassword');
-  
-      // Validate username
+
+      const usernameError = document.getElementById('username-error');
+      const emailError = document.getElementById('email-error');
+      const passwordError = document.getElementById('password-error');
+      const confirmPasswordError = document.getElementById('confirm-password-error');
+
+      [usernameError, emailError, passwordError, confirmPasswordError].forEach(
+        error => error.style.display = 'none'
+      );
+
       if (username.value.trim() === '') {
-        document.getElementById('username-error').style.display = 'block';
+        usernameError.textContent = 'Username cannot be empty';
+        usernameError.style.display = 'block';
         isValid = false;
-      } else {
-        document.getElementById('username-error').style.display = 'none';
-      }
-  
-      // Validate email
-      if (email.value.trim() === '' || !isValidEmail(email.value)) {
-        document.getElementById('email-error').style.display = 'block';
+      } else if (username.value.trim().length < 3 || username.value.trim().length > 20) {
+        usernameError.textContent = 'Username must be between 3 and 20 characters.';
+        usernameError.style.display = 'block';
         isValid = false;
-      } else {
-        document.getElementById('email-error').style.display = 'none';
-      }
-  
-      // Validate password
-      if (!isStrongPassword(password.value)) {
-        document.getElementById('password-error').style.display = 'block';
+      } else if (!isValidUsername(username.value)) {
+        usernameError.textContent = "Username can only contain letters, numbers, underscores, dashes, and periods.";
+        usernameError.style.display = 'block';
         isValid = false;
-      } else {
-        document.getElementById('password-error').style.display = 'none';
-      }
-  
-      // Confirm password
-      if (password.value !== confirmPassword.value) {
-        document.getElementById('confirm-password-error').style.display = 'block';
+      } else if (username.value[0] === '.' || username.value[0] === '_' || username.value[0] === '-' ||
+        username.value[username.value.length - 1] === '.' || username.value[username.value.length - 1] === '_' || username.value[username.value.length - 1] === '-') {
+        usernameError.textContent = "Username cannot start or end with special characters like '_', '-', or '.'";
+        usernameError.style.display = 'block';
         isValid = false;
-      } else {
-        document.getElementById('confirm-password-error').style.display = 'none';
+      } else if (username.value.includes(' ')) {
+        usernameError.textContent = "Username cannot contain spaces.";
+        usernameError.style.display = 'block';
+        isValid = false;
       }
-  
+
+      if (email.value.trim() === '') {
+        emailError.textContent = 'Email cannot be empty';
+        emailError.style.display = 'block';
+        isValid = false;
+      } else if (!isValidEmail(email.value)) {
+        emailError.textContent = 'Please enter a valid email address';
+        emailError.style.display = 'block';
+        isValid = false;
+      } else if (email.value.trim() !== email.value) {
+        emailError.textContent = "Email cannot have leading or trailing spaces.";
+        emailError.style.display = 'block';
+        isValid = false;
+      }
+
+      if (password.value.trim() === '') {
+        passwordError.textContent = 'Password cannot be empty';
+        passwordError.style.display = 'block';
+        isValid = false;
+      } else if (!isStrongPassword(password.value)) {
+        passwordError.textContent = 'Password must be 8+ characters with letter, number, and special character';
+        passwordError.style.display = 'block';
+        isValid = false;
+      }
+
+      if (confirmPassword.value.trim() === '') {
+        confirmPasswordError.textContent = 'Please confirm your password';
+        confirmPasswordError.style.display = 'block';
+        isValid = false;
+      } else if (password.value !== confirmPassword.value) {
+        confirmPasswordError.textContent = 'Passwords do not match';
+        confirmPasswordError.style.display = 'block';
+        isValid = false;
+      }
+
       return isValid;
     }
-  
-    function isValidEmail(email) {
-      const re = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
-      return re.test(email);
+
+    function isValidUsername(username) {
+      const regex = /^[a-zA-Z0-9._-]+$/;
+      return regex.test(username);
     }
-  
+
+    function isValidEmail(email) {
+      const re = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+
+      if (!re.test(email.trim())) {
+        return false;
+      }
+
+      const domain = email.split('@')[1].split('.')[0];
+
+      return domain.length >= 3;
+    }
     function isStrongPassword(password) {
-      const re = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[!@#$%^&*])[A-Za-z\d!@#$%^&*]{8,}$/;
+      const re = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?])[A-Za-z\d!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]{8,}$/;
       return re.test(password);
     }
   </script>
-  
-  
+
+
 </body>
+
 </html>

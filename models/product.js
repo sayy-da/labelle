@@ -1,9 +1,9 @@
 const mongoose = require('mongoose');
 
 const productSchema = new mongoose.Schema({
-  name: {type: String,required: true},
+  name: {type: String,required: true,unique:true},
   fragranceType: {type: String,required: true},
-  gender: {type: String,enum:["Male",'Female','Other'],required: true},
+  gender: {type: String,enum:["Male","Female","Other"],required: true},
   occasions: {type: String, required: true},
   description: {type: String,required: true},
   images:[{type:String}],

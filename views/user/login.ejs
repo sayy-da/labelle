@@ -9,11 +9,11 @@
     <!-- The above 4 meta tags *must* come first in the head; any other head content must come *after* these tags -->
 
     <!-- Title  -->
-    <title>login</title>
+    <title>Labelle</title>
 
     <!-- Favicon  -->
-    <link rel="icon" href="/img/core-img/favicon.png">
-
+   
+    <link rel="icon" href="img/core-img/favicon.ico">
    <style>
       @import url(https://fonts.googleapis.com/css?family=Roboto:300);
 
@@ -62,7 +62,7 @@
   transition: all 0.3 ease;
   cursor: pointer;
   border-radius: 20px;
-  margin-bottom: 9px;
+  margin-bottom: 0px;
 }
 .button-login:hover,.button-login:active,.form button:focus {
   background: #eeba36;
@@ -127,27 +127,95 @@ h6{
   margin-top: 0px;
   margin-bottom: 10px;
 }
+.google-button {
+          
+          display: inline-flex;
+          align-items: center;
+          background-color: #4285f4;
+          color: white;
+          padding: 10px 20px;
+          border: none;
+          border-radius: 4px;
+          font-size: 16px;
+          cursor: pointer;
+          text-decoration: none;
+          transition: background-color 0.3s;
+          margin-bottom: 15px;
+      }
+      .google-button:hover {
+          background-color: #357ae8;
+      }
+      .google-button img {
+          width: 20px;
+          height: 20px;
+          margin-right: 10px;
+      }
+      .signup-google{
+  margin-top: -30px;
+  font-size: 12px;
+  color: #8888CE;
+}
+/* Custom error message box styles */
+.error-message {
+  background-color: #f8d7da; /* Light red background */
+  color: #721c24; /* Dark red text */
+  border: 1px solid #f5c6cb; /* Light red border */
+  padding: 10px;
+  border-radius: 5px; /* Rounded corners */
+  font-size: 10px;
+  margin-bottom: 20px; /* Spacing below the message */
+}
+
+.error-message p {
+  margin: 0; /* Remove margin from the paragraph */
+}
+
+.error-message .close-btn {
+  background: none;
+  border: none;
+  color: #721c24;
+  font-size: 10px;
+  cursor: pointer;
+  position: absolute;
+  top: 10px;
+  right: 10px;
+}
+
+.error-message .close-btn:hover {
+  color: #f5c6cb;
+}
+
+
    </style>
 
 </head>
 <body>
   <div class="login-page">
-
-     <% if (error) { %>
-      <p style="color: red;"><%= error %></p>
-    <% } %>
-
     <div class="form">
+      <div class="signup-container">
+        <p class="signup-google">Signup with your Google account to get started.</p>
+        <a href="/auth/google" class="google-button">
+          <img src="/images/logo/avfci721i.png" alt="Google logo" width="20" height="20">
+          signup with Google
+        </a>
+    </div>
+    <% if (error ) { %>
+      <div class="error-message" role="alert">
+        <p><%= error %></p>
+      </div>
+    <% } %>
+    
         <form class="login-form" action="/login" method="POST" onsubmit="return validateForm()">
             
             <h6>Email</h6>
             <input type="text" name="email" placeholder="Email" />
-            <span id="email-error" style="color: red; display: none; font-size: 12px;">Please enter a valid email.</span>
+            <span id="email-error" class="error-message" style="color: red; display: none; font-size: 12px;"></span>
             
             <h6>Password</h6>
-            <input type="password" name="password" placeholder="Password" />
-            <span id="password-error" style="color: red; display: none; margin-top: -10px; font-size: 12px;">password incorrect</span>
-           
+            <input class="input-2" type="password" name="password" placeholder="Password" />
+            <span id="password-error" class="error-message" style="color: red; display: none; margin-top: -10px; font-size: 12px;"></span>
+            <a href="/forget-password" style="color:#8888CE; font-size: 12px; margin-right:170px; padding-top: -4px; font-weight: bold  ; margin-top: -10px; ">Forget password</a>
+
             <button type="submit" class="button-login"> 
              Login</button>
 
@@ -155,43 +223,51 @@ h6{
         </form>
     </div>
 </div>
-
 <script>
-    function validateForm() {
-        let isValid = true;
-        const email = document.getElementsByName('email')[0];
-        const password = document.getElementsByName('password')[0];
-    
-        // Email validation
-        if (email.value.trim() === '' || !isValidEmail(email.value)) {
-            document.getElementById('email-error').style.display = 'block';
-            isValid = false;
-        } else {
-            document.getElementById('email-error').style.display = 'none';
-        }
 
-        // Password strength validation
-        if (!isStrongPassword(password.value)) {
-            document.getElementById('password-error').style.display = 'block';
-            isValid = false;
-        } else {
-            document.getElementById('password-error').style.display = 'none';
-        }
-    
-        return isValid;
-    }
+  
+function validateForm() {
+  let isValid = true;
+  const email = document.getElementsByName('email')[0];
+  const password = document.getElementsByName('password')[0];
+  const emailErrorSpan = document.getElementById('email-error');
+  const passwordErrorSpan = document.getElementById('password-error');
 
-    function isValidEmail(email) {
-        const re = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
-        return re.test(email);
-    }
+  emailErrorSpan.style.display = 'none';
+  passwordErrorSpan.style.display = 'none';
 
-    function isStrongPassword(password) {
-    // Password must be at least 8 characters long and contain both letters and numbers
-    const re = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[!@#$%^&*])[A-Za-z\d!@#$%^&*]{8,}$/;
-
-    return re.test(password);
+  if (email.value.trim() === '') {
+      emailErrorSpan.textContent = 'Email cannot be empty';
+      emailErrorSpan.style.display = 'block';
+      isValid = false;
+  } else if (!isValidEmail(email.value)) {
+      emailErrorSpan.textContent = 'Please enter a valid email address';
+      emailErrorSpan.style.display = 'block';
+      isValid = false;
   }
+
+  if (password.value.trim() === '') {
+      passwordErrorSpan.textContent = 'Password cannot be empty';
+      passwordErrorSpan.style.display = 'block';
+      isValid = false;
+  } else if (!isStrongPassword(password.value)) {
+      passwordErrorSpan.textContent = 'Incorrect Password';
+      passwordErrorSpan.style.display = 'block';
+      isValid = false;
+  }
+
+  return isValid;
+}
+
+function isValidEmail(email) {
+  const re = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+  return re.test(email.trim());
+}
+
+function isStrongPassword(password) {
+  const re = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?])[A-Za-z\d!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]{8,}$/;
+  return re.test(password);
+}
 </script>
 </body>
 </html>

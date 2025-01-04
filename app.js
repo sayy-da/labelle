@@ -3,7 +3,9 @@ const express = require('express');
 const session = require('express-session');
 const mongoose = require('mongoose');
 const path = require('path');
+const flash = require('connect-flash');
 const passport = require('./config/passport')
+const nocache = require('nocache');
 require('dotenv').config();
 
 const app = express();
@@ -14,7 +16,7 @@ mongoose.connect('mongodb://localhost:27017/labelleDB')
   .then(() => console.log('MongoDB connected'))
   .catch((err) => console.error('Error connecting to MongoDB', err));
 
-// Middleware
+// Middleware 
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(express.static(path.join(__dirname, 'public')));
@@ -24,23 +26,28 @@ app.use(session({
   secret: 'labellesecretkey',
   saveUninitialized: true,
   resave: false,
-  cookie: { maxAge: 3600000 }  // 1 hour expiry time for session cookie
+  cookie: { maxAge:  1000 * 60 * 60 * 24 }  // 24 hour expiry time for session cookie
 }));
 
-
+app.use(nocache());
 app.use(passport.initialize());
 app.use(passport.session())
 
+
+app.use(flash());
 // Middleware to handle error messages
 app.use((req, res, next) => {
   res.locals.message = req.session.message;
   delete req.session.message;  // Clear the message after it's shown
   next();
 });
-``
-// app.get('/',(req,res)=>{
-//   res.render('user/home')
-// })
+
+app.use((req, res, next) => {
+  res.locals.successMessages = req.flash('success');
+  res.locals.errorMessages = req.flash('error');
+  next();
+});
+
 // Set view engine
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
