@@ -32,7 +32,8 @@ async (accessToken,refreshToken,profile,done) => {
       return done(null,user)
     }
   } catch (error) {
-return done(new Error("Login failed"), null);
+return done(null, false, { message: "Login failed" });
+
   }
 }
 ))
