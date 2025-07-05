@@ -1,54 +1,48 @@
-const passport =require('passport')
-const GoogleStrategy =require('passport-google-oauth20').Strategy
-const User = require('../models/users')
-const env = require('dotenv').config()
+const passport = require('passport');
+const GoogleStrategy = require('passport-google-oauth20').Strategy;
+const User = require('../models/users');
+require('dotenv').config();
 
-passport.use(new GoogleStrategy({
-  clientID:process.env.GOOGLE_CLIENT_ID,
-  clientSecret:process.env.GOOGLE_CLIENT_SECRET,
-  callbackURL:'/auth/google/callback'
-},
-async (accessToken,refreshToken,profile,done) => {
-  try {
-    
-    let user = await User.findOne({googleId:profile.id})
+passport.use(new GoogleStrategy(
+  {
+    clientID: process.env.GOOGLE_CLIENT_ID,
+    clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+    callbackURL: '/auth/google/callback',
+  },
+  async (accessToken, refreshToken, profile, done) => {
+    try {
+      console.log('Google Profile:', profile);
 
+      let user = await User.findOne({ googleId: profile.id });
 
-    if(user){
-      console.log(user)
-      if (user.status === 'blocked') {
-        return done(null, false, { error: `${user}Your account is blocked. Please contact support.` });
+      if (user) {
+        return done(null, user);
+      } else {
+        user = new User({
+          name: profile.displayName,
+          email: profile.emails[0].value,
+          googleId: profile.id,
+        });
+        await user.save();
+
+        return done(null, user);
       }
-
-      return done(null,user )
-    }else{
-      user = new User({
-        name:profile.displayName,
-        email:profile.emails[0].value,
-        googleId:profile.id,
-      })
-      await user.save()
-
-      return done(null,user)
+    } catch (error) {
+      console.error('Login error:', error);
+      return done(null, false, { message: "Login failed" });
     }
-  } catch (error) {
-return done(null, false, { message: "Login failed" });
-
   }
-}
-))
+));
 
-passport.serializeUser((user,done)=>{
-done(null,user.id)
-})
-passport.deserializeUser((id,done)=>{
+passport.serializeUser((user, done) => {
+  done(null, user.id);
+});
+
+passport.deserializeUser((id, done) => {
   User.findById(id)
-  .then(user =>{
-    done(null,user)
-  })
-  .catch(err =>{
-    done(err,null)
-  })
-})
+    .then((user) => done(null, user))
+    .catch((err) => done(err, null));
+});
 
-module.exports =passport;
+module.exports = passport;
+

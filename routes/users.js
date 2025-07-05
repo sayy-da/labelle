@@ -17,8 +17,8 @@ router.post('/resend-otp', userController.resendOtp);
 router.get('/login', userController.getLoginPage)
 router.post('/login', userController.login)
 
-router.get('/auth/google', passport.authenticate('google', ({ scope: ['profile', 'email'] })))
-router.get('/auth/google/callback', passport.authenticate('google', { failureRedirect: '/login?error=Your account is blocked. Please contact support.' }), (req, res) => {
+router.get('/auth/google', passport.authenticate('google', { scope: ['profile', 'email'] }));
+router.get('/auth/google/callback', passport.authenticate('google'), (req, res) => {
   req.session.user = req.user._id
   res.redirect('/')
 });
