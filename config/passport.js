@@ -15,9 +15,9 @@ async (accessToken,refreshToken,profile,done) => {
 
 
     if(user){
-      
+      console.log(user)
       if (user.status === 'blocked') {
-        return done(null, false, { error: 'Your account is blocked. Please contact support.' });
+        return done(null, false, { error: `${user}Your account is blocked. Please contact support.` });
       }
 
       return done(null,user )
