@@ -1,996 +1,796 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-    <meta charset="utf-8">
-    <!--  This file has been downloaded from bootdey.com @bootdey on twitter -->
-    <!--  All snippets are MIT license http://bootdey.com/license -->
-    <title>Labelle</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link href="https://netdna.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <link rel="icon" href="img/core-img/favicon.ico">
-
-
-
-    <style type="text/css">
-        body {
-            color: #797979;
-            background: #f1f2f7;
-            font-family: 'Open Sans', sans-serif;
-            padding: 0px !important;
-            margin: 0px !important;
-            font-size: 13px;
-            text-rendering: optimizeLegibility;
-            -webkit-font-smoothing: antialiased;
-            -moz-font-smoothing: antialiased;
-        }
-
-        .profile-nav,
-        .profile-info {
-            margin-top: 30px;
-        }
-
-        .profile-nav .user-heading {
-            background: #fbb710;
-            color: #fff;
-            border-radius: 4px 4px 0 0;
-            -webkit-border-radius: 4px 4px 0 0;
-            padding: 30px;
-            text-align: center;
-        }
-
-        .profile-nav .user-heading.round a {
-            border-radius: 50%;
-            -webkit-border-radius: 50%;
-            border: 10px solid rgba(255, 255, 255, 0.3);
-            display: inline-block;
-        }
-
-        .profile-nav .user-heading a img {
-            width: 112px;
-            height: 112px;
-            border-radius: 50%;
-            -webkit-border-radius: 50%;
-        }
-
-        .profile-nav .user-heading h1 {
-            font-size: 22px;
-            font-weight: 300;
-            margin-bottom: 5px;
-        }
-
-        .profile-nav .user-heading p {
-            font-size: 12px;
-        }
-
-        .profile-nav ul {
-            margin-top: 1px;
-        }
-
-        .profile-nav ul>li {
-            border-bottom: 1px solid #ebeae6;
-            margin-top: 0;
-            line-height: 30px;
-        }
-
-        .profile-nav ul>li:last-child {
-            border-bottom: none;
-        }
-
-        .profile-nav ul>li>a {
-            border-radius: 0;
-            -webkit-border-radius: 0;
-            color: #89817f;
-            border-left: 5px solid #fff;
-        }
-
-        .profile-nav ul>li>a:hover,
-        .profile-nav ul>li>a:focus,
-        .profile-nav ul li.active a {
-            background: #f8f7f5 !important;
-            border-left: 5px solid #fbb710;
-            color: #89817f !important;
-        }
-
-        .profile-nav ul>li:last-child>a:last-child {
-            border-radius: 0 0 4px 4px;
-            -webkit-border-radius: 0 0 4px 4px;
-        }
-
-        .profile-nav ul>li>a>i {
-            font-size: 16px;
-            padding-right: 10px;
-            color: #bcb3aa;
-        }
-
-        .r-activity {
-            margin: 6px 0 0;
-            font-size: 12px;
-        }
-
-
-        .p-text-area,
-        .p-text-area:focus {
-            border: none;
-            font-weight: 300;
-            box-shadow: none;
-            color: #c3c3c3;
-            font-size: 16px;
-        }
-
-        .profile-info .panel-footer {
-            background-color: #f8f7f5;
-            border-top: 1px solid #e7ebee;
-        }
-
-        .profile-info .panel-footer ul li a {
-            color: #7a7a7a;
-        }
-
-        .bio-graph-heading {
-            background: #fbb710;
-            color: #fff;
-            text-align: center;
-            font-style: italic;
-            padding: 40px 110px;
-            border-radius: 4px 4px 0 0;
-            -webkit-border-radius: 4px 4px 0 0;
-            font-size: 16px;
-            font-weight: 300;
-        }
-
-        .bio-graph-info {
-            color: #89817e;
-        }
-
-        .bio-graph-info h1 {
-            font-size: 22px;
-            font-weight: 300;
-            margin: 0 0 20px;
-        }
-
-        .bio-row {
-            width: 50%;
-            float: left;
-            margin-bottom: 10px;
-            padding: 0 15px;
-        }
-
-        .bio-row p span {
-            width: 100px;
-            display: inline-block;
-        }
-
-        .bio-chart,
-        .bio-desk {
-            float: left;
-        }
-
-        .bio-chart {
-            width: 40%;
-        }
-
-        .bio-desk {
-            width: 60%;
-        }
-
-        .bio-desk h4 {
-            font-size: 15px;
-            font-weight: 400;
-        }
-
-        .bio-desk h4.terques {
-            color: #4CC5CD;
-        }
-
-        .bio-desk h4.red {
-            color: #e26b7f;
-        }
-
-        .bio-desk h4.green {
-            color: #97be4b;
-        }
-
-        .bio-desk h4.purple {
-            color: #caa3da;
-        }
-
-        .file-pos {
-            margin: 6px 0 10px 0;
-        }
-
-        .profile-activity h5 {
-            font-weight: 300;
-            margin-top: 0;
-            color: #c3c3c3;
-        }
-
-        .summary-head {
-            background: #ee7272;
-            color: #fff;
-            text-align: center;
-            border-bottom: 1px solid #ee7272;
-        }
-
-        .summary-head h4 {
-            font-weight: 300;
-            text-transform: uppercase;
-            margin-bottom: 5px;
-        }
-
-        .summary-head p {
-            color: rgba(255, 255, 255, 0.6);
-        }
-
-        ul.summary-list {
-            display: inline-block;
-            padding-left: 0;
-            width: 100%;
-            margin-bottom: 0;
-        }
-
-        ul.summary-list>li {
-            display: inline-block;
-            width: 19.5%;
-            text-align: center;
-        }
-
-        ul.summary-list>li>a>i {
-            display: block;
-            font-size: 18px;
-            padding-bottom: 5px;
-        }
-
-        ul.summary-list>li>a {
-            padding: 10px 0;
-            display: inline-block;
-            color: #818181;
-        }
-
-        ul.summary-list>li {
-            border-right: 1px solid #eaeaea;
-        }
-
-        ul.summary-list>li:last-child {
-            border-right: none;
-        }
-
-        .activity {
-            width: 100%;
-            float: left;
-            margin-bottom: 10px;
-        }
-
-        .activity.alt {
-            width: 100%;
-            float: right;
-            margin-bottom: 10px;
-        }
-
-        .activity span {
-            float: left;
-        }
-
-        .activity.alt span {
-            float: right;
-        }
-
-        .activity span,
-        .activity.alt span {
-            width: 45px;
-            height: 45px;
-            line-height: 45px;
-            border-radius: 50%;
-            -webkit-border-radius: 50%;
-            background: #eee;
-            text-align: center;
-            color: #fff;
-            font-size: 16px;
-        }
-
-        .activity.terques span {
-            background: #8dd7d6;
-        }
-
-        .activity.terques h4 {
-            color: #8dd7d6;
-        }
-
-        .activity.purple span {
-            background: #b984dc;
-        }
-
-        .activity.purple h4 {
-            color: #b984dc;
-        }
-
-        .activity.blue span {
-            background: #90b4e6;
-        }
-
-        .activity.blue h4 {
-            color: #90b4e6;
-        }
-
-        .activity.green span {
-            background: #aec785;
-        }
-
-        .activity.green h4 {
-            color: #aec785;
-        }
-
-        .activity h4 {
-            margin-top: 0;
-            font-size: 16px;
-        }
-
-        .activity p {
-            margin-bottom: 0;
-            font-size: 13px;
-        }
-
-        .activity .activity-desk i,
-        .activity.alt .activity-desk i {
-            float: left;
-            font-size: 18px;
-            margin-right: 10px;
-            color: #bebebe;
-        }
-
-        .activity .activity-desk {
-            margin-left: 70px;
-            position: relative;
-        }
-
-        .activity.alt .activity-desk {
-            margin-right: 70px;
-            position: relative;
-        }
-
-        .activity.alt .activity-desk .panel {
-            float: right;
-            position: relative;
-        }
-
-        .activity-desk .panel {
-            background: #F4F4F4;
-            display: inline-block;
-        }
-
-
-        .activity .activity-desk .arrow {
-            border-right: 8px solid #F4F4F4 !important;
-        }
-
-        .activity .activity-desk .arrow {
-            border-bottom: 8px solid transparent;
-            border-top: 8px solid transparent;
-            display: block;
-            height: 0;
-            left: -7px;
-            position: absolute;
-            top: 13px;
-            width: 0;
-        }
-
-        .activity-desk .arrow-alt {
-            border-left: 8px solid #F4F4F4 !important;
-        }
-
-        .activity-desk .arrow-alt {
-            border-bottom: 8px solid transparent;
-            border-top: 8px solid transparent;
-            display: block;
-            height: 0;
-            right: -7px;
-            position: absolute;
-            top: 13px;
-            width: 0;
-        }
-
-        .activity-desk .album {
-            display: inline-block;
-            margin-top: 10px;
-        }
-
-        .activity-desk .album a {
-            margin-right: 10px;
-        }
-
-        .activity-desk .album a:last-child {
-            margin-right: 0px;
-        }
-
-        .my-button {
-            background-color: #FBB710;
-            /* Set background color */
-            color: white;
-            /* Set text color */
-            border: none;
-            /* Remove border */
-            padding: 10px 20px;
-            /* Add padding */
-            font-size: 16px;
-            /* Set font size */
-            cursor: pointer;
-            /* Change cursor on hover */
-            border-radius: 5px;
-            /* Optional: rounded corners */
-            display: inline-flex;
-            /* Align icon and text inline */
-            align-items: center;
-            /* Center content vertically */
-            margin-left: 340px;
-
-        }
-
-        .my-button i {
-            margin-right: 8px;
-            /* Space between icon and text */
-        }
-
-        .my-button:hover {
-            background-color: #e89a0f;
-            /* Darker shade on hover */
-        }
-
-        /* Navbar Style */
-        /* Navbar Style */
-        .navbar {
-            background-color: white;
-            /* White background for navbar */
-            padding: 10px 0;
-            /* Padding for spacing */
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-            /* Optional shadow for navbar */
-            margin-bottom: 0px;
-        }
-
-        .navbar-links {
-            list-style-type: none;
-            /* Remove default list styling */
-            display: flex;
-            /* Align navbar items horizontally */
-            justify-content: center;
-            /* Center the items */
-            padding: 15px 50px;
-            /* Remove default padding */
-            margin-left: 420px;
-        }
-
-        .navbar-links li {
-            margin: 0 20px;
-            /* Space between navbar items */
-
-        }
-
-        .navbar-links a {
-            text-decoration: none;
-            /* Remove underline from links */
-            color: black;
-            /* Set text color to black */
-            font-size: 14px;
-            /* Set font size */
-            transition: color 0.3s ease, background-color 0.3s ease;
-            /* Smooth transition for hover and active states */
-            padding: 5px 10px;
-            /* Padding around text */
-            border-radius: 4px;
-            /* Rounded corners */
-
-        }
-
-        .navbar-links a:hover {
-            color: white;
-            /* Change text color to white on hover */
-            background-color: #FBB710;
-            /* Highlight with #FBB710 on hover */
-        }
-
-        /* Active Link */
-        .navbar-links .active {
-            color: white;
-            /* Set text color to white */
-            background-color: #FBB710;
-            /* Set background color to #FBB710 */
-        }
-
-        .modal {
-            display: none;
-            /* Hidden by default */
-            position: fixed;
-            z-index: 1;
-            /* Sit on top */
-            left: 0;
-            top: 0;
-            width: 100%;
-            height: 100%;
-            overflow: auto;
-            /* Enable scroll if needed */
-            background-color: rgba(0, 0, 0, 0.5);
-            /* Black with opacity */
-        }
-
-        .modal-content {
-            background-color: #fff;
-            margin: 15% auto;
-            padding: 20px;
-            border: 1px solid #888;
-            width: 80%;
-            max-width: 500px;
-            border-radius: 8px;
-        }
-
-        .close-btn {
-            color: #aaa;
-            float: right;
-            font-size: 28px;
-            font-weight: bold;
-        }
-
-        .close-btn:hover,
-        .close-btn:focus {
-            color: black;
-            text-decoration: none;
-            cursor: pointer;
-        }
-
-        /* Form Styling */
-        form {
-            display: flex;
-            flex-direction: column;
-        }
-
-        form label {
-            margin-right: 10px;
-        }
-
-        form input {
-            margin-left: 20px;
-            margin-bottom: 10px;
-            padding: 8px;
-            font-size: 14px;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-        }
-
-        form button {
-            background-color: #FBB710;
-            color: white;
-            padding: 10px;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-        }
-
-        form button:hover {
-            background-color: #F8A800;
-            /* Darker yellow on hover */
-        }
-
-        .box {
-            border: 1;
-            border-radius: 5px;
-            border-color: black;
-            width: 100px;
-            background-color: #4CC5CD;
-        }
-
-        /* General Form Styling */
-        #viewProfileForm {
-            max-width: 800px;
-            margin: 0 auto;
-            padding: 20px;
-            border: 1px solid #ddd;
-            border-radius: 10px;
-            background-color: #f9f9f9;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-        }
-
-        .bio-row {
-            margin-bottom: 15px;
-            display: flex;
-            flex-direction: column;
-        }
-
-        .bio-row label {
-            font-weight: bold;
-            margin-bottom: 5px;
-            color: #333;
-        }
-
-        .bio-row input,
-        .bio-row select {
-            width: 100%;
-            padding: 10px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            font-size: 16px;
-            color: #333;
-            background-color: #fff;
-            transition: border-color 0.3s ease, background-color 0.3s ease;
-        }
-
-        .bio-row input:focus,
-        .bio-row select:focus {
-            border-color: #fbb710;
-            background-color: #fffee9;
-            outline: none;
-            box-shadow: 0 0 5px rgba(242, 207, 34, 0.5);
-        }
-
-        /* Styling for Read-Only Fields */
-        .bio-row input[readonly],
-        .bio-row input[disabled],
-        .bio-row select[disabled] {
-            background-color: #f8f9fa;
-            color: #6c757d;
-            border: 1px solid #e0e0e0;
-            cursor: not-allowed;
-        }
-
-        /* Buttons */
-        #editBtn,
-        #saveBtn {
-            padding: 10px 20px;
-            font-size: 16px;
-            color: #fff;
-            background-color: #fbb710;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            transition: background-color 0.3s ease;
-        }
-
-        #editBtn:hover,
-        #saveBtn:hover {
-            background-color: #d9673a;
-        }
-
-        #saveBtn {
-            display: none;
-            /* Initially hidden */
-        }
-
-        /* Change Password Link */
-        .btn-change-password {
-            display: inline-block;
-            font-size: 16px;
-            color: #007bff;
-            text-decoration: none;
-            margin-top: 10px;
-            transition: color 0.3s ease;
-        }
-
-        .btn-change-password:hover {
-            color: #0056b3;
-            text-decoration: underline;
-        }
-
-        /* Heading Styles */
-        h1,
-        h2 {
-            color: #343a40;
-            text-align: center;
-            margin-bottom: 20px;
-        }
-
-        /* Responsive Design */
-        @media (max-width: 768px) {
-            #viewProfileForm {
-                padding: 15px;
-            }
-
-            .bio-row label {
-                font-size: 14px;
-            }
-
-            .bio-row input,
-            .bio-row select {
-                font-size: 14px;
-            }
-
-            #editBtn,
-            #saveBtn {
-                font-size: 14px;
-                padding: 8px 12px;
-            }
-        }
-
-        .error {
-            border-color: red;
-        }
-
-        h1 {
-            color: #333;
-            margin-bottom: 20px;
-        }
-
-        .referral-container {
-            background-color: #fff;
-            border-radius: 8px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            padding: 20px;
-            text-align: center;
-            width: 100%;
-            max-width: 400px;
-        }
-
-        .referral-container h2 {
-            font-size: 1.5em;
-            margin-bottom: 10px;
-            color: #333;
-        }
-
-        #referralCodeDisplay {
-            font-size: 1.2em;
-            font-weight: bold;
-            color: #2d87f0;
-            margin: 10px 0;
-            word-wrap: break-word;
-            padding: 8px;
-            background-color: #f0f8ff;
-            border-radius: 5px;
-            border: 1px solid #d1e2f1;
-        }
-
-        button {
-            background-color: #fbb710;
-            color: white;
-            font-size: 1em;
-            padding: 10px 20px;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            transition: background-color 0.3s ease;
-            margin-top: 15px;
-        }
-
-        button:hover {
-            background-color: #f7db95;
-        }
-
-        button:active {
-            background-color: #1a5b9d;
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Labelle — My Profile</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Jost:wght@300;400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --cream: #f9f4ee;
+      --warm-white: #fdf9f5;
+      --gold: #c9a96e;
+      --gold-light: #e8d5b0;
+      --dark: #1a1410;
+      --muted: #8a7968;
+      --border: rgba(201,169,110,0.25);
+      --panel-bg: #fff8f2;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Jost', sans-serif;
+      background: var(--warm-white);
+      color: var(--dark);
+      overflow-x: hidden;
+      min-height: 100vh;
+    }
+
+    /* ── NAVBAR ── */
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 5vw;
+      height: 72px;
+      background: rgba(253,249,245,0.92);
+      backdrop-filter: blur(14px);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .nav-logo {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.7rem;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      color: var(--dark);
+      text-decoration: none;
+    }
+    .nav-logo span { color: var(--gold); }
+
+    .nav-links {
+      display: flex;
+      gap: 2.4rem;
+      list-style: none;
+    }
+    .nav-links a {
+      text-decoration: none;
+      font-size: 0.78rem;
+      font-weight: 400;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--muted);
+      transition: color 0.2s;
+    }
+    .nav-links a:hover { color: var(--gold); }
+
+    .nav-actions {
+      display: flex;
+      align-items: center;
+      gap: 1.4rem;
+    }
+    .nav-actions a {
+      text-decoration: none;
+      font-size: 0.75rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--muted);
+      transition: color 0.2s;
+    }
+    .nav-actions a:hover { color: var(--dark); }
+
+    /* ── PAGE WRAPPER ── */
+    .page-wrapper {
+      padding-top: 72px;
+      min-height: 100vh;
+    }
+
+    /* ── PAGE HEADER BANNER ── */
+    .page-banner {
+      background: linear-gradient(135deg, #1a1410 0%, #2e1f10 40%, #4a2e18 70%, #1a1410 100%);
+      padding: 3.5rem 5vw 3rem;
+      position: relative;
+      overflow: hidden;
+    }
+    .page-banner::before {
+      content: '';
+      position: absolute;
+      top: -60%;
+      right: -5%;
+      width: 50vw;
+      height: 50vw;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(201,169,110,0.15) 0%, transparent 65%);
+      pointer-events: none;
+    }
+    .banner-inner {
+      position: relative;
+      z-index: 1;
+    }
+    .banner-eyebrow {
+      font-size: 0.68rem;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 0.6rem;
+    }
+    .banner-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(2rem, 4vw, 3rem);
+      font-weight: 300;
+      color: var(--cream);
+      line-height: 1.1;
+    }
+    .banner-title em {
+      font-style: italic;
+      color: var(--gold-light);
+    }
+
+    /* ── LAYOUT ── */
+    .profile-layout {
+      display: grid;
+      grid-template-columns: 280px 1fr;
+      gap: 2rem;
+      padding: 2.5rem 5vw 4rem;
+      max-width: 1200px;
+      margin: 0 auto;
+      align-items: start;
+    }
+
+    /* ── SIDEBAR ── */
+    .sidebar {
+      position: sticky;
+      top: 90px;
+      animation: fadeUp 0.8s cubic-bezier(0.22,1,0.36,1) both;
+    }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(24px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .sidebar-card {
+      background: var(--panel-bg);
+      border: 1px solid var(--border);
+      overflow: hidden;
+    }
+
+    .sidebar-avatar-area {
+      background: linear-gradient(145deg, #1a1410, #2e1f10);
+      padding: 2.2rem 1.5rem 1.8rem;
+      text-align: center;
+      position: relative;
+    }
+    .sidebar-avatar-area::after {
+      content: '';
+      position: absolute;
+      bottom: -1px;
+      left: 0; right: 0;
+      height: 2px;
+      background: linear-gradient(to right, transparent, var(--gold), transparent);
+    }
+
+    .avatar-ring {
+      width: 96px;
+      height: 96px;
+      border-radius: 50%;
+      border: 2px solid var(--gold);
+      padding: 3px;
+      display: inline-block;
+      margin-bottom: 1rem;
+    }
+    .avatar-ring img {
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      object-fit: cover;
+      display: block;
+    }
+
+    .sidebar-name {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.3rem;
+      font-weight: 400;
+      color: var(--cream);
+      margin-bottom: 0.25rem;
+    }
+    .sidebar-email {
+      font-size: 0.72rem;
+      color: rgba(249,244,238,0.45);
+      letter-spacing: 0.04em;
+      word-break: break-all;
+    }
+    .sidebar-email a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    .sidebar-nav {
+      list-style: none;
+      padding: 0.5rem 0;
+    }
+    .sidebar-nav li { border-bottom: 1px solid var(--border); }
+    .sidebar-nav li:last-child { border-bottom: none; }
+    .sidebar-nav a {
+      display: flex;
+      align-items: center;
+      gap: 0.9rem;
+      padding: 0.85rem 1.4rem;
+      text-decoration: none;
+      font-size: 0.78rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--muted);
+      transition: background 0.2s, color 0.2s, border-left 0.2s;
+      border-left: 3px solid transparent;
+    }
+    .sidebar-nav a:hover {
+      background: rgba(201,169,110,0.06);
+      color: var(--dark);
+      border-left-color: var(--gold);
+    }
+    .sidebar-nav li.active a {
+      background: rgba(201,169,110,0.08);
+      color: var(--dark);
+      border-left-color: var(--gold);
+    }
+    .sidebar-nav i {
+      font-size: 0.85rem;
+      color: var(--gold);
+      width: 16px;
+      text-align: center;
+    }
+
+    /* ── MAIN CONTENT ── */
+    .main-content {
+      display: flex;
+      flex-direction: column;
+      gap: 1.8rem;
+      animation: fadeUp 0.8s 0.12s cubic-bezier(0.22,1,0.36,1) both;
+    }
+
+    .content-panel {
+      background: var(--panel-bg);
+      border: 1px solid var(--border);
+      overflow: hidden;
+    }
+
+    .panel-header {
+      padding: 1.4rem 2rem;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+    }
+
+    .panel-title-group {}
+    .panel-eyebrow {
+      font-size: 0.65rem;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 0.2rem;
+    }
+    .panel-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.5rem;
+      font-weight: 300;
+      color: var(--dark);
+    }
+
+    .panel-body {
+      padding: 2rem;
+    }
+
+    /* ── FORM GRID ── */
+    .form-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.4rem 2rem;
+    }
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+    .form-group.full { grid-column: 1 / -1; }
+
+    .form-label {
+      font-size: 0.68rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+
+    .form-input,
+    .form-select {
+      padding: 0.75rem 1rem;
+      background: var(--warm-white);
+      border: 1px solid var(--border);
+      color: var(--dark);
+      font-family: 'Jost', sans-serif;
+      font-size: 0.88rem;
+      font-weight: 300;
+      outline: none;
+      transition: border-color 0.2s, background 0.2s;
+      appearance: none;
+      -webkit-appearance: none;
+    }
+    .form-input:focus, .form-select:focus {
+      border-color: var(--gold);
+      background: #fffdf8;
+    }
+    .form-input:disabled,
+    .form-input[readonly],
+    .form-select:disabled {
+      background: #f4ede6;
+      color: var(--muted);
+      cursor: not-allowed;
+      border-color: rgba(201,169,110,0.15);
+    }
+
+    .select-wrapper {
+      position: relative;
+    }
+    .select-wrapper::after {
+      content: '▾';
+      position: absolute;
+      right: 1rem;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--gold);
+      pointer-events: none;
+      font-size: 0.8rem;
+    }
+
+    .field-error {
+      font-size: 0.72rem;
+      color: #c0392b;
+      margin-top: 0.2rem;
+    }
+
+    /* password link row */
+    .password-row {
+      display: flex;
+      align-items: center;
+      gap: 0.8rem;
+    }
+    .link-change-pwd {
+      font-size: 0.78rem;
+      color: var(--gold);
+      text-decoration: none;
+      letter-spacing: 0.08em;
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      transition: color 0.2s;
+    }
+    .link-change-pwd:hover { color: var(--dark); }
+
+    /* ── BUTTONS ── */
+    .btn-row {
+      display: flex;
+      gap: 1rem;
+      padding: 1.4rem 2rem;
+      border-top: 1px solid var(--border);
+      background: rgba(249,244,238,0.4);
+    }
+
+    .btn-gold {
+      padding: 0.75rem 2rem;
+      background: var(--gold);
+      color: var(--dark);
+      border: none;
+      font-family: 'Jost', sans-serif;
+      font-size: 0.75rem;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      font-weight: 500;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      transition: background 0.2s, transform 0.2s;
+    }
+    .btn-gold:hover { background: var(--gold-light); transform: translateY(-1px); }
+
+    .btn-outline-dark {
+      padding: 0.75rem 2rem;
+      background: transparent;
+      color: var(--dark);
+      border: 1px solid rgba(26,20,16,0.3);
+      font-family: 'Jost', sans-serif;
+      font-size: 0.75rem;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      font-weight: 400;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      transition: background 0.2s, color 0.2s, border-color 0.2s;
+    }
+    .btn-outline-dark:hover {
+      background: var(--dark);
+      color: var(--cream);
+    }
+
+    /* ── REFERRAL PANEL ── */
+    .referral-inner {
+      display: flex;
+      align-items: center;
+      gap: 2rem;
+      flex-wrap: wrap;
+    }
+    .referral-code-box {
+      flex: 1;
+      min-width: 180px;
+      padding: 1rem 1.4rem;
+      background: linear-gradient(135deg, #1a1410, #2e1f10);
+      border: 1px solid rgba(201,169,110,0.3);
+      position: relative;
+      overflow: hidden;
+    }
+    .referral-code-box::before {
+      content: '';
+      position: absolute;
+      top: -40%;
+      right: -10%;
+      width: 120px;
+      height: 120px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(201,169,110,0.18) 0%, transparent 70%);
+    }
+    .referral-label {
+      font-size: 0.62rem;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: rgba(249,244,238,0.4);
+      margin-bottom: 0.4rem;
+    }
+    .referral-code {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.5rem;
+      font-weight: 600;
+      letter-spacing: 0.18em;
+      color: var(--gold-light);
+      position: relative;
+    }
+
+    .referral-desc {
+      flex: 2;
+      min-width: 200px;
+    }
+    .referral-desc p {
+      font-size: 0.83rem;
+      color: var(--muted);
+      line-height: 1.7;
+      font-weight: 300;
+      margin-bottom: 1rem;
+    }
+
+    .btn-whatsapp {
+      padding: 0.7rem 1.6rem;
+      background: #25d366;
+      color: white;
+      border: none;
+      font-family: 'Jost', sans-serif;
+      font-size: 0.75rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      font-weight: 500;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      transition: background 0.2s;
+    }
+    .btn-whatsapp:hover { background: #1ebe5d; }
+
+    /* ── GOLD DIVIDER ── */
+    .gold-divider {
+      height: 1px;
+      background: linear-gradient(to right, transparent, var(--gold), transparent);
+      margin: 0;
+    }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 900px) {
+      .profile-layout {
+        grid-template-columns: 1fr;
+      }
+      .sidebar { position: static; }
+    }
+    @media (max-width: 600px) {
+      .form-grid { grid-template-columns: 1fr; }
+      .form-group.full { grid-column: 1; }
+      .nav-links { display: none; }
+      .referral-inner { flex-direction: column; }
+    }
+  </style>
 </head>
-
 <body>
-    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet">
 
-    <nav class="navbar">
+<!-- ── NAVBAR ── -->
+<nav>
+  <a href="/" class="nav-logo">La<span>belle</span></a>
+  <ul class="nav-links">
+    <li><a href="/">Home</a></li>
+    <li><a href="/shop">Shop</a></li>
+    <li><a href="#">Contact</a></li>
+  </ul>
+  <div class="nav-actions">
+    <% if (typeof user !== 'undefined' && user) { %>
+      <a href="#">Favourites</a>
+      <a href="/user-profile">Profile</a>
+    <% } else { %>
+      <a href="/login">Login</a>
+    <% } %>
+  </div>
+</nav>
 
-        <ul class="navbar-links">
+<div class="page-wrapper">
 
-            <li><a href="/">Home</a></li>
-            <li><a href="/shop">Shop</a></li>
-            <li><a href="#">Contact</a></li>
+  <!-- ── BANNER ── -->
+  <div class="page-banner">
+    <div class="banner-inner">
+      <p class="banner-eyebrow">Account</p>
+      <h1 class="banner-title">My <em>Profile</em></h1>
+    </div>
+  </div>
+
+  <!-- ── LAYOUT ── -->
+  <div class="profile-layout">
+
+    <!-- ── SIDEBAR ── -->
+    <aside class="sidebar">
+      <div class="sidebar-card">
+        <div class="sidebar-avatar-area">
+          <div class="avatar-ring">
+            <img src="<%= userData.gender === 'male'
+              ? 'https://www.bootdey.com/img/Content/avatar/avatar2.png'
+              : userData.gender === 'female'
+              ? 'https://www.bootdey.com/img/Content/avatar/avatar3.png'
+              : 'https://via.placeholder.com/150' %>"
+              alt="User Avatar" id="profileAvatar">
+          </div>
+          <div class="sidebar-name"><%= userData ? userData.name : 'Guest' %></div>
+          <div class="sidebar-email">
+            <a href="mailto:<%= userData ? userData.email : '' %>">
+              <%= userData ? userData.email : 'Email not available' %>
+            </a>
+          </div>
+        </div>
+
+        <ul class="sidebar-nav">
+          <li id="profile"><a href="/user-profile"><i class="fa fa-user"></i> Profile</a></li>
+          <li id="address-book"><a href="/user-address"><i class="fa fa-location-dot"></i> Address Book</a></li>
+          <li id="order-details"><a href="/user-order"><i class="fa fa-bag-shopping"></i> Order Details</a></li>
+          <li id="coupon"><a href="/user-coupon"><i class="fa fa-tag"></i> Coupons</a></li>
+          <li id="wallet"><a href="/user-wallet"><i class="fa fa-wallet"></i> Wallet</a></li>
+          <% if (typeof user !== 'undefined' && user) { %>
+          <li id="logout"><a href="/logout"><i class="fa fa-right-from-bracket"></i> Logout</a></li>
+          <% } %>
         </ul>
-    </nav>
+      </div>
+    </aside>
 
-    <div class="container bootstrap snippets bootdey">
-        <div class="row">
-            <div class="profile-nav col-md-3">
-                <div class="panel">
-                    <div class="user-heading round">
-                        <a href="#">
-                            <img src="<%= userData.gender === 'male' 
-                  ? 'https://www.bootdey.com/img/Content/avatar/avatar2.png' 
-                  : userData.gender === 'female' 
-                  ? 'https://www.bootdey.com/img/Content/avatar/avatar3.png' 
-                  : 'https://via.placeholder.com/150' %>" alt="User Avatar" id="profileAvatar">
-                        </a>
-                        <h1>
-                            <%= userData ? userData.name : 'Guest' %>
-                        </h1>
-                        <p>
-                            <a href="mailto:<%= userData ? userData.email : 'not available' %>">
-                                <%= userData ? userData.email : 'Email not available' %>
-                            </a>
-                        </p>
+    <!-- ── MAIN ── -->
+    <main class="main-content">
 
-                    </div>
+      <!-- Personal Info Panel -->
+      <div class="content-panel">
+        <div class="panel-header">
+          <div class="panel-title-group">
+            <p class="panel-eyebrow">Account Details</p>
+            <h2 class="panel-title">Personal Information</h2>
+          </div>
+        </div>
 
-                    <ul class="nav nav-pills nav-stacked">
-                        <li id="profile"><a href="/user-profile"> <i class="fa fa-user"></i> Profile</a></li>
-                        <li id="address-book"><a href="/user-address"> <i class="fa fa-address-book"></i> Address
-                                Book</a></li>
-                        <li id="order-details"><a href="/user-order"> <i class="fa fa-shopping-basket"></i> Order
-                                Details</a></li>
-                        <li id="coupon"><a href="/user-coupon"> <i class="fa fa-ticket-alt"></i> Coupon</a></li>
-                        <li id="wallet"><a href="/user-wallet"> <i class="fa fa-wallet"></i> Wallet</a></li>
-                        <% if (typeof user !=='undefined' && user) { %>
-                            <li id="logout"><a href="/logout"> <i class="fa fa-sign-out"></i>Logout</a></li>
-                            <% } %>
-                    </ul>
+        <form id="viewProfileForm">
+          <div class="panel-body">
+            <div class="form-grid">
+
+              <div class="form-group">
+                <label class="form-label" for="name">Full Name</label>
+                <input class="form-input" type="text" id="name" name="name"
+                  value="<%= userData.name || '' %>" disabled readonly />
+              </div>
+
+              <div class="form-group">
+                <label class="form-label" for="email">Email Address</label>
+                <input class="form-input" type="email" id="email" name="email"
+                  value="<%= userData.email || '' %>" disabled readonly />
+              </div>
+
+              <div class="form-group">
+                <label class="form-label" for="gender">Gender</label>
+                <div class="select-wrapper">
+                  <select class="form-select" id="gender" name="gender" disabled>
+                    <option value="male"   <%= userData.gender === 'male'   ? 'selected' : '' %>>Male</option>
+                    <option value="female" <%= userData.gender === 'female' ? 'selected' : '' %>>Female</option>
+                    <option value="other"  <%= userData.gender === 'other'  ? 'selected' : '' %>>Other</option>
+                  </select>
                 </div>
-            </div>
-            <script>
-                const currentPage = window.location.pathname;
+              </div>
 
-                const pages = {
-                    "/user-profile": "profile",
-                    "/user-address": "address-book",
-                    "/user-order": "order-details",
-                    "/user-coupon": "coupon",
-                    "/user-wallet": "wallet"
-                };
+              <div class="form-group">
+                <label class="form-label" for="dateofbirth">Date of Birth</label>
+                <input class="form-input" type="date" id="dateofbirth" name="dateofbirth"
+                  value="<%= userData.dateofbirth || '' %>" disabled />
+              </div>
 
-                for (let page in pages) {
-                    if (currentPage === page) {
-                        document.getElementById(pages[page]).classList.add('active');
-                    }
-                }
-            </script>
-            <div class="profile-info col-md-9">
-                <div class="panel">
+              <div class="form-group full">
+                <label class="form-label" for="phone">Phone Number</label>
+                <input class="form-input" type="tel" id="phone" name="phone"
+                  value="<%= userData.phone || '' %>" placeholder="Enter phone number" disabled />
+                <span id="phoneError" class="field-error"></span>
+              </div>
 
-                    <div class="panel-body bio-graph-info">
-                        <h1>Personal Information</h1>
-                        <div class="profile-container">
-                            <h2>User Profile</h2>
-                            <form id="viewProfileForm">
-                                <div class="row">
-                                    <!-- Non-editable fields -->
-                                    <div class="bio-row">
-                                        <label class="userlabel" for="name"><span>Name : </span></label>
-                                        <input type="text" id="name" name="name" value="<%= userData.name || '' %>"
-                                            disabled readonly />
-                                    </div>
-                                    <div class="bio-row">
-                                        <label class="userlabel" for="email"><span>Email : </span></label>
-                                        <input type="email" id="email" name="email" value="<%= userData.email || '' %>"
-                                            disabled readonly />
-                                    </div>
-                                    <div class="bio-row">
-                                        <label class="userlabel" for="gender">Gender : </label>
-                                        <select id="gender" name="gender" class="form-control" disabled>
-                                            <option value="male" <%=userData.gender==='male' ? 'selected' : '' %>>Male
-                                            </option>
-                                            <option value="female" <%=userData.gender==='female' ? 'selected' : '' %>
-                                                >Female</option>
-                                            <option value="other" <%=userData.gender==='other' ? 'selected' : '' %>
-                                                >Other</option>
-                                        </select>
-                                    </div>
-                                    <!-- Editable fields -->
-                                    <div class="bio-row">
-                                        <label class="userlabel" for="dateofbirth">Date of Birth : </label>
-                                        <input type="date" id="dateofbirth" name="dateofbirth"
-                                            value="<%= userData.dateofbirth || '' %>" disabled />
-                                    </div>
-
-                                    <div class="bio-row">
-                                        <label class="userlabel" for="phone">Phone : </label>
-                                        <input type="tel" id="phone" name="phone" value="<%= userData.phone || '' %>"
-                                            placeholder="Enter phone number" disabled />
-                                        <span id="phoneError" style="color: red; font-size: 0.9em;"></span>
-                                    </div>
-
-
-                                    <div class="bio-row">
-                                        <label class="userlabel" for="phone">password : </label>
-                                        <a href="/change-password" class="btn-change-password"><i
-                                                class="fa fa-edit"></i> Change Password</a>
-                                    </div>
-
-                                </div>
-                                <!-- Hidden field for userId -->
-                                <input type="hidden" id="userId" name="userId" value="<%= userData._id %>">
-                                <!-- Buttons -->
-                                <button type="button" id="editBtn" class="edit-button">
-                                    <i class="fa fa-edit"></i> Edit Profile
-                                </button>
-                                <button type="button" id="saveBtn" class="save-button" style="display: none;">
-                                    <i class="fa fa-save"></i> Save Changes
-                                </button>
-                            </form>
-                        </div>
-                    </div>
-                    <div class="referral-container" style="margin-left: 200px;">
-                        <h2>Your Referral Code:</h2>
-                        <p id="referralCodeDisplay">
-                            <%= userData.referralCode %>
-                        </p> <!-- Display referral code with id -->
-                        <!-- WhatsApp button -->
-                        <button onclick="sendToWhatsApp()">Send Referral Code via WhatsApp</button>
-                    </div>
+              <div class="form-group full">
+                <label class="form-label">Password</label>
+                <div class="password-row">
+                  <input class="form-input" type="password" value="••••••••••" disabled readonly
+                    style="max-width:200px; letter-spacing:0.2em;" />
+                  <a href="/change-password" class="link-change-pwd">
+                    <i class="fa fa-pen-to-square"></i> Change Password
+                  </a>
                 </div>
+              </div>
 
             </div>
+          </div>
 
+          <div class="gold-divider"></div>
 
-            <script>
-                const referralCode = document.getElementById("referralCodeDisplay").innerText;
+          <div class="btn-row">
+            <button type="button" id="editBtn" class="btn-gold">
+              <i class="fa fa-pen"></i> Edit Profile
+            </button>
+            <button type="button" id="saveBtn" class="btn-gold" style="display:none;">
+              <i class="fa fa-floppy-disk"></i> Save Changes
+            </button>
+            <button type="button" id="cancelBtn" class="btn-outline-dark" style="display:none;">
+              Cancel
+            </button>
+          </div>
 
-                function sendToWhatsApp() {
-                    const message = `Hello! Check out this. I am inviting you to use Labelle  a simple perfume  selling app ,Here is my code ${referralCode} just enter it before your Registration.`
-                    const whatsappUrl = `https://wa.me/?text=${encodeURIComponent(message)}`;
-                    window.open(whatsappUrl, '_blank');
-                }
+          <input type="hidden" id="userId" name="userId" value="<%= userData._id %>">
+        </form>
+      </div>
 
-                const editButton = document.getElementById("editBtn");
-                const saveButton = document.getElementById("saveBtn");
-                const inputs = document.querySelectorAll("#viewProfileForm input, #viewProfileForm select");
+      <!-- Referral Panel -->
+      <div class="content-panel">
+        <div class="panel-header">
+          <div class="panel-title-group">
+            <p class="panel-eyebrow">Share &amp; Earn</p>
+            <h2 class="panel-title">Your Referral Code</h2>
+          </div>
+        </div>
+        <div class="panel-body">
+          <div class="referral-inner">
+            <div class="referral-code-box">
+              <div class="referral-label">Your Code</div>
+              <div class="referral-code" id="referralCodeDisplay"><%= userData.referralCode %></div>
+            </div>
+            <div class="referral-desc">
+              <p>Share your referral code with friends and family. When they sign up using your code, both of you will enjoy exclusive Labelle benefits.</p>
+              <button class="btn-whatsapp" onclick="sendToWhatsApp()">
+                <i class="fab fa-whatsapp"></i> Share on WhatsApp
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
 
-                editButton.onclick = function () {
-                    inputs.forEach(input => {
-                        if (input.id !== "name" && input.id !== "email" && input.id !== "userId") {
-                            input.removeAttribute("disabled");
-                            input.removeAttribute("readonly");
-                        }
-                    });
-                    editButton.style.display = "none";
-                    saveButton.style.display = "inline-block";
-                };
+    </main>
+  </div>
+</div>
 
-                saveButton.onclick = async function () {
-                    const phoneInput = document.getElementById("phone");
-                    const phoneError = document.getElementById("phoneError");
-                    const phone = phoneInput.value.trim();
+<script>
+  // Active nav item
+  const currentPage = window.location.pathname;
+  const pages = {
+    "/user-profile":  "profile",
+    "/user-address":  "address-book",
+    "/user-order":    "order-details",
+    "/user-coupon":   "coupon",
+    "/user-wallet":   "wallet"
+  };
+  for (let page in pages) {
+    if (currentPage === page) {
+      const el = document.getElementById(pages[page]);
+      if (el) el.classList.add('active');
+    }
+  }
 
-                    if (!/^[6-9]\d{9}$/.test(phone)) {
-                        phoneError.textContent = "Phone number must be 10 digits and start with 6-9.";
-                        phoneInput.classList.add("error");
-                        return;
-                    } else {
-                        phoneError.textContent = "";
-                        phoneInput.classList.remove("error");
-                    }
+  // Edit / Save / Cancel
+  const editBtn   = document.getElementById("editBtn");
+  const saveBtn   = document.getElementById("saveBtn");
+  const cancelBtn = document.getElementById("cancelBtn");
+  const inputs    = document.querySelectorAll("#viewProfileForm input, #viewProfileForm select");
 
-                    const formData = {
-                        dateofbirth: document.getElementById("dateofbirth").value,
-                        phone: phone,
-                        gender: document.getElementById("gender").value,
-                        userId: document.getElementById("userId").value
-                    };
+  function enableEditing() {
+    inputs.forEach(input => {
+      if (!["name","email","userId"].includes(input.id)) {
+        input.removeAttribute("disabled");
+        input.removeAttribute("readonly");
+      }
+    });
+    editBtn.style.display   = "none";
+    saveBtn.style.display   = "inline-flex";
+    cancelBtn.style.display = "inline-flex";
+  }
 
-                    try {
-                        const response = await fetch("/user-profile/edit", {
-                            method: "POST",
-                            headers: {
-                                "Content-Type": "application/json"
-                            },
-                            body: JSON.stringify(formData)
-                        });
+  function disableEditing() {
+    inputs.forEach(input => {
+      input.setAttribute("disabled", true);
+    });
+    editBtn.style.display   = "inline-flex";
+    saveBtn.style.display   = "none";
+    cancelBtn.style.display = "none";
+    document.getElementById("phoneError").textContent = "";
+  }
 
-                        const result = await response.json();
-                        if (result.success) {
-                            Swal.fire({
-                                title: 'Success!',
-                                text: result.message,
-                                icon: 'success',
-                                confirmButtonText: 'OK'
-                            }).then(() => {
-                                location.reload();
-                            });
-                        } else {
-                            Swal.fire({
-                                title: 'Error!',
-                                text: result.message,
-                                icon: 'error',
-                                confirmButtonText: 'OK'
-                            });
-                        }
+  editBtn.onclick   = enableEditing;
+  cancelBtn.onclick = () => { location.reload(); };
 
-                    } catch (error) {
-                        console.error("Error updating profile:", error);
-                        alert("An error occurred while updating the profile.");
-                    }
-                };
+  saveBtn.onclick = async function () {
+    const phoneInput = document.getElementById("phone");
+    const phoneError = document.getElementById("phoneError");
+    const phone      = phoneInput.value.trim();
 
+    if (!/^[6-9]\d{9}$/.test(phone)) {
+      phoneError.textContent = "Phone number must be 10 digits and start with 6–9.";
+      phoneInput.style.borderColor = "#c0392b";
+      return;
+    } else {
+      phoneError.textContent = "";
+      phoneInput.style.borderColor = "";
+    }
 
+    const formData = {
+      dateofbirth: document.getElementById("dateofbirth").value,
+      phone,
+      gender: document.getElementById("gender").value,
+      userId: document.getElementById("userId").value
+    };
 
+    try {
+      const response = await fetch("/user-profile/edit", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(formData)
+      });
+      const result = await response.json();
+      if (result.success) {
+        Swal.fire({ title: 'Saved!', text: result.message, icon: 'success', confirmButtonColor: '#c9a96e', confirmButtonText: 'OK' })
+          .then(() => location.reload());
+      } else {
+        Swal.fire({ title: 'Error', text: result.message, icon: 'error', confirmButtonColor: '#c9a96e' });
+      }
+    } catch (err) {
+      console.error(err);
+      alert("An error occurred while updating the profile.");
+    }
+  };
 
-            </script>
-            <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-            <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script>
-            <script src="https://code.jquery.com/jquery-1.10.2.min.js"></script>
-            <script src="https://netdna.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
-            <script type="text/javascript"></script>
+  // WhatsApp referral
+  function sendToWhatsApp() {
+    const code = document.getElementById("referralCodeDisplay").innerText;
+    const message = `Hello! I'm inviting you to Labelle — a premium perfume store. Use my referral code ${code} when you register to unlock exclusive benefits!`;
+    window.open(`https://wa.me/?text=${encodeURIComponent(message)}`, '_blank');
+  }
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </body>
-
 </html>

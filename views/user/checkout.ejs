@@ -1,716 +1,841 @@
 <!DOCTYPE html>
-
 <html lang="en">
-
 <head>
-    <meta charset="UTF-8">
-    <meta name="description" content="">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <!-- The above 4 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Checkout — Labelle</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
 
-    <!-- Title  -->
-    <title>Labelle</title>
-    <style>
-        .coupon {
-            margin-top: 10px;
-            background-color: #fbf9f4;
-            border-radius: 10px;
+    :root {
+      --cream: #f9f4ee;
+      --warm: #fdf9f5;
+      --gold: #c9a96e;
+      --gold-lt: #e8d5b0;
+      --dark: #1a1410;
+      --muted: #8a7968;
+      --border: rgba(201,169,110,0.2);
+      --surface: #fff;
+      --green: #2e7d32;
+    }
 
-            width: 380px;
-            text-align: center;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            margin-right: 10px;
-        }
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: #f4efe9;
+      color: var(--dark);
+      min-height: 100vh;
+    }
 
-        .coupon h2 {
-            color: #ffffff;
-            margin-bottom: 10px;
-        }
+    /* ── NAV ── */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      height: 64px;
+      background: rgba(253,249,245,0.95);
+      backdrop-filter: blur(20px);
+      border-bottom: 1px solid var(--border);
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 5vw;
+    }
+    .logo {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.6rem; font-weight: 600; letter-spacing: 0.1em;
+      color: var(--dark); text-decoration: none;
+    }
+    .logo span { color: var(--gold); }
+    .nav-links { display: flex; gap: 2rem; }
+    .nav-links a {
+      font-size: 0.75rem; letter-spacing: 0.12em; text-transform: uppercase;
+      color: var(--muted); text-decoration: none; transition: color 0.2s;
+    }
+    .nav-links a:hover { color: var(--dark); }
 
-        .coupon p {
-            color: #333;
-            margin-bottom: 20px;
-        }
+    /* ── PROGRESS BAR ── */
+    .progress-wrap {
+      margin-top: 64px;
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      padding: 1.2rem 5vw;
+      display: flex; align-items: center; gap: 0;
+    }
+    .prog-step {
+      display: flex; align-items: center; gap: 0.6rem;
+      font-size: 0.7rem; letter-spacing: 0.1em; text-transform: uppercase;
+    }
+    .prog-num {
+      width: 26px; height: 26px; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 0.65rem; font-weight: 500; flex-shrink: 0;
+      background: var(--border); color: var(--muted);
+      transition: all 0.3s;
+    }
+    .prog-step.done .prog-num { background: var(--gold); color: #fff; }
+    .prog-step.active .prog-num { background: var(--dark); color: var(--cream); }
+    .prog-label { color: var(--muted); }
+    .prog-step.active .prog-label { color: var(--dark); font-weight: 500; }
+    .prog-line { flex: 1; height: 1px; background: var(--border); margin: 0 1rem; max-width: 60px; }
 
-        #coupon-select {
-            padding: 10px;
-            width: 70%;
-            margin-bottom: 10px;
-            border-radius: 5px;
-            border: 1px solid #ffffff;
-            font-size: 5px;
-            /* Font size for the select dropdown */
-        }
+    /* ── PAGE TITLE ── */
+    .page-title {
+      background: var(--dark);
+      padding: 2.8rem 5vw 2.2rem;
+    }
+    .page-title-eyebrow {
+      font-size: 0.65rem; letter-spacing: 0.3em; text-transform: uppercase;
+      color: var(--gold); margin-bottom: 0.5rem;
+    }
+    .page-title h1 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(1.8rem, 3.5vw, 2.8rem); font-weight: 300;
+      color: var(--cream); line-height: 1.1;
+    }
+    .page-title h1 em { font-style: italic; color: var(--gold-lt); }
 
-        .apply-btn {
-            padding: 10px 15px;
-            background-color: #fbb710;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-        }
+    /* ── MAIN GRID ── */
+    .main {
+      padding: 2.5rem 5vw 5rem;
+      display: grid;
+      grid-template-columns: 1fr 380px;
+      gap: 2rem;
+      align-items: start;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
 
-        .apply-btn:hover {
-            background-color: black;
-        }
+    /* ── CARD ── */
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 2px;
+      margin-bottom: 1.5rem;
+      overflow: hidden;
+    }
+    .card-head {
+      padding: 1.1rem 1.5rem;
+      border-bottom: 1px solid var(--border);
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .card-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.1rem; font-weight: 400; color: var(--dark);
+      display: flex; align-items: center; gap: 0.6rem;
+    }
+    .card-title i { font-size: 0.8rem; color: var(--gold); }
+    .card-body { padding: 1.5rem; }
 
-        /* Adjusting font size for option elements */
-        #coupon-select option {
-            font-size: 3px;
-            /* Adjust this value as needed */
-        }
-    </style>
-    <!-- Favicon  -->
-    <link rel="icon" href="img/core-img/favicon.ico">
+    /* ── ADDRESS SELECT ── */
+    .saved-address-select {
+      margin-bottom: 1.5rem;
+    }
+    .field-label {
+      display: block;
+      font-size: 0.62rem; letter-spacing: 0.18em; text-transform: uppercase;
+      color: var(--muted); margin-bottom: 0.5rem;
+    }
+    .select-wrap { position: relative; }
+    .select-wrap::after {
+      content: '▾'; position: absolute; right: 1rem; top: 50%;
+      transform: translateY(-50%); color: var(--muted); pointer-events: none; font-size: 0.7rem;
+    }
+    select, .field-input {
+      width: 100%; padding: 0.8rem 1rem;
+      background: var(--warm); border: 1px solid var(--border);
+      font-family: 'DM Sans', sans-serif; font-size: 0.85rem; color: var(--dark);
+      outline: none; appearance: none; -webkit-appearance: none;
+      transition: border-color 0.2s, box-shadow 0.2s;
+      border-radius: 2px;
+    }
+    select { cursor: pointer; padding-right: 2.5rem; }
+    select:focus, .field-input:focus {
+      border-color: var(--gold);
+      box-shadow: 0 0 0 3px rgba(201,169,110,0.1);
+    }
+    .field-input::placeholder { color: rgba(138,121,104,0.45); }
+    .field-input.is-invalid { border-color: rgba(220,53,69,0.6); }
 
-    <!-- Core Style CSS -->
-    <link rel="stylesheet" href="css/core-style.css">
-    <link rel="stylesheet" href="style.css">
+    /* divider */
+    .or-divider {
+      display: flex; align-items: center; gap: 1rem;
+      margin: 1.5rem 0;
+      font-size: 0.65rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--muted);
+    }
+    .or-divider::before, .or-divider::after {
+      content: ''; flex: 1; height: 1px; background: var(--border);
+    }
 
+    /* ── ADDRESS FORM GRID ── */
+    .form-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+    }
+    .form-grid .span2 { grid-column: 1 / -1; }
+    .field-group { display: flex; flex-direction: column; }
+    .error-msg { font-size: 0.67rem; color: #c0392b; margin-top: 0.3rem; }
+
+    .btn-save {
+      margin-top: 1.2rem;
+      padding: 0.8rem 2rem;
+      background: var(--dark); color: var(--cream);
+      border: none; font-family: 'DM Sans', sans-serif;
+      font-size: 0.7rem; letter-spacing: 0.18em; text-transform: uppercase;
+      cursor: pointer; transition: background 0.2s; border-radius: 2px;
+    }
+    .btn-save:hover { background: var(--gold); }
+
+    /* ── PAYMENT OPTIONS ── */
+    .payment-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 0.8rem;
+    }
+    .pay-option {
+      position: relative; cursor: pointer;
+    }
+    .pay-option input[type="radio"] { display: none; }
+    .pay-card {
+      border: 2px solid var(--border);
+      border-radius: 4px;
+      padding: 1.1rem 1rem;
+      display: flex; flex-direction: column; align-items: center;
+      gap: 0.6rem; text-align: center;
+      transition: all 0.2s; background: var(--warm);
+    }
+    .pay-option input:checked ~ .pay-card {
+      border-color: var(--dark);
+      background: rgba(26,20,16,0.04);
+    }
+    .pay-card:hover { border-color: var(--gold-lt); }
+    .pay-icon {
+      width: 40px; height: 40px; border-radius: 50%;
+      background: rgba(201,169,110,0.12);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1rem; color: var(--gold);
+      transition: background 0.2s;
+    }
+    .pay-option input:checked ~ .pay-card .pay-icon {
+      background: var(--dark); color: var(--cream);
+    }
+    .pay-name { font-size: 0.8rem; font-weight: 500; color: var(--dark); }
+    .pay-desc { font-size: 0.68rem; color: var(--muted); line-height: 1.3; }
+    .pay-check {
+      position: absolute; top: 8px; right: 8px;
+      width: 18px; height: 18px; border-radius: 50%;
+      background: var(--dark); color: #fff;
+      display: none; align-items: center; justify-content: center;
+      font-size: 0.55rem;
+    }
+    .pay-option input:checked ~ .pay-check { display: flex; }
+
+    /* ── RIGHT COL ── */
+    .right-col { position: sticky; top: 80px; }
+
+    /* ── ORDER ITEMS ── */
+    .order-item {
+      display: flex; align-items: center; gap: 0.9rem;
+      padding: 0.75rem 0;
+      border-bottom: 1px solid var(--border);
+    }
+    .order-item:last-child { border-bottom: none; }
+    .order-img {
+      width: 48px; height: 48px;
+      background: var(--cream); overflow: hidden; flex-shrink: 0; border-radius: 2px;
+    }
+    .order-img img { width: 100%; height: 100%; object-fit: cover; }
+    .order-name { font-size: 0.82rem; color: var(--dark); flex: 1; line-height: 1.3; }
+    .order-qty { font-size: 0.7rem; color: var(--muted); white-space: nowrap; }
+    .order-price { font-size: 0.85rem; color: var(--dark); white-space: nowrap; font-weight: 500; }
+
+    /* ── COUPON ── */
+    .coupon-row { display: flex; gap: 0; }
+    .coupon-row select { border-right: none; border-radius: 2px 0 0 2px; flex: 1; }
+    .btn-coupon {
+      padding: 0.8rem 1.1rem;
+      background: var(--dark); color: var(--cream);
+      border: 1px solid var(--dark);
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.68rem; letter-spacing: 0.12em; text-transform: uppercase;
+      cursor: pointer; white-space: nowrap; transition: all 0.2s;
+      border-radius: 0 2px 2px 0;
+    }
+    .btn-coupon:hover { background: var(--gold); border-color: var(--gold); }
+    .btn-coupon.cancel { background: transparent; color: #c0392b; border-color: rgba(192,57,43,0.4); }
+    .btn-coupon.cancel:hover { background: rgba(192,57,43,0.06); }
+
+    /* ── PRICE DETAILS GRID ── */
+    .price-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.6rem;
+      margin-bottom: 1rem;
+    }
+    .price-tile {
+      background: var(--warm);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      padding: 0.9rem 1rem;
+      text-align: center;
+    }
+    .price-tile-label {
+      font-size: 0.6rem; letter-spacing: 0.15em; text-transform: uppercase;
+      color: var(--muted); margin-bottom: 0.3rem;
+    }
+    .price-tile-value {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.2rem; font-weight: 600; color: var(--dark);
+    }
+    .price-tile-value.green { color: var(--green); }
+    .price-tile-value.discount { color: #c0392b; font-size: 1.1rem; }
+    .price-tile-value.free { font-family: 'DM Sans', sans-serif; font-size: 0.78rem; font-weight: 500; color: var(--green); letter-spacing: 0.06em; text-transform: uppercase; }
+
+    .total-row {
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 1rem;
+      background: var(--dark); border-radius: 4px;
+      margin-bottom: 1rem;
+    }
+    .total-row .total-lbl {
+      font-size: 0.68rem; letter-spacing: 0.18em; text-transform: uppercase;
+      color: rgba(249,244,238,0.6);
+    }
+    .total-row .total-val {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.6rem; font-weight: 600; color: var(--cream);
+    }
+
+    /* ── CHECKOUT BTN ── */
+    .btn-checkout {
+      display: block; width: 100%; padding: 1rem;
+      background: var(--gold); color: var(--dark);
+      border: none; font-family: 'DM Sans', sans-serif;
+      font-size: 0.75rem; letter-spacing: 0.18em; text-transform: uppercase; font-weight: 500;
+      cursor: pointer; transition: all 0.25s; border-radius: 2px;
+      margin-bottom: 0.8rem;
+    }
+    .btn-checkout:hover { background: var(--dark); color: var(--cream); transform: translateY(-1px); }
+
+    .secure-note {
+      display: flex; align-items: center; justify-content: center;
+      gap: 0.4rem; font-size: 0.67rem; color: var(--muted); letter-spacing: 0.05em;
+    }
+    .secure-note i { font-size: 0.6rem; }
+
+    /* ── FOOTER ── */
+    footer {
+      background: #130e09; padding: 3rem 5vw 2rem;
+      border-top: 1px solid rgba(201,169,110,0.1);
+    }
+    .footer-inner {
+      display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 2.5rem;
+      padding-bottom: 2rem; border-bottom: 1px solid rgba(255,255,255,0.06); margin-bottom: 1.5rem;
+    }
+    .footer-logo { font-family: 'Cormorant Garamond', serif; font-size: 1.5rem; font-weight: 600; letter-spacing: 0.1em; color: var(--cream); margin-bottom: 0.8rem; }
+    .footer-logo span { color: var(--gold); }
+    .footer-desc { font-size: 0.8rem; line-height: 1.8; color: rgba(249,244,238,0.3); font-weight: 300; max-width: 240px; }
+    .footer-col-title { font-size: 0.65rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--gold); margin-bottom: 1.2rem; }
+    .footer-links { list-style: none; display: flex; flex-direction: column; gap: 0.65rem; }
+    .footer-links a { text-decoration: none; font-size: 0.8rem; color: rgba(249,244,238,0.35); transition: color 0.2s; }
+    .footer-links a:hover { color: var(--gold); }
+    .footer-bottom { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 1rem; }
+    .footer-copy { font-size: 0.7rem; color: rgba(249,244,238,0.2); }
+    .footer-legal { display: flex; gap: 1.4rem; }
+    .footer-legal a { font-size: 0.7rem; color: rgba(249,244,238,0.2); text-decoration: none; transition: color 0.2s; }
+    .footer-legal a:hover { color: var(--gold); }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 1024px) {
+      .main { grid-template-columns: 1fr; }
+      .right-col { position: static; }
+      .footer-inner { grid-template-columns: 1fr 1fr; }
+    }
+    @media (max-width: 640px) {
+      .payment-grid { grid-template-columns: 1fr; }
+      .form-grid { grid-template-columns: 1fr; }
+      .form-grid .span2 { grid-column: 1; }
+      .footer-inner { grid-template-columns: 1fr; gap: 1.5rem; }
+    }
+  </style>
 </head>
-
 <body>
 
+<!-- NAV -->
+<nav>
+  <a href="/" class="logo">La<span>belle</span></a>
+  <div class="nav-links">
+    <a href="/">Home</a>
+    <a href="/shop">Shop</a>
+    <a href="/cart">Cart</a>
+    <a href="/wishlist"><i class="fa fa-heart-o"></i></a>
+    <a href="/user-profile">Profile</a>
+  </div>
+</nav>
 
-    <!-- ##### Main Content Wrapper Start ##### -->
-    <div class="main-content-wrapper d-flex clearfix">
-        <!-- Mobile Nav (max width 767px)-->
-        <div class="mobile-nav">
-            <!-- Navbar Brand -->
-            <div class="amado-navbar-brand">
-                <!-- <a href="/"><img src="img/core-img/logo.png" alt=""></a> -->
-            </div>
-            <!-- Navbar Toggler -->
-            <div class="amado-navbar-toggler">
-                <span></span><span></span><span></span>
-            </div>
+<!-- PROGRESS -->
+<div class="progress-wrap">
+  <div class="prog-step done">
+    <div class="prog-num"><i class="fa fa-check" style="font-size:0.5rem;"></i></div>
+    <span class="prog-label">Cart</span>
+  </div>
+  <div class="prog-line"></div>
+  <div class="prog-step active">
+    <div class="prog-num">2</div>
+    <span class="prog-label">Checkout</span>
+  </div>
+  <div class="prog-line"></div>
+  <div class="prog-step">
+    <div class="prog-num">3</div>
+    <span class="prog-label">Confirmation</span>
+  </div>
+</div>
+
+<!-- PAGE TITLE -->
+<div class="page-title">
+  <p class="page-title-eyebrow">Step 2 of 3</p>
+  <h1>Secure <em>Checkout</em></h1>
+</div>
+
+<!-- MAIN CONTENT -->
+<div class="main">
+
+  <!-- LEFT COL -->
+  <div class="left-col">
+
+    <!-- DELIVERY ADDRESS -->
+    <div class="card">
+      <div class="card-head">
+        <div class="card-title">
+          <i class="fa fa-map-marker"></i>
+          Delivery Address
         </div>
-    
-        <!-- Header Area Start -->
-        <header class="header-area clearfix">
-            <!-- Close Icon -->
-            <div class="nav-close">
-                <i class="fa fa-close" aria-hidden="true"></i>
-            </div>
-            <!-- Logo -->
-            <div class="logo">
-                <a href="/"><img style="width: 700px !important; height: 150px;" src="img/core-img/logo.png" alt=""></a>
-            </div>
-            <!-- Amado Nav -->
-            <nav class="amado-nav">
-                <ul>
-                    <li><a href="/">Home</a></li>
-                    <li><a href="/shop">Shop</a></li>
-                    <li><a href="/cart">Cart</a></li>
-                </ul>
-            </nav>
-            <!-- Button Group -->
-            <div class="amado-btn-group mt-30 mb-100">
-                <a href="#" class="btn"></a>
-                <a href="/user-profile" class="btn amado-btn active">profile</a>
-            </div>
-            <!-- Cart Menu -->
-            <div class="cart-fav-search mb-100">
-                <a href="/wishlist" class="fav-nav"><img src="img/core-img/favorites.png" alt=""> Favourite</a>
-            </div>
-            <!-- Social Button -->
-            <div class="social-info d-flex justify-content-between">
-            </div>
-        </header>
-        <!-- Header Area End -->
-    
-        <!-- Cart Table Area -->
-        <div class="cart-table-area section-padding-100">
-            <div class="container-fluid">
-                <div class="row">
-                    <div class="col-12 col-lg-8">
-                        <div class="checkout_details_area mt-50 clearfix">
-                            <div class="cart-title">
-                                <h2>Checkout</h2>
-                            </div>
-                            <div class="row">
-                                <!-- Address Selection Dropdown -->
-                                <div class="col-12 mb-3">
-                                    <select id="selectAddress" name="selectAddress"
-                                        style="width: 100%; padding: 10px; margin-bottom: 20px;">
-                                        <option value="">Select Address</option>
-                                        <% addresses.forEach(function(address) { %>
-                                            <option value="<%= address._id %>">
-                                                <%= address.addressType %> - <%= address.name %>, <%= address.landmark %>,
-                                                <%= address.city %>, <%= address.state %> - <%= address.pincode %>
-                                            </option>
-                                        <% }); %>
-                                    </select>
-                                </div>
-                            </div>
-    
-                            <form id="addressForm">
-                                <div class="row">
-                                    <div class="col-12 mb-3">
-                                        <h6>Add New Address</h6>
-                                        <input class="form-control" type="text" name="addressType"
-                                            placeholder="Address Type eg. Home, Office" />
-                                    </div>
-                                    <div class="col-12 mb-3">
-                                        <input class="form-control" type="text" name="name" placeholder="Full Name" />
-                                    </div>
-                                    <div class="col-12 mb-3">
-                                        <input class="form-control" type="text" name="streetAddress"
-                                            placeholder="streetAddress" />
-                                    </div>
-                                    <div class="col-12 mb-3">
-                                        <input class="form-control" type="text" name="city" placeholder="City" />
-                                    </div>
-                                    <div class="col-md-6 mb-3">
-                                        <input class="form-control" type="text" name="landmark"
-                                            placeholder="Landmark" />
-                                    </div>
-                                    <div class="col-md-6 mb-3">
-                                        <input class="form-control" type="text" name="state" placeholder="State" />
-                                    </div>
-                                    <div class="col-md-6 mb-3">
-                                        <input class="form-control" type="text" name="pincode" placeholder="Pincode" />
-                                    </div>
-                                    <div class="col-md-6 mb-3">
-                                        <input class="form-control" type="tel" name="phone"
-                                            placeholder="Phone Number" />
-                                    </div>
-                                    <div class="col-12"
-                                        style="display: flex; justify-content: center; align-items: center;">
-                                        <button
-                                            style="border-radius: 8px; font-size: 13px; padding: 1px 10px; text-align: center;"
-                                            type="submit" class="btn amado-btn">Save Address</button>
-                                    </div>
-                                </div>
-                            </form>
-                        </div>
-                    </div>
-    
-                    <div class="col-12 col-lg-4">
-                        <!-- Order Summary -->
-                        <div class="cart-summary"
-                            style="padding: 20px; border: 1px solid #ddd; border-radius: 8px; background-color: #f9f9f9; margin: auto; margin-top: 40px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);">
-                            <h5 style="text-align: center; font-size: 18px; font-weight: bold; margin-bottom: 20px; color: #333;">
-                                Order Summary</h5>
-                            <table style="width: 100%; border-collapse: collapse; text-align: left; font-size: 14px; color: #555;">
-                                <thead>
-                                    <tr style="border-bottom: 2px solid #ddd;">
-                                        <th style="padding: 10px 5px;">Product</th>
-                                        <th style="padding: 10px 5px; text-align: center;">Quantity</th>
-                                        <th style="padding: 10px 5px; text-align: right;">Price</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <% cart.items.forEach(item=> { %>
-                                        <tr style="border-bottom: 1px solid #eee;">
-                                            <td style="padding: 10px 5px;">
-                                                <%= item.productId.name %>
-                                            </td>
-                                            <td style="padding: 10px 5px; text-align: center;">
-                                                <%= item.quantity %>
-                                            </td>
-                                            <% if(item.variantId.offer>=fragranceOffers[item.productId.fragranceType]){ %>
-                                                <td style="padding: 10px 5px; text-align: right;">₹<%= 
-                                                    (item.variantId.price-(item.variantId.price*item.variantId.offer/100))
-                                                    * item.quantity %>
-                                                </td>
-                                            <% }else{ %>
-                                                <td style="padding: 10px 5px; text-align: right;">₹<%= 
-                                                    (item.variantId.price-(item.variantId.price*fragranceOffers[item.productId.fragranceType]/100))
-                                                    * item.quantity %>
-                                                </td>
-                                            <% } %>
-                                        </tr>
-                                    <% }); %>
-                                </tbody>
-                            </table>
-                        </div>
-    
-                        <div class="coupon">
-                            <div class="coupon-content">
-                                <select id="coupon-select" onchange="updateCouponButton()">
-                                    <option value="">Choose a Coupon</option>
-                                    <% coupons.forEach(coupon=> { %>
-                                        <option value="<%= coupon.code %>">
-                                            <%= coupon.code %> - <%= coupon.discount %>% Off (Valid Until: <%= 
-                                                coupon.expireOn.toDateString() %>)
-                                        </option>
-                                    <% }) %>
-                                </select>
-                                <button class="apply-btn" id="coupon-button" onclick="applyOrCancelCoupon()">Apply
-                                    Coupon</button>
-                            </div>
-                        </div>
-    
-                        <!-- Cart Total -->
-                        <div class="cart-summary"
-                            style="padding: 20px; border: 1px solid #ddd; border-radius: 8px; background-color: #fff; margin: auto; margin-top: 20px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);">
-                            <h5 style="text-align: center; font-size: 18px; font-weight: bold; margin-bottom: 20px; color: #333;">
-                                Cart Total</h5>
-                            <ul class="summary-table"
-                                style="list-style: none; padding: 0; margin: 0; font-size: 16px; color: #555;">
-                                <li style="display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid #eee;">
-                                    <span>Subtotal:</span>
-                                    <p id="subtotall">₹<%= subtotal %></p>
-                                </li>
-                                <li style="display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid #eee;">
-                                    <span>Discount:</span> <span style="color: green; font-weight: bold;">0</span>
-                                </li>
-                                <li style="display: flex; justify-content: space-between; padding: 8px 0; font-weight: bold; font-size: 18px;">
-                                    <span>Total:</span> <span>₹<%= subtotal %></span>
-                                </li>
-                            </ul>
-    
-                            <!-- Payment Methods -->
-                            <div class="payment-method" style="margin-top: 20px;">
-                                <div class="custom-control custom-radio" style="margin-bottom: 10px;">
-                                    <input type="radio" id="cod" name="paymentMethod" value="cod"
-                                        class="custom-control-input" required>
-                                    <label class="custom-control-label" for="cod" style="font-size: 14px;">Cash on
-                                        Delivery</label>
-                                </div>
-                                <div class="custom-control custom-radio">
-                                    <input type="radio" id="razorpay" name="paymentMethod" value="razorpay"
-                                        class="custom-control-input">
-                                    <label class="custom-control-label" for="razorpay" style="font-size: 14px;">Online
-                                        Payment</label>
-                                </div>
-                                <div class="custom-control custom-radio">
-                                    <input type="radio" id="wallet" name="paymentMethod" value="wallet"
-                                        class="custom-control-input">
-                                    <label class="custom-control-label" for="wallet" style="font-size: 14px;">Using
-                                        Wallet(<%= wallet %>)</label>
-                                </div>
-                            </div>
-    
-                            <!-- Checkout Button -->
-                            <div class="cart-btn" style="margin-top: 20px; text-align: center;">
-                                <a href="#"><button id="proceedCheckout" class="btn amado-btn"
-                                        style="width: 100%; padding:1px 10px; font-size: 16px; border-radius: 8px;">Proceed
-                                        to Payment</button></a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+      </div>
+      <div class="card-body">
+
+        <!-- Saved addresses (EJS conditional) -->
+        <% if (addresses && addresses.length > 0) { %>
+        <div class="saved-address-select">
+          <label class="field-label">Choose a saved address</label>
+          <div class="select-wrap">
+            <select id="selectAddress" name="selectAddress">
+              <option value="">— Select a saved address —</option>
+              <% addresses.forEach(function(a) { %>
+                <option value="<%= a._id %>">
+                  <%= a.addressType %> — <%= a.name %>, <%= a.landmark %>, <%= a.city %>, <%= a.state %> - <%= a.pincode %>
+                </option>
+              <% }); %>
+            </select>
+          </div>
         </div>
+        <div class="or-divider">or add new</div>
+        <% } else { %>
+          <input type="hidden" id="selectAddress" value="">
+          <p style="font-size:0.82rem;color:var(--muted);margin-bottom:1.2rem;">No saved addresses found. Add one below.</p>
+        <% } %>
+
+        <!-- Address Form -->
+        <form id="addressForm">
+          <div class="form-grid">
+            <div class="field-group">
+              <label class="field-label">Address Type</label>
+              <input class="field-input" type="text" name="addressType" placeholder="e.g. Home, Office">
+            </div>
+            <div class="field-group">
+              <label class="field-label">Full Name</label>
+              <input class="field-input" type="text" name="name" placeholder="Your full name">
+            </div>
+            <div class="field-group span2">
+              <label class="field-label">Street Address</label>
+              <input class="field-input" type="text" name="streetAddress" placeholder="Street address">
+            </div>
+            <div class="field-group">
+              <label class="field-label">City</label>
+              <input class="field-input" type="text" name="city" placeholder="City">
+            </div>
+            <div class="field-group">
+              <label class="field-label">Landmark</label>
+              <input class="field-input" type="text" name="landmark" placeholder="Landmark">
+            </div>
+            <div class="field-group">
+              <label class="field-label">State</label>
+              <input class="field-input" type="text" name="state" placeholder="State">
+            </div>
+            <div class="field-group">
+              <label class="field-label">Pincode</label>
+              <input class="field-input" type="text" name="pincode" placeholder="6-digit pincode">
+            </div>
+            <div class="field-group span2">
+              <label class="field-label">Phone Number</label>
+              <input class="field-input" type="tel" name="phone" placeholder="10-digit phone number">
+            </div>
+          </div>
+          <button type="submit" class="btn-save">
+            <i class="fa fa-plus" style="margin-right:0.4rem;font-size:0.6rem;"></i>
+            Save & Use This Address
+          </button>
+        </form>
+      </div>
     </div>
-    <footer class="footer_area clearfix" style="padding: 0;">
-        <div class="container">
-            <div class="row align-items-center">
-                <!-- Single Widget Area -->
-                <div class="col-12 col-lg-4">
-                    <div class="single_widget_area">
-                        <!-- Logo -->
-                        <div class="footer-logo mr-50">
-                            <h4>labelle</h4>
-                            <a href="/"><img style="height: 250px; width: 400px; margin: 0px; padding: 0px;"
-                                    src="/img/core-img/logo2.png" alt=""></a>
-                        </div>
-                        <!-- Copywrite Text -->
 
-                    </div>
-                </div>
-                <!-- Single Widget Area -->
-                <div class="col-12 col-lg-8">
-                    <div class="single_widget_area">
-                        <!-- Footer Menu -->
-                        <div class="footer_menu">
-                            <nav class="navbar navbar-expand-lg justify-content-end">
-                                <button class="navbar-toggler" type="button" data-toggle="collapse"
-                                    data-target="#footerNavContent" aria-controls="footerNavContent"
-                                    aria-expanded="false" aria-label="Toggle navigation"><i
-                                        class="fa fa-bars"></i></button>
-                                <div class="collapse navbar-collapse" id="footerNavContent">
-                                    <ul class="navbar-nav ml-auto">
-                                        <li class="nav-item active">
-                                            <a class="nav-link" href="/">Home</a>
-                                        </li>
-                                        <li class="nav-item">
-                                            <a class="nav-link" href="/shop">Shop</a>
-                                        </li>
-                                        <li class="nav-item">
-                                            <a class="nav-link" href="/cart">Cart</a>
-                                        </li>
-
-                                    </ul>
-                                </div>
-                            </nav>
-                        </div>
-                    </div>
-                </div>
-            </div>
+    <!-- PAYMENT METHOD -->
+    <div class="card">
+      <div class="card-head">
+        <div class="card-title">
+          <i class="fa fa-credit-card"></i>
+          Choose Payment Method
         </div>
-    </footer>
-    <!-- ##### Footer Area End ##### -->
-    <script>
-        let isCouponApplied = false;
+      </div>
+      <div class="card-body">
+        <div class="payment-grid">
 
-        function updateCouponButton() {
-            const couponCode = document.getElementById('coupon-select').value;
-            const couponButton = document.getElementById('coupon-button');
-            couponButton.innerText = couponCode && isCouponApplied ? 'Cancel Coupon' : 'Apply Coupon';
-        }
+          <!-- COD -->
+          <label class="pay-option">
+            <input type="radio" name="paymentMethod" value="cod" required>
+            <div class="pay-check"><i class="fa fa-check"></i></div>
+            <div class="pay-card">
+              <div class="pay-icon"><i class="fa fa-money"></i></div>
+              <div class="pay-name">Cash on Delivery</div>
+              <div class="pay-desc">Pay when your order arrives</div>
+            </div>
+          </label>
 
-        function applyOrCancelCoupon() {
-            const couponCode = document.getElementById('coupon-select').value;
-            if (!couponCode && !isCouponApplied) {
-                Swal.fire({
-                    icon: 'warning',
-                    title: 'Oops...',
-                    text: 'Please select a coupon',
-                    confirmButtonText: 'OK',
-                });
-                return;
-            }
+          <!-- Razorpay -->
+          <label class="pay-option">
+            <input type="radio" name="paymentMethod" value="razorpay">
+            <div class="pay-check"><i class="fa fa-check"></i></div>
+            <div class="pay-card">
+              <div class="pay-icon"><i class="fa fa-lock"></i></div>
+              <div class="pay-name">Online Payment</div>
+              <div class="pay-desc">UPI · Cards · Net Banking</div>
+            </div>
+          </label>
 
-            if (isCouponApplied) {
-                cancelCoupon();
+          <!-- Wallet -->
+          <label class="pay-option">
+            <input type="radio" name="paymentMethod" value="wallet">
+            <div class="pay-check"><i class="fa fa-check"></i></div>
+            <div class="pay-card">
+              <div class="pay-icon"><i class="fa fa-shield"></i></div>
+              <div class="pay-name">Wallet</div>
+              <div class="pay-desc">Balance: ₹<%= wallet %></div>
+            </div>
+          </label>
 
-            } else {
+        </div>
+      </div>
+    </div>
 
-                applyCoupon(couponCode);
-            }
-        }
+  </div>
 
-        function applyCoupon(couponCode) {
-            const subtotalElement = document.getElementById("subtotall");
-            const subtotal = parseFloat(subtotalElement.textContent.replace("₹", "").trim());
+  <!-- RIGHT COL -->
+  <div class="right-col">
 
-            fetch('/apply-coupon', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ couponCode })
-            })
-                .then(response => response.json())
+    <!-- ORDER SUMMARY -->
+    <div class="card">
+      <div class="card-head">
+        <div class="card-title"><i class="fa fa-shopping-bag"></i> Order Summary</div>
+      </div>
+      <div class="card-body">
+        <% cart.items.forEach(item => {
+          const offerPercent = item.variantId.offer >= fragranceOffers[item.productId.fragranceType]
+            ? item.variantId.offer
+            : fragranceOffers[item.productId.fragranceType];
+          const lineTotal = (item.variantId.price - (item.variantId.price * offerPercent / 100)) * item.quantity;
+        %>
+        <div class="order-item">
+          <div class="order-img">
+            <img src="<%= item.productId.images[0] %>" alt="<%= item.productId.name %>">
+          </div>
+          <div class="order-name"><%= item.productId.name %></div>
+          <div class="order-qty">×<%= item.quantity %></div>
+          <div class="order-price">₹<%= lineTotal.toFixed(2) %></div>
+        </div>
+        <% }); %>
+      </div>
+    </div>
 
-                .then(data => {
-                    if (data.success) {
-                        Swal.fire({
-                            icon: 'success',
-                            title: 'Success!',
-                            text: 'Coupon applied successfully!',
-                            confirmButtonText: 'OK',
-                        });
+    <!-- COUPON -->
+    <div class="card">
+      <div class="card-head">
+        <div class="card-title"><i class="fa fa-tag"></i> Coupon Code</div>
+      </div>
+      <div class="card-body">
+        <div class="coupon-row">
+          <select id="coupon-select" onchange="updateCouponButton()">
+            <option value="">Choose a coupon…</option>
+            <% coupons.forEach(coupon => { %>
+              <option value="<%= coupon.code %>">
+                <%= coupon.code %> — <%= coupon.discount %>% off
+              </option>
+            <% }); %>
+          </select>
+          <button class="btn-coupon" id="coupon-button" onclick="applyOrCancelCoupon()">Apply</button>
+        </div>
+      </div>
+    </div>
 
-                        const discount = parseFloat(data.discount);
-                        document.querySelector('.summary-table li:nth-child(2) span:last-child').innerText = '₹' + discount;
+    <!-- PRICE DETAILS (GRID) -->
+    <div class="card">
+      <div class="card-head">
+        <div class="card-title"><i class="fa fa-inr"></i> Price Details</div>
+      </div>
+      <div class="card-body">
 
+        <div class="price-grid">
+          <div class="price-tile">
+            <div class="price-tile-label">Subtotal</div>
+            <div class="price-tile-value" id="subtotall">₹<%= subtotal %></div>
+          </div>
+          <div class="price-tile">
+            <div class="price-tile-label">Discount</div>
+            <div class="price-tile-value discount">−₹<span id="discount-val">0</span></div>
+          </div>
+          <div class="price-tile" style="grid-column: 1 / -1;">
+            <div class="price-tile-label">Delivery</div>
+            <div class="price-tile-value free">Free Shipping</div>
+          </div>
+        </div>
 
-                        const total = subtotal - discount;
-                        document.querySelector('.summary-table li:nth-child(3) span:last-child').innerText = '₹' + total;
+        <div class="total-row">
+          <span class="total-lbl">You Pay</span>
+          <span class="total-val">₹<span id="cart-total"><%= subtotal %></span></span>
+        </div>
 
-                        isCouponApplied = true;
-                        updateCouponButton();
-                    } else {
-                        Swal.fire({
-                            icon: 'error',
-                            title: 'Error!',
-                            text: data.message,
-                            confirmButtonText: 'OK',
-                        });
-                    }
-                })
-                .catch(error => {
-                    console.error('Error applying coupon:', error);
-                    Swal.fire({
-                        icon: 'error',
-                        title: 'Oops...',
-                        text: 'There was an error applying the coupon.',
-                        confirmButtonText: 'OK',
-                    });
-                });
-        }
+        <button class="btn-checkout" id="proceedCheckout">
+          Proceed to Payment &nbsp;<i class="fa fa-arrow-right" style="font-size:0.7rem;"></i>
+        </button>
 
-        function cancelCoupon() {
-            fetch('/cancel-coupon', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({})
-            })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.success) {
-                        Swal.fire({
-                            icon: 'success',
-                            title: 'Success!',
-                            text: 'Coupon canceled successfully!',
-                            confirmButtonText: 'OK',
-                        });
+        <div class="secure-note">
+          <i class="fa fa-lock"></i>
+          Secure & Encrypted Checkout
+        </div>
+      </div>
+    </div>
 
-                        document.querySelector('.summary-table li:nth-child(2) span:last-child').innerText = '₹0';
-                        const subtotalElement = document.getElementById("subtotall");
-                        const subtotal = parseFloat(subtotalElement.textContent.replace("₹", "").trim());
-                        document.querySelector('.summary-table li:nth-child(3) span:last-child').innerText = '₹' + subtotal;
+  </div>
+</div>
 
-                        document.getElementById('coupon-select').selectedIndex = 0;
-                        isCouponApplied = false;
-                        updateCouponButton();
-                    } else {
-                        Swal.fire({
-                            icon: 'error',
-                            title: 'Error!',
-                            text: data.message,
-                            confirmButtonText: 'OK',
-                        });
-                    }
-                })
-                .catch(error => {
-                    console.error('Error canceling coupon:', error);
-                    Swal.fire({
-                        icon: 'error',
-                        title: 'Oops...',
-                        text: 'There was an error canceling the coupon.',
-                        confirmButtonText: 'OK',
-                    });
-                });
-        }
-        function callRazorpayFunction(orderId, kid, ordderId) {
-            var options = {
-                key: kid,
-                amount: 1000 * 100,
-                currency: 'INR',
-                order_id: orderId,
-                handler: function (response) {
+<!-- FOOTER -->
+<footer>
+  <div class="footer-inner">
+    <div>
+      <div class="footer-logo">La<span>belle</span></div>
+      <p class="footer-desc">Premium fragrances crafted to express your personality. Elegance in every drop.</p>
+    </div>
+    <div>
+      <p class="footer-col-title">Shop</p>
+      <ul class="footer-links">
+        <li><a href="#">New Arrivals</a></li>
+        <li><a href="#">Bestsellers</a></li>
+        <li><a href="#">Gift Sets</a></li>
+      </ul>
+    </div>
+    <div>
+      <p class="footer-col-title">Help</p>
+      <ul class="footer-links">
+        <li><a href="#">Track Order</a></li>
+        <li><a href="#">Returns</a></li>
+        <li><a href="#">FAQ</a></li>
+      </ul>
+    </div>
+    <div>
+      <p class="footer-col-title">Company</p>
+      <ul class="footer-links">
+        <li><a href="#">About Us</a></li>
+        <li><a href="#">Careers</a></li>
+        <li><a href="#">Press</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <p class="footer-copy">© 2025 Labelle. All rights reserved.</p>
+    <div class="footer-legal"><a href="#">Privacy Policy</a><a href="#">Terms</a></div>
+  </div>
+</footer>
 
-                    window.location.href = `/success-order/${ordderId}`;
-                },
-                theme: {
-                    color: '#F37254',
-                },
-                modal: {
-                    escape: false,
-                    ondismiss: function () {
-                        window.location.href = `/failure-order/${ordderId}`;
-                    },
-                },
-            };
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+<script>
+  let isCouponApplied = false;
 
+  function updateCouponButton() {
+    const btn = document.getElementById('coupon-button');
+    if (isCouponApplied) {
+      btn.textContent = 'Cancel';
+      btn.classList.add('cancel');
+    } else {
+      btn.textContent = 'Apply';
+      btn.classList.remove('cancel');
+    }
+  }
 
-            var rzp1 = new Razorpay(options);
+  function applyOrCancelCoupon() {
+    const code = document.getElementById('coupon-select').value;
+    if (!code && !isCouponApplied) {
+      Swal.fire({ icon: 'warning', title: 'Select a coupon', text: 'Please choose a coupon first.', confirmButtonColor: '#1a1410' });
+      return;
+    }
+    isCouponApplied ? cancelCoupon() : applyCoupon(code);
+  }
 
-            rzp1.open();
+  function applyCoupon(couponCode) {
+    const subtotalText = document.getElementById('subtotall').textContent.replace('₹','').trim();
+    const subtotal = parseFloat(subtotalText);
+    fetch('/apply-coupon', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ couponCode }),
+    })
+    .then(r => r.json())
+    .then(data => {
+      if (data.success) {
+        const discount = parseFloat(data.discount);
+        document.getElementById('discount-val').textContent = discount.toFixed(2);
+        document.getElementById('cart-total').textContent = (subtotal - discount).toFixed(2);
+        isCouponApplied = true;
+        updateCouponButton();
+        Swal.fire({ icon: 'success', title: 'Coupon Applied!', text: 'Discount added to your order.', confirmButtonColor: '#1a1410' });
+      } else {
+        Swal.fire({ icon: 'error', title: 'Invalid Coupon', text: data.message, confirmButtonColor: '#1a1410' });
+      }
+    });
+  }
 
-            rzp1.on('payment.failed', function (response) {
-                console.error('Payment Failed:', response.error);
-                Swal.fire({
-                    title: 'Payment Failed!',
-                    text: response.error.description || 'An unexpected error occurred.',
-                    icon: 'error',
-                    confirmButtonText: 'OK',
-                });
-            });
-        }
+  function cancelCoupon() {
+    fetch('/cancel-coupon', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({}),
+    })
+    .then(r => r.json())
+    .then(data => {
+      if (data.success) {
+        const subtotalText = document.getElementById('subtotall').textContent.replace('₹','').trim();
+        document.getElementById('discount-val').textContent = '0';
+        document.getElementById('cart-total').textContent = parseFloat(subtotalText).toFixed(2);
+        document.getElementById('coupon-select').selectedIndex = 0;
+        isCouponApplied = false;
+        updateCouponButton();
+        Swal.fire({ icon: 'success', title: 'Coupon Removed', confirmButtonColor: '#1a1410' });
+      }
+    });
+  }
 
-        document.addEventListener('DOMContentLoaded', () => {
-            const addressForm = document.getElementById('addressForm');
+  function callRazorpayFunction(orderId, kid, ordderId) {
+    var options = {
+      key: kid,
+      amount: 1000 * 100,
+      currency: 'INR',
+      order_id: orderId,
+      handler: function(response) { window.location.href = `/success-order/${ordderId}`; },
+      theme: { color: '#c9a96e' },
+      modal: {
+        escape: false,
+        ondismiss: function() { window.location.href = `/failure-order/${ordderId}`; },
+      },
+    };
+    var rzp1 = new Razorpay(options);
+    rzp1.open();
+    rzp1.on('payment.failed', function(response) {
+      Swal.fire({ title: 'Payment Failed', text: response.error.description, icon: 'error', confirmButtonColor: '#1a1410' });
+    });
+  }
 
-            const validateField = {
-                name: (value) => /^[a-zA-Z\s]{2,50}$/.test(value),
-                addressType: (value) => /^[a-zA-Z\s]{2,20}$/.test(value),
-                streetAddress: (value) => value.trim().length >= 5 && value.trim().length <= 100,
-                city: (value) => /^[a-zA-Z\s]{2,50}$/.test(value),
-                landmark: (value) => (value.trim().length >= 2 && value.trim().length <= 50),
-                state: (value) => /^[a-zA-Z\s]{2,50}$/.test(value),
-                pincode: (value) => /^\d{6}$/.test(value),
-                phone: (value) => /^[6-9]\d{9}$/.test(value)
-            };
+  // Address validation
+  document.addEventListener('DOMContentLoaded', () => {
+    const form = document.getElementById('addressForm');
 
-            const showError = (input, message) => {
-                const existingError = input.parentElement.querySelector('.error-message');
-                if (existingError) {
-                    existingError.remove();
-                }
+    const rules = {
+      name:          { test: v => /^[a-zA-Z\s]{2,50}$/.test(v),  msg: 'Valid name required (2–50 letters)' },
+      addressType:   { test: v => /^[a-zA-Z\s]{2,20}$/.test(v),  msg: 'Valid type required (2–20 letters)' },
+      streetAddress: { test: v => v.length >= 5 && v.length <= 100, msg: 'Street address must be 5–100 characters' },
+      city:          { test: v => /^[a-zA-Z\s]{2,50}$/.test(v),  msg: 'Valid city name required' },
+      landmark:      { test: v => v.length >= 2 && v.length <= 50, msg: 'Landmark must be 2–50 characters' },
+      state:         { test: v => /^[a-zA-Z\s]{2,50}$/.test(v),  msg: 'Valid state name required' },
+      pincode:       { test: v => /^\d{6}$/.test(v),              msg: 'Pincode must be exactly 6 digits' },
+      phone:         { test: v => /^[6-9]\d{9}$/.test(v),        msg: 'Phone must be 10 digits starting 6–9' },
+    };
 
-                const errorMsg = document.createElement('div');
-                errorMsg.className = 'error-message text-danger small mt-1';
-                errorMsg.textContent = message;
-                input.parentElement.appendChild(errorMsg);
-                input.classList.add('is-invalid');
-            };
+    const showErr = (input, msg) => {
+      clearErr(input);
+      const d = document.createElement('div');
+      d.className = 'error-msg'; d.textContent = msg;
+      input.parentElement.appendChild(d);
+      input.classList.add('is-invalid');
+    };
+    const clearErr = input => {
+      const e = input.parentElement.querySelector('.error-msg');
+      if (e) e.remove();
+      input.classList.remove('is-invalid');
+    };
 
-            const clearError = (input) => {
-                const existingError = input.parentElement.querySelector('.error-message');
-                if (existingError) {
-                    existingError.remove();
-                }
-                input.classList.remove('is-invalid');
-            };
+    form.querySelectorAll('input').forEach(input => {
+      input.addEventListener('blur', e => {
+        const r = rules[e.target.name];
+        if (r) r.test(e.target.value.trim()) ? clearErr(e.target) : showErr(e.target, r.msg);
+      });
+    });
 
-            addressForm.querySelectorAll('input').forEach(input => {
-                input.addEventListener('blur', (e) => {
-                    const fieldName = e.target.name;
-                    const value = e.target.value.trim();
+    form.addEventListener('submit', async e => {
+      e.preventDefault();
+      const data = Object.fromEntries(new FormData(e.target));
+      let valid = true;
+      Object.keys(rules).forEach(field => {
+        const input = form.querySelector(`[name="${field}"]`);
+        if (!rules[field].test((data[field]||'').trim())) { showErr(input, rules[field].msg); valid = false; }
+      });
+      if (!valid) return;
 
-
-
-                    if (!validateField[fieldName](value)) {
-                        switch (fieldName) {
-                            case 'name':
-                                showError(e.target, 'Please enter a valid name (2-50 letters)');
-                                break;
-                            case 'addressType':
-                                showError(e.target, 'Please enter a valid address type (2-20 letters)');
-                                break;
-                            case 'streetAddress':
-                                showError(e.target, 'Street address must be 5-100 characters');
-                                break;
-                            case 'city':
-                                showError(e.target, 'Please enter a valid city name');
-                                break;
-                            case 'landmark':
-                                showError(e.target, 'Landmark must be 2-50 characters or leave it empty');
-                                break;
-                            case 'state':
-                                showError(e.target, 'Please enter a valid state name');
-                                break;
-                            case 'pincode':
-                                showError(e.target, 'Pincode must be 6 digits');
-                                break;
-                            case 'phone':
-                                showError(e.target, 'Phone number must be 10 digits starting with 6-9');
-                                break;
-                        }
-                    } else {
-                        clearError(e.target);
-                    }
-                });
-            });
-
-            addressForm.addEventListener('submit', async (e) => {
-                e.preventDefault();
-
-                let isValid = true;
-                const formData = new FormData(e.target);
-                const data = Object.fromEntries(formData);
-
-                Object.keys(validateField).forEach(field => {
-                    const input = addressForm.querySelector(`[name="${field}"]`);
-                    const value = data[field]?.trim() || '';
-
-
-
-                    if (!validateField[field](value)) {
-                        showError(input, 'Please check this field');
-                        isValid = false;
-                    }
-                });
-
-                if (isValid) {
-                    try {
-                        const response = await fetch('/user-address-add', {
-                            method: 'POST',
-                            headers: {
-                                'Content-Type': 'application/json'
-                            },
-                            body: JSON.stringify(data)
-                        });
-
-                        const result = await response.json();
-
-                        if (result.success) {
-                            Swal.fire({
-                                title: 'Success!',
-                                text: result.message,
-                                icon: 'success',
-                                confirmButtonText: 'OK'
-                            }).then(() => {
-                                window.location.reload();
-                            });
-                        } else {
-                            Swal.fire({
-                                title: 'Error!',
-                                text: result.message,
-                                icon: 'error',
-                                confirmButtonText: 'OK'
-                            });
-                        }
-                    } catch (error) {
-                        console.error('Error:', error);
-                        Swal.fire({
-                            title: 'Error!',
-                            text: 'An unexpected error occurred',
-                            icon: 'error',
-                            confirmButtonText: 'OK'
-                        });
-                    }
-                }
-            });
+      try {
+        const res = await fetch('/user-address-add', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(data),
         });
+        const result = await res.json();
+        if (result.success) {
+          Swal.fire({ title: 'Address Saved!', icon: 'success', confirmButtonColor: '#1a1410' })
+            .then(() => window.location.reload());
+        } else {
+          Swal.fire({ title: 'Error', text: result.message, icon: 'error', confirmButtonColor: '#1a1410' });
+        }
+      } catch {
+        Swal.fire({ title: 'Error', text: 'Something went wrong.', icon: 'error', confirmButtonColor: '#1a1410' });
+      }
+    });
+  });
 
-        document.getElementById('proceedCheckout').addEventListener('click', async () => {
-            const selectedAddress = document.getElementById('selectAddress');
-            const selectedPayment = document.querySelector('input[name="paymentMethod"]:checked');
+  // Proceed to payment
+  document.getElementById('proceedCheckout').addEventListener('click', async () => {
+    const selectedAddress = document.getElementById('selectAddress').value;
+    const selectedPayment = document.querySelector('input[name="paymentMethod"]:checked');
 
-            if (!selectedAddress.value || !selectedPayment) {
-                Swal.fire({
-                    title: 'Warning!',
-                    text: 'Please select an address and payment method',
-                    icon: 'warning',
-                    confirmButtonText: 'OK'
-                });
-                return;
-            }
+    if (!selectedAddress || !selectedPayment) {
+      Swal.fire({ title: 'Almost there!', text: 'Please select a delivery address and a payment method.', icon: 'warning', confirmButtonColor: '#1a1410' });
+      return;
+    }
 
-            try {
-                const response = await fetch('/process-checkout', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({
-                        addressId: selectedAddress.value,
-                        paymentMethod: selectedPayment.value
-                    })
-                });
+    try {
+      const res = await fetch('/process-checkout', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ addressId: selectedAddress, paymentMethod: selectedPayment.value }),
+      });
+      const result = await res.json();
 
-                const result = await response.json();
-
-                if (response.ok) {
-
-                    if (result.paymentMethod === 'razorpay') {
-
-                        callRazorpayFunction(result.razorpayOrderId, result.razorpayKey, result.orderId);
-                    } else {
-                        window.location.href = `/success-order/${result.orderId}`;
-                    }
-                } else {
-                    Swal.fire({
-                        title: 'Error!',
-                        text: result.error,
-                        icon: 'error',
-                        confirmButtonText: 'OK'
-                    });
-                }
-            } catch (error) {
-                console.error('Checkout error:', error);
-                Swal.fire({
-                    title: 'Error!',
-                    text: 'An unexpected error occurred during checkout',
-                    icon: 'error',
-                    confirmButtonText: 'OK'
-                });
-            }
-        });
-    </script>
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
-    <!-- ##### jQuery (Necessary for All JavaScript Plugins) ##### -->
-    <script src="/js/jquery/jquery-2.2.4.min.js"></script>
-    <!-- Popper js -->
-    <script src="/js/popper.min.js"></script>
-    <!-- Bootstrap js -->
-    <script src="/js/bootstrap.min.js"></script>
-    <!-- Plugins js -->
-    <script src="/js/plugins.js"></script>
-    <!-- Active js -->
-    <script src="/js/active.js"></script>
-
+      if (res.ok) {
+        if (result.paymentMethod === 'razorpay') {
+          callRazorpayFunction(result.razorpayOrderId, result.razorpayKey, result.orderId);
+        } else {
+          window.location.href = `/success-order/${result.orderId}`;
+        }
+      } else {
+        Swal.fire({ title: 'Error', text: result.error, icon: 'error', confirmButtonColor: '#1a1410' });
+      }
+    } catch {
+      Swal.fire({ title: 'Error', text: 'An unexpected error occurred.', icon: 'error', confirmButtonColor: '#1a1410' });
+    }
+  });
+</script>
 </body>
-
-
-
-
 </html>

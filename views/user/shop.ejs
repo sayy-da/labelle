@@ -1,527 +1,937 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-    <meta charset="UTF-8">
-    <meta name="description" content="">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Shop — Labelle</title>
+  <link rel="icon" href="img/core-img/favicon.ico">
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Jost:wght@300;400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
 
-    <title>Labelle</title>
+    :root {
+      --cream: #f9f4ee;
+      --warm-white: #fdf9f5;
+      --gold: #c9a96e;
+      --gold-light: #e8d5b0;
+      --dark: #1a1410;
+      --muted: #8a7968;
+      --border: rgba(201,169,110,0.25);
+    }
 
-    <link rel="icon" href="img/core-img/favicon.ico">
+    html { scroll-behavior: smooth; }
 
-    <link rel="stylesheet" href="css/core-style.css">
-    <link rel="stylesheet" href="style.css">
-    <style>
-        .selected-fragrance {
-            color: #fbb710;
-        }
+    body {
+      font-family: 'Jost', sans-serif;
+      background: var(--warm-white);
+      color: var(--dark);
+      overflow-x: hidden;
+    }
 
-        #new-arrivals {
-            margin-top: 40px;
-        }
+    /* ── SEARCH OVERLAY ── */
+    .search-overlay {
+      position: fixed;
+      inset: 0;
+      z-index: 999;
+      background: rgba(26,20,16,0.96);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s;
+    }
+    .search-overlay.open { opacity: 1; pointer-events: all; }
+    .search-overlay-inner { width: 100%; max-width: 640px; padding: 0 2rem; position: relative; }
+    .search-close-btn {
+      position: absolute;
+      top: -60px; right: 2rem;
+      background: none; border: none;
+      color: var(--gold-light);
+      font-size: 1.4rem;
+      cursor: pointer;
+    }
+    .search-overlay form { display: flex; border-bottom: 1px solid var(--gold); }
+    .search-overlay input {
+      flex: 1;
+      background: none;
+      border: none;
+      outline: none;
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.6rem;
+      color: var(--cream);
+      padding: 0.6rem 0;
+    }
+    .search-overlay input::placeholder { color: rgba(249,244,238,0.3); }
+    .search-overlay button[type=submit] {
+      background: none; border: none; cursor: pointer; padding: 0 0.5rem;
+    }
+    .search-overlay button[type=submit] img { width: 20px; filter: invert(1) sepia(1) saturate(2) hue-rotate(5deg); }
+    .search-info { margin-top: 1.2rem; font-size: 0.8rem; color: rgba(249,244,238,0.4); }
+    .search-info a { color: var(--gold); text-decoration: none; margin-left: 0.5rem; }
+    .no-results { margin-top: 1rem; font-size: 0.85rem; color: #e0a070; }
 
-        #new-arrivals h2 {
-            text-align: center;
-            margin-bottom: 20px;
-        }
+    /* ── NAVBAR ── */
+    nav.main-nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 200;
+      height: 72px;
+      background: rgba(253,249,245,0.92);
+      backdrop-filter: blur(16px);
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 5vw;
+    }
 
-        #new-arrivals .single-product-wrapper {
-            border: 1px solid #eee;
-            padding: 15px;
-            text-align: center;
-            background-color: #f9f9f9;
-            border-radius: 5px;
-            transition: transform 0.3s ease;
-        }
+    .nav-logo {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.7rem;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      color: var(--dark);
+      text-decoration: none;
+    }
+    .nav-logo span { color: var(--gold); }
 
-        #new-arrivals .single-product-wrapper:hover {
-            transform: scale(1.05);
-        }
+    /* nav center links with dropdowns */
+    .nav-center { display: flex; align-items: center; gap: 0; }
 
-        .small-swal {
-            top: 10px !important;
+    .nav-item {
+      position: relative;
+    }
 
-            transform: translateX(-50%) !important;
-            font-size: 7px;
-            padding: 10px;
-        }
-    </style>
+    .nav-item > a, .nav-item > span {
+      display: flex;
+      align-items: center;
+      gap: 0.3rem;
+      padding: 0 1.4rem;
+      height: 72px;
+      font-size: 0.75rem;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--muted);
+      text-decoration: none;
+      cursor: pointer;
+      transition: color 0.2s;
+      white-space: nowrap;
+      border: none;
+      background: none;
+      font-family: 'Jost', sans-serif;
+    }
+    .nav-item > a:hover, .nav-item > span:hover,
+    .nav-item:hover > a, .nav-item:hover > span { color: var(--gold); }
+
+    .nav-item > a.active-page { color: var(--dark); }
+
+    /* dropdown panel */
+    .nav-dropdown {
+      position: absolute;
+      top: 72px;
+      left: 50%;
+      transform: translateX(-50%);
+      min-width: 200px;
+      background: var(--warm-white);
+      border: 1px solid var(--border);
+      border-top: 2px solid var(--gold);
+      box-shadow: 0 20px 60px rgba(26,20,16,0.12);
+      padding: 1.2rem 0;
+      opacity: 0;
+      pointer-events: none;
+      transform: translateX(-50%) translateY(8px);
+      transition: opacity 0.22s, transform 0.22s;
+    }
+
+    .nav-item:hover .nav-dropdown {
+      opacity: 1;
+      pointer-events: all;
+      transform: translateX(-50%) translateY(0);
+    }
+
+    .nav-dropdown .drop-title {
+      font-size: 0.6rem;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--gold);
+      padding: 0 1.4rem 0.6rem;
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 0.5rem;
+    }
+
+    .nav-dropdown ul { list-style: none; }
+    .nav-dropdown ul li a {
+      display: block;
+      padding: 0.45rem 1.4rem;
+      font-size: 0.8rem;
+      color: var(--muted);
+      text-decoration: none;
+      letter-spacing: 0.04em;
+      transition: color 0.15s, padding-left 0.15s;
+    }
+    .nav-dropdown ul li a:hover { color: var(--dark); padding-left: 1.8rem; }
+    .nav-dropdown ul li a.selected-fragrance { color: var(--gold); }
+
+    /* wide dropdown for multi-column */
+    .nav-dropdown.wide {
+      min-width: 520px;
+      padding: 1.4rem;
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 0 1rem;
+    }
+    .nav-dropdown.wide .drop-col {}
+    .nav-dropdown.wide .drop-col-title {
+      font-size: 0.6rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 0.6rem;
+      padding-bottom: 0.4rem;
+      border-bottom: 1px solid var(--border);
+    }
+    .nav-dropdown.wide ul { list-style: none; }
+    .nav-dropdown.wide ul li { margin-bottom: 0.1rem; }
+    .nav-dropdown.wide ul li a {
+      display: block;
+      padding: 0.3rem 0;
+      font-size: 0.78rem;
+      color: var(--muted);
+      text-decoration: none;
+      transition: color 0.15s;
+    }
+    .nav-dropdown.wide ul li a:hover { color: var(--dark); }
+    .nav-dropdown.wide ul li a.active { color: var(--gold); font-weight: 500; }
+
+    .caret { font-size: 0.55rem; opacity: 0.5; }
+
+    /* nav right */
+    .nav-right { display: flex; align-items: center; gap: 1.4rem; }
+    .nav-right a, .nav-right button {
+      font-size: 0.75rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--muted);
+      text-decoration: none;
+      background: none;
+      border: none;
+      cursor: pointer;
+      font-family: 'Jost', sans-serif;
+      transition: color 0.2s;
+    }
+    .nav-right a:hover, .nav-right button:hover { color: var(--dark); }
+    .nav-cart-icon { position: relative; display: flex; align-items: center; gap: 0.35rem; }
+    .nav-search-btn { display: flex; align-items: center; }
+
+    /* mobile toggle */
+    .mobile-toggle { display: none; background: none; border: none; cursor: pointer; }
+    .mobile-toggle span { display: block; width: 22px; height: 1.5px; background: var(--dark); margin: 5px 0; transition: 0.3s; }
+
+    /* ── PAGE HEADER ── */
+    .page-header {
+      margin-top: 72px;
+      background: linear-gradient(135deg, #1a1410 0%, #2e1f10 60%, #1a1410 100%);
+      padding: 5rem 5vw 4rem;
+      position: relative;
+      overflow: hidden;
+    }
+    .page-header::before {
+      content: '';
+      position: absolute;
+      top: -30%; right: 0;
+      width: 50vw; height: 200%;
+      background: radial-gradient(circle at 70% 50%, rgba(201,169,110,0.12) 0%, transparent 60%);
+      pointer-events: none;
+    }
+    .page-header-inner { position: relative; max-width: 600px; }
+    .page-header-eyebrow {
+      font-size: 0.68rem;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 0.8rem;
+    }
+    .page-header h1 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(2.2rem, 5vw, 3.8rem);
+      font-weight: 300;
+      color: var(--cream);
+      line-height: 1.1;
+      margin-bottom: 0.8rem;
+    }
+    .page-header h1 em { font-style: italic; color: var(--gold-light); }
+    .page-header p {
+      font-size: 0.88rem;
+      color: rgba(249,244,238,0.5);
+      font-weight: 300;
+      line-height: 1.7;
+    }
+
+    /* ── MAIN CONTENT ── */
+    .shop-body { padding: 5rem 5vw; }
+
+    /* ── NEW ARRIVALS ── */
+    .section-eyebrow {
+      font-size: 0.68rem;
+      letter-spacing: 0.28em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 0.6rem;
+    }
+    .section-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(1.6rem, 3vw, 2.4rem);
+      font-weight: 300;
+      color: var(--dark);
+      margin-bottom: 2.5rem;
+    }
+    .section-title em { font-style: italic; color: var(--muted); }
+
+    .arrivals-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 1.5rem;
+      margin-bottom: 5rem;
+    }
+
+    .arrival-card {
+      background: var(--cream);
+      overflow: hidden;
+      cursor: pointer;
+      transition: transform 0.35s cubic-bezier(0.22,1,0.36,1), box-shadow 0.35s;
+    }
+    .arrival-card:hover { transform: translateY(-5px); box-shadow: 0 20px 50px rgba(26,20,16,0.1); }
+
+    .arrival-img {
+      position: relative;
+      overflow: hidden;
+      aspect-ratio: 1/1;
+      background: #e8ddd1;
+    }
+    .arrival-img img {
+      width: 100%; height: 100%;
+      object-fit: cover;
+      display: block;
+      transition: opacity 0.4s;
+    }
+    .arrival-img .hover-img {
+      position: absolute;
+      inset: 0;
+      opacity: 0;
+      transition: opacity 0.4s;
+    }
+    .arrival-card:hover .hover-img { opacity: 1; }
+
+    .arrival-body { padding: 1.2rem; border-top: 1px solid var(--border); }
+    .arrival-name {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.1rem;
+      color: var(--dark);
+      margin-bottom: 0.3rem;
+    }
+    .arrival-price { font-size: 0.85rem; color: var(--muted); }
+    .arrival-price::before { content: '₹'; }
+
+    /* ── DIVIDER ── */
+    .section-divider {
+      height: 1px;
+      background: var(--border);
+      margin-bottom: 4rem;
+    }
+
+    /* ── ALL PRODUCTS ── */
+    .products-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 2rem;
+    }
+
+    .product-card {
+      background: var(--cream);
+      overflow: hidden;
+      transition: transform 0.35s cubic-bezier(0.22,1,0.36,1), box-shadow 0.35s;
+      cursor: pointer;
+    }
+    .product-card:hover { transform: translateY(-5px); box-shadow: 0 20px 50px rgba(26,20,16,0.1); }
+
+    .product-img {
+      position: relative;
+      overflow: hidden;
+      aspect-ratio: 1/1;
+      background: #e8ddd1;
+    }
+    .product-img img {
+      width: 100%; height: 100%;
+      object-fit: cover;
+      display: block;
+      transition: opacity 0.4s;
+    }
+    .product-img .hover-img {
+      position: absolute;
+      inset: 0;
+      opacity: 0;
+      transition: opacity 0.4s;
+    }
+    .product-card:hover .hover-img { opacity: 1; }
+
+    .product-body {
+      padding: 1.4rem 1.2rem;
+      border-top: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .product-meta {}
+    .product-name {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.2rem;
+      font-weight: 400;
+      color: var(--dark);
+      text-decoration: none;
+      display: block;
+      margin-bottom: 0.25rem;
+    }
+    .product-name:hover { color: var(--gold); }
+    .product-price {
+      font-size: 0.85rem;
+      color: var(--muted);
+    }
+    .product-price::before { content: '₹'; }
+
+    .product-actions { display: flex; align-items: center; gap: 0.6rem; }
+
+    .wishlist-btn {
+      background: none;
+      border: none;
+      cursor: pointer;
+      width: 36px; height: 36px;
+      display: flex; align-items: center; justify-content: center;
+      color: var(--muted);
+      font-size: 1rem;
+      transition: color 0.2s;
+    }
+    .wishlist-btn:hover { color: #e03030; }
+    .wishlist-btn .fa-heart { color: rgb(246,39,39); }
+
+    /* ── PAGINATION ── */
+    .pagination-wrapper {
+      margin-top: 4rem;
+      display: flex;
+      justify-content: flex-end;
+    }
+    .pagination { display: flex; list-style: none; gap: 0.4rem; }
+    .page-item .page-link {
+      display: flex; align-items: center; justify-content: center;
+      width: 38px; height: 38px;
+      border: 1px solid var(--border);
+      font-size: 0.78rem;
+      color: var(--muted);
+      text-decoration: none;
+      transition: background 0.2s, color 0.2s, border-color 0.2s;
+    }
+    .page-item.active .page-link,
+    .page-item .page-link:hover {
+      background: var(--gold);
+      border-color: var(--gold);
+      color: white;
+    }
+
+    /* ── FOOTER ── */
+    footer {
+      background: #130e09;
+      padding: 4rem 5vw 2rem;
+      border-top: 1px solid rgba(201,169,110,0.1);
+      margin-top: 5rem;
+    }
+    .footer-top {
+      display: grid;
+      grid-template-columns: 1.8fr 1fr 1fr 1fr;
+      gap: 3rem;
+      padding-bottom: 3rem;
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+      margin-bottom: 2rem;
+    }
+    .footer-brand-logo {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.6rem;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      color: var(--cream);
+      margin-bottom: 1rem;
+    }
+    .footer-brand-logo span { color: var(--gold); }
+    .footer-brand-text {
+      font-size: 0.82rem;
+      line-height: 1.8;
+      color: rgba(249,244,238,0.35);
+      font-weight: 300;
+      max-width: 260px;
+      margin-bottom: 1.6rem;
+    }
+    .social-links { display: flex; gap: 0.8rem; }
+    .social-link {
+      width: 34px; height: 34px;
+      border: 1px solid rgba(201,169,110,0.25);
+      display: flex; align-items: center; justify-content: center;
+      transition: border-color 0.2s, background 0.2s;
+      text-decoration: none;
+    }
+    .social-link:hover { border-color: var(--gold); background: rgba(201,169,110,0.1); }
+    .social-link svg { width: 14px; height: 14px; stroke: var(--gold); fill: none; }
+    .footer-col-title {
+      font-size: 0.68rem;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 1.4rem;
+    }
+    .footer-links { list-style: none; display: flex; flex-direction: column; gap: 0.7rem; }
+    .footer-links a {
+      text-decoration: none;
+      font-size: 0.82rem;
+      color: rgba(249,244,238,0.4);
+      font-weight: 300;
+      transition: color 0.2s;
+    }
+    .footer-links a:hover { color: var(--gold); }
+    .footer-bottom {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+    .footer-copy { font-size: 0.72rem; color: rgba(249,244,238,0.2); letter-spacing: 0.05em; }
+    .footer-legal { display: flex; gap: 1.6rem; }
+    .footer-legal a {
+      font-size: 0.72rem;
+      color: rgba(249,244,238,0.2);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+    .footer-legal a:hover { color: var(--gold); }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 1024px) {
+      .arrivals-grid { grid-template-columns: repeat(2, 1fr); }
+      .footer-top { grid-template-columns: 1fr 1fr; }
+      .nav-center { display: none; }
+      .mobile-toggle { display: block; }
+      .nav-dropdown.wide { min-width: 300px; grid-template-columns: 1fr 1fr; }
+    }
+    @media (max-width: 640px) {
+      .arrivals-grid { grid-template-columns: 1fr; }
+      .products-grid { grid-template-columns: 1fr; }
+      .footer-top { grid-template-columns: 1fr; gap: 2rem; }
+    }
+  </style>
 </head>
-
 <body>
-    <!-- Search Wrapper Area Start -->
-    <div class="search-wrapper section-padding-100">
-        <div class="search-close">
-            <i class="fa fa-close" aria-hidden="true"></i>
-        </div>
-        <div class="container">
-            <div class="row">
-                <div class="col-12">
-                    <div class="search-content">
-                        <form action="/shop" method="get">
-                            <input type="search" name="search" id="search" placeholder="Type your keyword..."
-                                value="<%= searchQuery || '' %>">
-                            <button type="submit">
-                                <img src="img/core-img/search.png" alt="Search">
-                            </button>
-                        </form>
 
-                        <% if (searchQuery) { %>
-                            <div class="search-results-info mt-3">
-                                Search results for: "<%= searchQuery %>"
-                                    <a href="/shop" class="ml-2 text-muted">Clear Search</a>
-                            </div>
-                            <% } %>
+<!-- ── SEARCH OVERLAY ── -->
+<div class="search-overlay" id="searchOverlay">
+  <div class="search-overlay-inner">
+    <button class="search-close-btn" id="searchCloseBtn"><i class="fa fa-times"></i></button>
+    <form action="/shop" method="get">
+      <input type="search" name="search" id="search" placeholder="Search fragrances..." value="<%= searchQuery || '' %>">
+      <button type="submit"><img src="img/core-img/search.png" alt="Search"></button>
+    </form>
+    <% if (searchQuery) { %>
+      <div class="search-info">
+        Results for: "<%= searchQuery %>"
+        <a href="/shop">Clear</a>
+      </div>
+    <% } %>
+    <% if (products.length === 0 && searchQuery) { %>
+      <div class="no-results">No products found matching your search.</div>
+    <% } %>
+  </div>
+</div>
 
-                                <% if (products.length===0 && searchQuery) { %>
-                                    <div class="no-results alert alert-warning mt-3">
-                                        No products found matching your search.
-                                    </div>
-                                    <% } %>
-                    </div>
-                </div>
-            </div>
-        </div>
+<!-- ── NAVBAR ── -->
+<nav class="main-nav">
+  <!-- Logo -->
+  <a href="/" class="nav-logo">La<span>belle</span></a>
+
+  <!-- Center Nav with Hover Filter Dropdowns -->
+  <div class="nav-center">
+
+    <div class="nav-item">
+      <a href="/">Home</a>
     </div>
 
-
-    <!-- Search Wrapper Area End -->
-
-    <div class="main-content-wrapper d-flex clearfix">
-        <!-- Mobile Nav -->
-        <div class="mobile-nav">
-            <div class="amado-navbar-brand">
-                <a href="/home"><img src="img/core-img/logo.png" alt=""></a>
-            </div>
-            <div class="amado-navbar-toggler">
-                <span></span><span></span><span></span>
-            </div>
-        </div>
-
-        <!-- Header Area Start -->
-        <header class="header-area clearfix">
-            <div class="nav-close">
-                <i class="fa fa-close" aria-hidden="true"></i>
-            </div>
-            <div class="logo">
-                <a href="/"><img style="width: 700px !important; height: 150px;" src="img/core-img/logo.png" alt=""></a>
-            </div>
-            <nav class="amado-nav">
-                <ul>
-                    <li><a href="/">Home</a></li>
-                    <li class="active"><a href="/shop">Shop</a></li>
-                    <li><a href="/cart">Cart</a></li>
-                </ul>
-            </nav>
-            <div class="amado-btn-group mt-30 mb-100">
-                <% if (user ) { %>
-                    <button class="btn amado-btn mb-15" onclick="window.location.href='/logout'">Logout</button>
-                    <% } else { %>
-                        <button class="btn amado-btn mb-15" onclick="window.location.href='/login'">Login</button>
-                        <% } %>
-                            <a href="/user-profile" class="btn amado-btn active">Profile</a>
-            </div>
-            <div class="cart-fav-search mb-100">
-                <a href="/wishlist" class="fav-nav"><img src="img/core-img/favorites.png" alt=""> Favourite</a>
-                <a href="#" class="search-nav"><img src="img/core-img/search.png" alt=""> Search</a>
-            </div>
-            <div class="social-info d-flex justify-content-between">
-
-            </div>
-        </header>
-        <!-- Header Area End -->
-
-        <div class="shop_sidebar_area" style="padding-bottom:1300px ;">
-            <div class="widget catagory mb-50">
-                <h6 class="widget-title mb-30">Gender</h6>
-                <div class="catagories-menu" data-filter="gender">
-                    <ul>
-                        <li><a href="#" data-value="male">Male</a></li>
-                        <li><a href="#" data-value="female">Female</a></li>
-                        <li><a href="#" data-value="other">unisex</a></li>
-                    </ul>
-                </div>
-            </div>
-            <div class="widget catagory mb-50">
-                <h6 class="widget-title mb-30">Fragrance</h6>
-                <div class="catagories-menu" data-filter="fragrance">
-                    <ul>
-                        <% fragrances.forEach(fragrance=> { %>
-                            <li>
-                                <a href="#" data-value="<%= fragrance.name %>"
-                                    class="<%= selectedFragrances.includes(fragrance.name) ? 'selected-fragrance' : '' %>">
-                                    <%= fragrance.name %>
-                                </a>
-                            </li>
-                            <% }); %>
-                    </ul>
-                </div>
-            </div>
-
-
-            <div class="widget catagory mb-50">
-                <h6 class="widget-title mb-30">Occasions </h6>
-                <div class="catagories-menu" data-filter="occasion">
-                    <ul>
-                        <% occasions.forEach(occasion=> { %>
-                            <li>
-                                <a href="#" data-value="<%= occasion.name %>">
-                                    <%= occasion.name %>
-                                </a>
-                            </li>
-                            <% }); %>
-                    </ul>
-                </div>
-            </div>
-        </div>
-        <div class="amado_product_area section-padding-100">
-            <div class="container-fluid">
-                <div class="row">
-                    <div class="col-12">
-                        <div class="product-topbar d-xl-flex align-items-end justify-content-between">
-                            <div class="total-products">
-                                <div class="view d-flex">
-                                    <!-- <a href="#"><i class="fa fa-th-large" aria-hidden="true"></i></a>
-                                    <a href="#"><i class="fa fa-bars" aria-hidden="true"></i></a> -->
-                                </div>
-                            </div>
-                            <!-- <div class="product-sorting d-flex">
-                                <div class="sort-by-date d-flex align-items-center mr-15">
-                                    <p>Sort by</p>
-                                    <form action="#" method="get">
-                                        <select name="select" id="sortBydate">
-                                            <option value="value">Date</option>
-                                            <option value="value">Newest</option>
-                                            <option value="value">Popular</option>
-                                        </select>
-                                    </form>
-                                </div> 
-                            </div> -->
-                        </div>
-                    </div>
-                </div>
-                <section id="new-arrivals" class="container">
-                    <h2>New Arrivals</h2>
-                    <div class="row">
-                        <% newArrivals.forEach((product)=> { %>
-                            <div class="col-12 col-sm-6 col-md-4">
-                                <div class="single-product-wrapper">
-                                    <a
-                                        href="/product-details/<%= product.defaultVariant ? product.defaultVariant._id : '0' %>">
-                                        <div class="product-img">
-                                            <img src="<%= product.images[2] %>" alt="Product Image">
-                                            <% if (product.images[0]) { %>
-                                                <img class="hover-img" src="<%= product.images[0] %>" alt="Hover Image">
-                                                <% } %>
-                                        </div>
-                                    </a>
-                                    <div class="product-description">
-                                        <h6>
-                                            <%= product.name %>
-                                        </h6>
-                                        <p class="product-price">
-                                            <%=product.defaultVariant ? product.defaultVariant.price: '1000' %>
-                                        </p>
-                                    </div>
-                                </div>
-                            </div>
-                            <% }); %>
-                    </div>
-                </section>
-                <div class="row">
-                    <% products.forEach((product, index)=> { %>
-                        <div class="col-12 col-sm-6 col-md-12 col-xl-6">
-                            <div class="single-product-wrapper">
-                                <a
-                                    href="/product-details/<%=product.defaultVariant ? product.defaultVariant._id:'0' %>">
-                                    <div class="product-img">
-                                        <img src="<%=product.images[0]%>" alt="">
-                                        <img class="hover-img" src="<%=product.images[1]%>" alt="">
-                                    </div>
-                                </a>
-                                <div class="product-description d-flex align-items-center justify-content-between">
-                                    <div class="product-meta-data">
-                                        <div class="line"></div>
-                                        <p class="product-price">
-                                            <%=product.defaultVariant ? product.defaultVariant.price: '1000' %>
-                                        </p>
-                                        <a
-                                            href="/product-details/<%=product.defaultVariant ? product.defaultVariant._id:'0' %>">
-                                            <h6>
-                                                <%= product.name %>
-                                            </h6>
-                                        </a>
-                                    </div>
-                                    <div class="ratings-cart text-right">
-                                        <a href="/wishlist/<%= product.defaultVariant ? product.defaultVariant._id : '0' %>"
-                                            onclick="toggleWishlist(event, '<%= product.defaultVariant._id  %>')"
-                                            class="wishlist-toggle">
-                                            <div>
-                                                <% if (wishlistItems && Array.isArray(wishlistItems) &&
-                                                    wishlistItems.includes(product.defaultVariant?._id?.toString())) {
-                                                    %>
-                                                    <i id="heart-icon-<%= product.defaultVariant._id %>"
-                                                        style="color: rgb(246, 39, 39); font-size: 20px;"
-                                                        class="fa fa-heart"></i>
-                                                    <% } else { %>
-                                                        <i id="heart-icon-<%= product.defaultVariant._id %>"
-                                                            class="fa fa-heart-o" style="font-size: 20px;"></i>
-                                                        <% } %>
-                                            </div>
-                                        </a>
-
-
-
-                                        <div class="ratings">
-                                            <!-- <i class="fa fa-star" aria-hidden="true"></i>
-                                            <i class="fa fa-star" aria-hidden="true"></i>
-                                            <i class="fa fa-star" aria-hidden="true"></i>
-                                            <i class="fa fa-star" aria-hidden="false"></i>
-                                            <i class="fa fa-star" aria-hidden="false"></i> -->
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <% } ) %>
-                            <div class="row">
-                                <div class="col-12">
-                                    <nav aria-label="navigation">
-                                        <ul class="pagination justify-content-end mt-50">
-                                            <% for (let i=1; i <=totalPages; i++) { %>
-                                                <li class="page-item <%= currentPage === i ? 'active' : '' %>">
-                                                    <a class="page-link" href="?page=<%= i %>">
-                                                        <%= i %>.
-                                                    </a>
-                                                </li>
-                                                <% } %>
-                                        </ul>
-                                    </nav>
-                                </div>
-                            </div>
-                </div>
-            </div>
-        </div>
+    <div class="nav-item">
+      <a href="/shop" class="active-page">Shop <span class="caret">▾</span></a>
+      <!-- All products — no filter -->
     </div>
 
+    <!-- GENDER filter -->
+    <div class="nav-item">
+      <span>Gender <span class="caret">▾</span></span>
+     <div class="nav-dropdown">
+  <div class="drop-title">Shop by Gender</div>
+  <ul>
+    <li><a href="#" data-filter="gender" data-value="Male" class="filter-link">Male</a></li>
+    <li><a href="#" data-filter="gender" data-value="Female" class="filter-link">Female</a></li>
+    <li><a href="#" data-filter="gender" data-value="Other" class="filter-link">Unisex</a></li>
 
+    <!-- CLEAR -->
+    <li style="margin-top:0.5rem;">
+      <a href="#" class="clear-filter" data-clear="gender"
+         style="font-size:0.7rem; letter-spacing:0.1em; text-transform:uppercase; color:var(--gold);">
+         Clear
+      </a>
+    </li>
+  </ul>
+</div>
+    </div>
 
-    <footer class="footer_area clearfix" style="padding: 0;">
-        <div class="container">
-            <div class="row align-items-center">
-
-                <div class="col-12 col-lg-4">
-                    <div class="single_widget_area">
-
-                        <div class="footer-logo mr-50">
-                            <h4>labelle</h4>
-                            <a href="/"><img style="height: 250px; width: 400px; margin: 0px; padding: 0px;"
-                                    src="/img/core-img/logo2.png" alt=""></a>
-                        </div>
-
-
-                    </div>
-                </div>
-
-                <div class="col-12 col-lg-8">
-                    <div class="single_widget_area">
-
-                        <div class="footer_menu">
-                            <nav class="navbar navbar-expand-lg justify-content-end">
-                                <button class="navbar-toggler" type="button" data-toggle="collapse"
-                                    data-target="#footerNavContent" aria-controls="footerNavContent"
-                                    aria-expanded="false" aria-label="Toggle navigation"><i
-                                        class="fa fa-bars"></i></button>
-                                <div class="collapse navbar-collapse" id="footerNavContent">
-                                    <ul class="navbar-nav ml-auto">
-                                        <li class="nav-item active">
-                                            <a class="nav-link" href="/">Home</a>
-                                        </li>
-                                        <li class="nav-item">
-                                            <a class="nav-link" href="/shop">Shop</a>
-                                        </li>
-                                        <li class="nav-item">
-                                            <a class="nav-link" href="/cart">Cart</a>
-                                        </li>
-
-                                    </ul>
-
-                                </div>
-
-                            </nav>
-                        </div>
-                    </div>
-                </div>
-            </div>
+    <!-- FRAGRANCE filter -->
+    <div class="nav-item">
+      <span>Fragrance <span class="caret">▾</span></span>
+      <div class="nav-dropdown wide">
+        <div class="drop-col">
+          <div class="drop-col-title">Fragrance Notes</div>
+          <ul>
+            <% fragrances.slice(0, Math.ceil(fragrances.length / 2)).forEach(fragrance => { %>
+              <li>
+                <a href="#" data-filter="fragrance" data-value="<%= fragrance.name %>"
+                  class="filter-link <%= selectedFragrances.includes(fragrance.name) ? 'active' : '' %>">
+                  <%= fragrance.name %>
+                </a>
+              </li>
+            <% }); %>
+          </ul>
         </div>
-    </footer>
+        <div class="drop-col">
+          <div class="drop-col-title">&nbsp;</div>
+          <ul>
+            <% fragrances.slice(Math.ceil(fragrances.length / 2)).forEach(fragrance => { %>
+              <li>
+                <a href="#" data-filter="fragrance" data-value="<%= fragrance.name %>"
+                  class="filter-link <%= selectedFragrances.includes(fragrance.name) ? 'active' : '' %>">
+                  <%= fragrance.name %>
+                </a>
+              </li>
+            <% }); %>
+          </ul>
+        </div>
+        <div class="drop-col">
+          <div class="drop-col-title">Active Filters</div>
+          <ul id="activeFragranceList">
+            <% if (selectedFragrances.length > 0) { %>
+              <% selectedFragrances.forEach(f => { %><li><a href="#" class="active"><%= f %></a></li><% }); %>
+            <% } else { %>
+              <li><a href="#" style="opacity:0.4; pointer-events:none;">None selected</a></li>
+            <% } %>
+          </ul>
+          <% if (selectedFragrances.length > 0) { %>
+            <a href="/shop" style="display:block; margin-top:1rem; font-size:0.7rem; letter-spacing:0.1em; text-transform:uppercase; color:var(--gold); text-decoration:none;">Clear all</a>
+          <% } %>
+        </div>
+      </div>
+    </div>
 
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            const searchForm = document.querySelector('.search-content form');
-            const searchInput = document.getElementById('search');
+    <!-- OCCASION filter -->
+    <div class="nav-item">
+      <span>Occasion <span class="caret">▾</span></span>
+      <div class="nav-dropdown">
+  <div class="drop-title">Shop by Occasion</div>
+  <ul>
+    <% occasions.forEach(occasion => { %>
+      <li>
+        <a href="#" data-filter="occasion" data-value="<%= occasion.name %>" class="filter-link">
+          <%= occasion.name %>
+        </a>
+      </li>
+    <% }); %>
 
-            searchForm.addEventListener('submit', (e) => {
-                e.preventDefault();
-                const searchTerm = searchInput.value.trim();
+    <!-- CLEAR -->
+    <li style="margin-top:0.5rem;">
+      <a href="#" class="clear-filter" data-clear="occasion"
+         style="font-size:0.7rem; letter-spacing:0.1em; text-transform:uppercase; color:var(--gold);">
+         Clear
+      </a>
+    </li>
+  </ul>
+</div>
+    </div>
 
-                if (searchTerm) {
-                    window.location.href = `/shop?search=${encodeURIComponent(searchTerm)}`;
-                }
-            });
-        });
-        function toggleWishlist(event, variantId) {
-            event.preventDefault();
+    <div class="nav-item">
+      <a href="/cart">Cart</a>
+    </div>
 
-            const heartIcon = document.getElementById(`heart-icon-${variantId}`);
-            const isInWishlist = heartIcon.classList.contains('fa-heart');
+  </div>
 
-            const url = isInWishlist ? '/wishlist-remove' : '/wishlist-add';
-            const successMessage = isInWishlist ? 'Removed from Wishlist!' : 'Added to Wishlist!';
+  <!-- Right actions -->
+  <div class="nav-right">
+    <button class="nav-search-btn" id="searchOpenBtn" title="Search">
+      <i class="fa fa-search" style="font-size:0.9rem;"></i>
+    </button>
+    <a href="/wishlist">Wishlist</a>
+    <% if (user) { %>
+      <a href="/logout">Logout</a>
+      <a href="/user-profile">Profile</a>
+    <% } else { %>
+      <a href="/login">Login</a>
+    <% } %>
+    <button class="mobile-toggle" id="mobileToggle">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</nav>
 
-            fetch(url, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ variantId }),
-            })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.success) {
-                        if (isInWishlist) {
-                            heartIcon.classList.add('fa-heart-o');
-                            heartIcon.classList.remove('fa-heart');
-                            heartIcon.style.color = '';
-                        } else {
-                            heartIcon.classList.add('fa-heart');
-                            heartIcon.classList.remove('fa-heart-o');
-                            heartIcon.style.color = 'rgb(246, 39, 39)';
-                        }
+<!-- ── PAGE HEADER ── -->
+<div class="page-header">
+  <div class="page-header-inner">
+    <p class="page-header-eyebrow">Labelle Collection</p>
+    <h1>Explore Our <em>Fragrances</em></h1>
+    <p>Each scent is a journey — discover yours among our curated selection of premium perfumes.</p>
+  </div>
+</div>
 
-                        Swal.fire({
-                            position: 'top',
-                            icon: 'success',
-                            title: successMessage,
-                            showConfirmButton: false,
-                            timer: 1500,
-                            width: '250px',
-                        });
-                    } else {
-                        Swal.fire({
-                            icon: 'info',
-                            title: 'Action Failed!',
-                            text: data.message,
-                            confirmButtonText: 'OK',
-                            width: '350px',
-                        });
-                    }
-                })
-                .catch(error => {
-                    console.error('Error:', error);
-                    Swal.fire({
-                        icon: 'error',
-                        title: 'Error!',
-                        text: 'An error occurred while updating the wishlist.',
-                        confirmButtonText: 'OK',
-                        width: '250px',
-                    });
-                });
+<!-- ── MAIN SHOP BODY ── -->
+<div class="shop-body">
+
+  <!-- NEW ARRIVALS -->
+  <% if (newArrivals && newArrivals.length > 0) { %>
+  <div style="margin-bottom: 5rem;">
+    <p class="section-eyebrow">Just Arrived</p>
+    <h2 class="section-title">New <em>Arrivals</em></h2>
+    <div class="arrivals-grid">
+      <% newArrivals.forEach((product) => { %>
+        <div class="arrival-card">
+          <a href="/product-details/<%= product.defaultVariant ? product.defaultVariant._id : '0' %>">
+            <div class="arrival-img">
+              <img src="<%= product.images[2] || product.images[0] %>" alt="<%= product.name %>">
+              <% if (product.images[0]) { %>
+                <img class="hover-img" src="<%= product.images[0] %>" alt="<%= product.name %>">
+              <% } %>
+            </div>
+          </a>
+          <div class="arrival-body">
+            <div class="arrival-name"><%= product.name %></div>
+            <div class="arrival-price"><%= product.defaultVariant ? product.defaultVariant.price : '1000' %></div>
+          </div>
+        </div>
+      <% }); %>
+    </div>
+  </div>
+  <% } %>
+
+  <div class="section-divider"></div>
+
+  <!-- ALL PRODUCTS -->
+  <p class="section-eyebrow">All Products</p>
+  <h2 class="section-title">The <em>Full Collection</em></h2>
+
+  <div class="products-grid">
+    <% products.forEach((product, index) => { %>
+      <div class="product-card">
+        <a href="/product-details/<%= product.defaultVariant ? product.defaultVariant._id : '0' %>">
+          <div class="product-img">
+            <img src="<%= product.images[0] %>" alt="<%= product.name %>">
+            <% if (product.images[1]) { %>
+              <img class="hover-img" src="<%= product.images[1] %>" alt="<%= product.name %>">
+            <% } %>
+          </div>
+        </a>
+        <div class="product-body">
+          <div class="product-meta">
+            <div class="product-price"><%= product.defaultVariant ? product.defaultVariant.price : '1000' %></div>
+            <a class="product-name"
+              href="/product-details/<%= product.defaultVariant ? product.defaultVariant._id : '0' %>">
+              <%= product.name %>
+            </a>
+          </div>
+          <div class="product-actions">
+            <a href="/wishlist/<%= product.defaultVariant ? product.defaultVariant._id : '0' %>"
+               onclick="toggleWishlist(event, '<%= product.defaultVariant._id %>')"
+               class="wishlist-btn">
+              <% if (wishlistItems && Array.isArray(wishlistItems) &&
+                  wishlistItems.includes(product.defaultVariant?._id?.toString())) { %>
+                <i id="heart-icon-<%= product.defaultVariant._id %>" class="fa fa-heart" style="color:rgb(246,39,39);"></i>
+              <% } else { %>
+                <i id="heart-icon-<%= product.defaultVariant._id %>" class="fa fa-heart-o"></i>
+              <% } %>
+            </a>
+          </div>
+        </div>
+      </div>
+    <% }); %>
+  </div>
+
+  <!-- PAGINATION -->
+  <div class="pagination-wrapper">
+    <ul class="pagination">
+      <% for (let i = 1; i <= totalPages; i++) { %>
+        <li class="page-item <%= currentPage === i ? 'active' : '' %>">
+          <a class="page-link" href="?page=<%= i %>"><%= i %></a>
+        </li>
+      <% } %>
+    </ul>
+  </div>
+
+</div>
+
+<!-- ── FOOTER ── -->
+<footer>
+  <div class="footer-top">
+    <div>
+      <div class="footer-brand-logo">La<span>belle</span></div>
+      <p class="footer-brand-text">Premium fragrances crafted to express your personality. Elegance, confidence, and beauty — in every drop.</p>
+      <div class="social-links">
+        <a href="#" class="social-link">
+          <svg viewBox="0 0 24 24" stroke-width="1.5"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1112.63 8 4 4 0 0116 11.37zM17.5 6.5h.01" stroke-linecap="round"/></svg>
+        </a>
+        <a href="#" class="social-link">
+          <svg viewBox="0 0 24 24" stroke-width="1.5"><path d="M18 2h-3a5 5 0 00-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 011-1h3z"/></svg>
+        </a>
+        <a href="#" class="social-link">
+          <svg viewBox="0 0 24 24" stroke-width="1.5"><path d="M23 3a10.9 10.9 0 01-3.14 1.53 4.48 4.48 0 00-7.86 3v1A10.66 10.66 0 013 4s-4 9 5 13a11.64 11.64 0 01-7 2c9 5 20 0 20-11.5a4.5 4.5 0 00-.08-.83A7.72 7.72 0 0023 3z" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </a>
+      </div>
+    </div>
+    <div>
+      <p class="footer-col-title">Shop</p>
+      <ul class="footer-links">
+        <li><a href="#">New Arrivals</a></li>
+        <li><a href="#">Bestsellers</a></li>
+        <li><a href="#">Collections</a></li>
+        <li><a href="#">Gift Sets</a></li>
+      </ul>
+    </div>
+    <div>
+      <p class="footer-col-title">Help</p>
+      <ul class="footer-links">
+        <li><a href="#">Track Order</a></li>
+        <li><a href="#">Returns</a></li>
+        <li><a href="#">FAQ</a></li>
+        <li><a href="#">Contact Us</a></li>
+      </ul>
+    </div>
+    <div>
+      <p class="footer-col-title">Company</p>
+      <ul class="footer-links">
+        <li><a href="#">About Labelle</a></li>
+        <li><a href="#">Sustainability</a></li>
+        <li><a href="#">Careers</a></li>
+        <li><a href="#">Press</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <p class="footer-copy">© 2025 Labelle. All rights reserved.</p>
+    <div class="footer-legal">
+      <a href="#">Privacy Policy</a>
+      <a href="#">Terms of Service</a>
+    </div>
+  </div>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+  document.querySelectorAll('.clear-filter').forEach(btn => {
+  btn.addEventListener('click', (e) => {
+    e.preventDefault();
+
+    const filterType = btn.dataset.clear;
+
+    document
+      .querySelectorAll(`.filter-link[data-filter="${filterType}"]`)
+      .forEach(link => link.classList.remove('active'));
+
+    applyFilters();
+  });
+});
+  // ── Search overlay
+  const overlay = document.getElementById('searchOverlay');
+  document.getElementById('searchOpenBtn').addEventListener('click', () => overlay.classList.add('open'));
+  document.getElementById('searchCloseBtn').addEventListener('click', () => overlay.classList.remove('open'));
+  overlay.addEventListener('click', (e) => { if (e.target === overlay) overlay.classList.remove('open'); });
+
+  // ── Filter links — apply URL query params
+  function applyFilters() {
+    const query = new URLSearchParams(window.location.search);
+
+    const activeGender = document.querySelector('.filter-link[data-filter="gender"].active');
+    if (activeGender) query.set('gender', activeGender.dataset.value);
+    else query.delete('gender');
+
+    const activeFragrances = [...document.querySelectorAll('.filter-link[data-filter="fragrance"].active')]
+      .map(el => el.dataset.value);
+    if (activeFragrances.length) query.set('fragrance', activeFragrances.join(','));
+    else query.delete('fragrance');
+
+    const activeOccasion = document.querySelector('.filter-link[data-filter="occasion"].active');
+    if (activeOccasion) query.set('occasion', activeOccasion.dataset.value);
+    else query.delete('occasion');
+
+    query.delete('page');
+    window.location.search = query.toString();
+  }
+
+  document.querySelectorAll('.filter-link[data-filter="gender"]').forEach(link => {
+    link.addEventListener('click', (e) => {
+      e.preventDefault();
+      document.querySelectorAll('.filter-link[data-filter="gender"]').forEach(l => l.classList.remove('active'));
+      link.classList.toggle('active');
+      applyFilters();
+    });
+  });
+
+  document.querySelectorAll('.filter-link[data-filter="fragrance"]').forEach(link => {
+    link.addEventListener('click', (e) => {
+      e.preventDefault();
+      link.classList.toggle('active');
+      applyFilters();
+    });
+  });
+
+  document.querySelectorAll('.filter-link[data-filter="occasion"]').forEach(link => {
+    link.addEventListener('click', (e) => {
+      e.preventDefault();
+      document.querySelectorAll('.filter-link[data-filter="occasion"]').forEach(l => l.classList.remove('active'));
+      link.classList.toggle('active');
+      applyFilters();
+    });
+  });
+
+  // ── Wishlist toggle
+  function toggleWishlist(event, variantId) {
+    event.preventDefault();
+    const heartIcon = document.getElementById(`heart-icon-${variantId}`);
+    const isInWishlist = heartIcon.classList.contains('fa-heart');
+    const url = isInWishlist ? '/wishlist-remove' : '/wishlist-add';
+    const successMessage = isInWishlist ? 'Removed from Wishlist!' : 'Added to Wishlist!';
+
+    fetch(url, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ variantId }),
+    })
+    .then(r => r.json())
+    .then(data => {
+      if (data.success) {
+        if (isInWishlist) {
+          heartIcon.classList.replace('fa-heart', 'fa-heart-o');
+          heartIcon.style.color = '';
+        } else {
+          heartIcon.classList.replace('fa-heart-o', 'fa-heart');
+          heartIcon.style.color = 'rgb(246,39,39)';
         }
-
-
-
-        function applyFilters(category = null) {
-            const selectedGenders = [];
-            const selectedFragrances = [];
-            const selectedOccasions = [];
-
-
-            document.querySelectorAll('.catagories-menu[data-filter="gender"] ul li a.active').forEach(link => {
-                const gender = link.getAttribute('data-value');
-                selectedGenders.push(gender.charAt(0).toUpperCase() + gender.slice(1));
-            });
-
-            document.querySelectorAll('.catagories-menu[data-filter="fragrance"] ul li a.active').forEach(link => {
-                selectedFragrances.push(link.getAttribute('data-value'));
-            });
-
-            document.querySelectorAll('.catagories-menu[data-filter="occasion"] ul li a.active').forEach(link => {
-                selectedOccasions.push(link.getAttribute('data-value'));
-            });
-
-
-            const query = new URLSearchParams(window.location.search);
-
-            if (selectedGenders.length) {
-                query.set('gender', selectedGenders.join(','));
-            } else {
-                query.delete('gender');
-            }
-
-            if (selectedFragrances.length) {
-                query.set('fragrance', selectedFragrances.join(','));
-            } else {
-                query.delete('fragrance');
-            }
-
-            if (selectedOccasions.length) {
-                query.set('occasion', selectedOccasions.join(','));
-            } else {
-                query.delete('occasion');
-            }
-
-            if (category) {
-                query.set('category', category);
-            }
-
-
-            window.location.search = query.toString();
-        }
-
-
-        document.addEventListener('DOMContentLoaded', () => {
-
-            document.querySelectorAll('.catagories-menu[data-filter="gender"] ul li a').forEach(link => {
-                link.addEventListener('click', function (e) {
-                    e.preventDefault();
-
-                    document.querySelectorAll('.catagories-menu[data-filter="gender"] ul li a').forEach(otherLink => {
-                        otherLink.classList.remove('active');
-                    });
-
-                    this.classList.toggle('active');
-                    applyFilters();
-                });
-            });
-
-
-            document.querySelectorAll('.catagories-menu[data-filter="fragrance"] ul li a').forEach(link => {
-                link.addEventListener('click', function (e) {
-                    e.preventDefault();
-                    this.classList.toggle('active');
-                    applyFilters();
-                });
-            });
-
-            document.querySelectorAll('.catagories-menu[data-filter="occasion"] ul li a').forEach(link => {
-                link.addEventListener('click', function (e) {
-                    e.preventDefault();
-                    this.classList.toggle('active');
-                    applyFilters();
-                });
-            });
-        });
-    </script>
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <script src="/js/jquery/jquery-2.2.4.min.js"></script>
-    <script src="/js/popper.min.js"></script>
-    <script src="/js/bootstrap.min.js"></script>
-    <script src="/js/plugins.js"></script>
-    <script src="/js/active.js"></script>
-
+        Swal.fire({ position:'top', icon:'success', title: successMessage, showConfirmButton:false, timer:1500, width:'250px' });
+      } else {
+        Swal.fire({ icon:'info', title:'Action Failed!', text: data.message, confirmButtonText:'OK', width:'350px' });
+      }
+    })
+    .catch(() => {
+      Swal.fire({ icon:'error', title:'Error!', text:'An error occurred.', confirmButtonText:'OK', width:'250px' });
+    });
+  }
+</script>
 </body>
-
 </html>
