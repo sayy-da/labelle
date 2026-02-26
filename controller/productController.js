@@ -60,6 +60,8 @@ const uploads = multer({ storage: storage });
 
 exports.addProduct = [uploads.array('images', 3), async (req, res) => {
   try {
+     console.log("BODY:", req.body);
+    console.log("FILES:", req.files);
     const fragrances = await Fragrance.find().sort({ createdAt: -1 });
     const occasions = await Occasion.find().sort({ createdAt: -1 });
 
