@@ -9,31 +9,31 @@ const Order = require('../models/order')
 const { error } = require('console');
 exports.getProductList = async (req, res) => {
   try {
-  
+
     const page = parseInt(req.query.page) || 1
-    const limit = parseInt(req.query.limit) ||10
-    const skip =(page-1)*limit
-    const query =  req.query.query ? req.query.query.trim() : ''
+    const limit = parseInt(req.query.limit) || 10
+    const skip = (page - 1) * limit
+    const query = req.query.query ? req.query.query.trim() : ''
 
 
     const filter = query
-    ? {
+      ? {
         $or: [
-          { name: { $regex: query, $options: 'i' } },   
+          { name: { $regex: query, $options: 'i' } },
           { Fragrance: { $regex: query, $options: 'i' } },
-          { Occasion: { $regex: query, $options: 'i' } },   
-          { gender: { $regex: query, $options: 'i' } },     
+          { Occasion: { $regex: query, $options: 'i' } },
+          { gender: { $regex: query, $options: 'i' } },
         ],
       }
-    : {};
+      : {};
 
     const products = await Product.find(filter).sort({ createdAt: -1 }).skip(skip).limit(limit)
 
 
     const totalProducts = await Product.countDocuments(filter)
 
-    const totalPages = Math.ceil(totalProducts/limit) 
-    res.render('admin/product-list', { products ,page,totalProducts,totalPages,limit,query});
+    const totalPages = Math.ceil(totalProducts / limit)
+    res.render('admin/product-list', { products, page, totalProducts, totalPages, limit, query });
   } catch (error) {
     console.error('Error fetching product list', error);
     res.status(500).send('Error fetching product list');
@@ -45,9 +45,9 @@ exports.getProductList = async (req, res) => {
 exports.getAddProduct = async (req, res) => {
   const fragrances = await Fragrance.find().sort({ createdAt: -1 });
   const occasions = await Occasion.find().sort({ createdAt: -1 });
-  
+
   res.render('admin/add-product', {
-    errors: {}, 
+    errors: {},
     formData: {},
     fragrances,
     occasions
@@ -55,36 +55,26 @@ exports.getAddProduct = async (req, res) => {
 }
 
 
-const storage = multer.diskStorage({
-
-
-  destination: (req, file, cb) => {
-    cb(null, './public/uploads/');
-  },
-  filename: (req, file, cb) => {
-    cb(null, Date.now() + path.extname(file.originalname));
-  }
-});
-
+const { storage } = require('../config/cloudinary');
 const uploads = multer({ storage: storage });
 
 exports.addProduct = [uploads.array('images', 3), async (req, res) => {
   try {
     const fragrances = await Fragrance.find().sort({ createdAt: -1 });
     const occasions = await Occasion.find().sort({ createdAt: -1 });
-    
+
 
     const { name, fragranceType, gender, occasions: occasionName, description } = req.body;
-    const images = req.files.map(file => '/uploads/' + file.filename);
+    const images = req.files.map(file => file.path);
 
     const existingProduct = await Product.findOne({ name });
     const errors = {};
 
-    if (!name || name.length > 20 ) {
+    if (!name || name.length > 20) {
       errors.name = 'Product name is required and should not exceed 20 characters.';
     } else if (/[^a-zA-Z0-9\s-]/.test(name) || name.trim() === '') {
       errors.name = 'Product name should not contain special characters (except -), or be empty';
-    }else if(existingProduct){
+    } else if (existingProduct) {
       errors.name = 'Product already exists.';
     }
 
@@ -133,64 +123,64 @@ exports.addProduct = [uploads.array('images', 3), async (req, res) => {
     res.status(500).send('Error adding product');
   }
 }];
-exports.getEditProduct = async (req,res) => {
-  const {id} = req.params
-  try{
+exports.getEditProduct = async (req, res) => {
+  const { id } = req.params
+  try {
     const product = await Product.findById(id)
     const fragrances = await Fragrance.find().sort({ createdAt: -1 });
     const occasiones = await Occasion.find().sort({ createdAt: -1 });
-    
-    if(!product){
-      return res.render('product-list',{error:'Product not found' })
+
+    if (!product) {
+      return res.render('product-list', { error: 'Product not found' })
     }
-    res.render('admin/edit-product',{
-      name:product.name,
-      fragranceType:product.fragranceType,
-      gender:product.gender,
-      occasions:product.occasions,
-      description:product.description,
-      images:product.images,
-      id:product._id,
-      error:null,
+    res.render('admin/edit-product', {
+      name: product.name,
+      fragranceType: product.fragranceType,
+      gender: product.gender,
+      occasions: product.occasions,
+      description: product.description,
+      images: product.images,
+      id: product._id,
+      error: null,
       fragrances,
       occasiones
     })
-  }catch(error){
+  } catch (error) {
     console.error('Error fetching product:', error);
     res.status(500).send('Failed to fetch product details');
   }
 }
 
-exports.editVariant = async (req,res) => {
-  const {id} = req.params;
-  const {milliliter,price,stock,productId} = req.body;
+exports.editVariant = async (req, res) => {
+  const { id } = req.params;
+  const { milliliter, price, stock, productId } = req.body;
 
   try {
-    
+
 
     const variant = await Variant.findById(id)
     if (!variant) {
       throw new Error('variant not found');
     }
 
-      variant.milliliter = milliliter;
-      variant.price = price;
-      variant.stock = stock;
-      variant.productId =productId
-      await variant.save();
-      
-      res.redirect(`/admin/variant/${productId}`);
+    variant.milliliter = milliliter;
+    variant.price = price;
+    variant.stock = stock;
+    variant.productId = productId
+    await variant.save();
+
+    res.redirect(`/admin/variant/${productId}`);
   } catch (error) {
     console.error('Error editing variant:', error);
-      res.render('admin/edit-variant', {
-        error: 'Failed to edit product. Please try again.',
-        milliliter,
-        price,
-        stock,
-        id,
-        productId
+    res.render('admin/edit-variant', {
+      error: 'Failed to edit product. Please try again.',
+      milliliter,
+      price,
+      stock,
+      id,
+      productId
 
-      });
+    });
   }
 }
 
@@ -200,18 +190,18 @@ exports.editProduct = [
   async (req, res) => {
     const { id } = req.params;
     const { name, fragranceType, gender, occasions, description } = req.body;
-    
+
 
     try {
       const product = await Product.findById(id);
-      
+
       if (!product) {
         throw new Error('Product not found');
       }
 
- 
+
       if (req.files && req.files.length > 0) {
-        const newImages = req.files.map(file => '/uploads/' + file.filename);
+        const newImages = req.files.map(file => file.path);
         product.images = newImages;
       }
 
@@ -222,13 +212,13 @@ exports.editProduct = [
       product.description = description;
 
       await product.save();
-      
+
       res.redirect('/admin/product-list');
     } catch (error) {
       console.error('Error editing product:', error);
       const fragrances = await Fragrance.find().sort({ createdAt: -1 });
       const occasiones = await Occasion.find().sort({ createdAt: -1 });
-      
+
       res.render('admin/edit-product', {
         error: 'Failed to edit product. Please try again.',
         name,
@@ -238,32 +228,32 @@ exports.editProduct = [
         occasions,
         occasiones,
         description,
-        images:product.images || [],
+        images: product.images || [],
         id
       });
     }
   }
 ];
 
-exports.getEditVariant = async (req,res) => {
-  const {id} = req.params
+exports.getEditVariant = async (req, res) => {
+  const { id } = req.params
 
   try {
     const variant = await Variant.findById(id)
-    if(!variant){
-      return res.render('variant',{error:'variant not found' })
+    if (!variant) {
+      return res.render('variant', { error: 'variant not found' })
     }
 
     const milliliters = await Milliliter.find().sort({ createdAt: -1 });
-    res.render('admin/edit-variant',{
-      milliliter:variant.milliliter,
-      price:variant.price,
-      stock:variant.stock,
-      id:variant._id,
+    res.render('admin/edit-variant', {
+      milliliter: variant.milliliter,
+      price: variant.price,
+      stock: variant.stock,
+      id: variant._id,
       milliliters,
-      productId:variant.productId,
- 
-      error:null
+      productId: variant.productId,
+
+      error: null
     })
   } catch (error) {
     console.error('Error fetching variarnt:', error);
@@ -272,20 +262,20 @@ exports.getEditVariant = async (req,res) => {
 }
 
 
-exports.getAddVariant = async  (req,res)=>{
+exports.getAddVariant = async (req, res) => {
   const productId = req.params.productId
-  
+
   const milliliters = await Milliliter.find().sort({ createdAt: -1 });
-  
-  res.render('admin/add-variant',{productId,milliliters,error:{}})
+
+  res.render('admin/add-variant', { productId, milliliters, error: {} })
 }
-exports.addVariant = async (req,res) => {
-  try {   
+exports.addVariant = async (req, res) => {
+  try {
     const productId = req.params.productId
-    const {milliliter,price,stock} = req.body
+    const { milliliter, price, stock } = req.body
 
 
-   
+
     const newVariant = new Variant({
       productId,
       milliliter,
@@ -294,44 +284,44 @@ exports.addVariant = async (req,res) => {
     })
 
 
-   await newVariant.save();
+    await newVariant.save();
 
-   res.redirect(`/admin/variant/${productId}`)
+    res.redirect(`/admin/variant/${productId}`)
   } catch (error) {
     console.error('Error adding variant', error);
     res.status(500).send('Error adding variant');
   }
 }
 
-exports.getVariantList = async (req,res)=>{
+exports.getVariantList = async (req, res) => {
   try {
-     const productId = req.params.productId
-   
+    const productId = req.params.productId
 
-     
-    const page = parseInt(req.query.page)||1
-    const limit = parseInt(req.query.limit)||10
-    const skip =(page-1)*limit
-    const query =  req.query.query ? req.query.query.trim() : ''
+
+
+    const page = parseInt(req.query.page) || 1
+    const limit = parseInt(req.query.limit) || 10
+    const skip = (page - 1) * limit
+    const query = req.query.query ? req.query.query.trim() : ''
 
 
     const filter = query
-    ? {
+      ? {
         $or: [
-          { milliliter: { $regex: query, $options: 'i' } },   
-          { stock: { $regex: query, $options: 'i' } },  
-          { price: { $regex: query, $options: 'i' } },   
+          { milliliter: { $regex: query, $options: 'i' } },
+          { stock: { $regex: query, $options: 'i' } },
+          { price: { $regex: query, $options: 'i' } },
         ],
       }
-    : {};
+      : {};
 
-    const variants = await Variant.find({productId},filter).sort({createdAt:-1}).skip(skip).limit(limit)
+    const variants = await Variant.find({ productId }, filter).sort({ createdAt: -1 }).skip(skip).limit(limit)
 
-  
-    const totalvariants = await Variant.countDocuments({productId},filter)
 
-    const totalPages = Math. ceil(totalvariants/limit) 
-    res.render('admin/variant',{variants,productId,page,totalvariants,totalPages,limit,query})
+    const totalvariants = await Variant.countDocuments({ productId }, filter)
+
+    const totalPages = Math.ceil(totalvariants / limit)
+    res.render('admin/variant', { variants, productId, page, totalvariants, totalPages, limit, query })
   } catch (error) {
     console.error('Error fetching variant list', error);
     res.status(500).send('Error fetching variant list');
@@ -342,20 +332,20 @@ exports.getVariantList = async (req,res)=>{
 
 
 
- exports.addFragrance = async (req, res) => {
-  let { name,offer } = req.body;  
-  
+exports.addFragrance = async (req, res) => {
+  let { name, offer } = req.body;
 
-  
+
+
   try {
 
     if (/\d/.test(name) || /[^a-zA-Z0-9\s-]/.test(name) || name.trim() === '') {
-      return res.render('admin/add-fragrance', { 
+      return res.render('admin/add-fragrance', {
         error: 'Fragrance name cannot contain numbers, special characters (except -), or be empty.',
-        name 
+        name
       });
     }
-    
+
 
 
     const lowercaseName = name.trim().toLowerCase();
@@ -363,15 +353,15 @@ exports.getVariantList = async (req,res)=>{
     const existingFragrance = await Fragrance.findOne({ name: lowercaseName });
 
     if (existingFragrance) {
-      return res.render('admin/add-fragrance', { 
-        error: 'Fragrance name already exists', 
-        name 
+      return res.render('admin/add-fragrance', {
+        error: 'Fragrance name already exists',
+        name
       });
     }
 
-    const newFragrance = new Fragrance({ name : name, offer:offer });
+    const newFragrance = new Fragrance({ name: name, offer: offer });
 
-    
+
 
     await newFragrance.save();
 
@@ -383,29 +373,29 @@ exports.getVariantList = async (req,res)=>{
 };
 
 
-exports.getAddFragrance = (req,res)=>{
-  res.render('admin/add-fragrance',{error:''})
+exports.getAddFragrance = (req, res) => {
+  res.render('admin/add-fragrance', { error: '' })
 }
 exports.getFragranceList = async (req, res) => {
   try {
     const page = parseInt(req.query.page) || 1
-    const limit = parseInt(req.query.limit) ||10
-    const skip =(page-1)*limit
+    const limit = parseInt(req.query.limit) || 10
+    const skip = (page - 1) * limit
     const query = req.query.query ? req.query.query.trim() : '';
-   
-   
+
+
     const filter = query
-      ? { name: { $regex: query, $options: 'i' }} 
+      ? { name: { $regex: query, $options: 'i' } }
       : {};
 
     const fragrances = await Fragrance.find(filter).sort({ createdAt: -1 })
-    .skip(skip).limit(limit)
-      
+      .skip(skip).limit(limit)
+
     const totalFragrances = await Fragrance.countDocuments(filter)
 
-    const totalPages = Math.ceil(totalFragrances/limit) 
-    
-    res.render('admin/fragrance-list', { fragrances,page,totalFragrances,totalPages,limit,query });
+    const totalPages = Math.ceil(totalFragrances / limit)
+
+    res.render('admin/fragrance-list', { fragrances, page, totalFragrances, totalPages, limit, query });
   } catch (error) {
     console.error('Error fetching product list', error);
     res.status(500).send('Error fetching product list');
@@ -418,59 +408,59 @@ exports.addOccasion = async (req, res) => {
 
   try {
     if (/\d/.test(name) || /[^a-zA-Z0-9\s/-]/.test(name) || name.trim() === '') {
-      return res.render('admin/add-occasion', { 
+      return res.render('admin/add-occasion', {
         error: 'Occasion name cannot contain numbers, special characters (except - and /), or be empty.',
         name
       });
     }
-    
+
     const lowercaseName = name.trim().toLowerCase();
 
 
     const existingOccasion = await Occasion.findOne({ name: lowercaseName });
 
     if (existingOccasion) {
-      return res.render('admin/add-occasion', {  
-        error: 'Occasion name already exists (case-insensitive)', 
+      return res.render('admin/add-occasion', {
+        error: 'Occasion name already exists (case-insensitive)',
         name
-       })
+      })
     }
-    const newOccasion = new Occasion({ name : name });
+    const newOccasion = new Occasion({ name: name });
     await newOccasion.save();
     res.redirect('/admin/occasion-list');
   } catch (error) {
     console.error('Error adding occasion:', error);
-    res.status(500).send( 'Failed to add occasion' );
+    res.status(500).send('Failed to add occasion');
   }
 };
 
 
 
-exports.getAddOccasion = (req,res)=>{
-  res.render('admin/add-occasion',{error:''})
+exports.getAddOccasion = (req, res) => {
+  res.render('admin/add-occasion', { error: '' })
 }
 
 exports.getOccasionList = async (req, res) => {
   try {
-     
+
     const page = parseInt(req.query.page) || 1
-    const limit = parseInt(req.query.limit) ||10
-    const skip =(page-1)*limit
-  
+    const limit = parseInt(req.query.limit) || 10
+    const skip = (page - 1) * limit
+
     const query = req.query.query ? req.query.query.trim() : '';
-   
-   
+
+
     const filter = query
-      ? { name: { $regex: query, $options: 'i' }}
+      ? { name: { $regex: query, $options: 'i' } }
       : {};
 
     const occasions = await Occasion.find(filter).sort({ createdAt: -1 }).skip(skip).limit(limit)
 
     const totalOccasions = await Occasion.countDocuments(filter)
 
-    const totalPages = Math. ceil(totalOccasions/limit) 
-    
-    res.render('admin/occasion-list', {occasions, page,totalOccasions,totalPages,limit,query});
+    const totalPages = Math.ceil(totalOccasions / limit)
+
+    res.render('admin/occasion-list', { occasions, page, totalOccasions, totalPages, limit, query });
   } catch (error) {
     console.error('Error fetching occasion list', error);
     res.status(500).send('Error fetching occasion list');
@@ -481,25 +471,25 @@ exports.getOccasionList = async (req, res) => {
 
 exports.getMillilitersList = async (req, res) => {
   try {
-     
+
     const page = parseInt(req.query.page) || 1
-    const limit = parseInt(req.query.limit) ||10
-    const skip =(page-1)*limit
-  
+    const limit = parseInt(req.query.limit) || 10
+    const skip = (page - 1) * limit
+
     const query = req.query.query ? req.query.query.trim() : '';
-   
-   
+
+
     const filter = query
-      ? { name: { $regex: query, $options: 'i' }} 
+      ? { name: { $regex: query, $options: 'i' } }
       : {};
 
     const milliliters = await Milliliter.find(filter).sort({ createdAt: -1 }).skip(skip).limit(limit)
 
     const totalMilliliters = await Milliliter.countDocuments(filter)
 
-    const totalPages = Math. ceil(totalMilliliters/limit) 
-    
-    res.render('admin/milliliters-list', { milliliters, page,totalMilliliters,totalPages,limit,query});
+    const totalPages = Math.ceil(totalMilliliters / limit)
+
+    res.render('admin/milliliters-list', { milliliters, page, totalMilliliters, totalPages, limit, query });
   } catch (error) {
     console.error('Error fetching milliliters list', error);
     res.status(500).send('Error fetching milliliters list');
@@ -508,8 +498,8 @@ exports.getMillilitersList = async (req, res) => {
 
 
 
-exports.getAddMilliliters = (req,res)=>{
-  res.render('admin/add-milliliters',{error:''})
+exports.getAddMilliliters = (req, res) => {
+  res.render('admin/add-milliliters', { error: '' })
 }
 
 
@@ -521,44 +511,44 @@ exports.addMilliliters = async (req, res) => {
   try {
 
     if (/\D/.test(milliliter) || /[^0-9\s]/.test(milliliter) || milliliter.trim() === '') {
-      return res.render('admin/add-milliliters', { 
+      return res.render('admin/add-milliliters', {
         error: 'Milliliter value cannot contain letters, special characters, or be empty.',
-        milliliter 
+        milliliter
       });
     }
 
     if (parseInt(milliliter) > 1000) {
-      return res.render('admin/add-milliliters', { 
+      return res.render('admin/add-milliliters', {
         error: 'Milliliter value cannot exceed 1000 ml.',
-        milliliter 
+        milliliter
       });
     }
-    
+
     const newMilliliter = new Milliliter({ milliliter });
     await newMilliliter.save();
     res.redirect('/admin/milliliters-list');
   } catch (error) {
     console.error('Error adding milliliters:', error);
-    res.status(500).send('Failed to add milliliters' );
+    res.status(500).send('Failed to add milliliters');
   }
 };
 
 exports.getOrderList = async (req, res) => {
   try {
-    
+
     const page = parseInt(req.query.page) || 1
-    const limit = parseInt(req.query.limit) ||10
-    const skip =(page-1)*limit
-    const query =  req.query.query ? req.query.query.trim() : ''
+    const limit = parseInt(req.query.limit) || 10
+    const skip = (page - 1) * limit
+    const query = req.query.query ? req.query.query.trim() : ''
 
     const filter = query
-    ? {
+      ? {
         $or: [
-          { orderId: { $regex: query, $options: 'i' } },   
+          { orderId: { $regex: query, $options: 'i' } },
         ],
       }
-    : {};
-   
+      : {};
+
 
 
     const orders = await Order.find(filter)
@@ -580,7 +570,7 @@ exports.getOrderList = async (req, res) => {
 
     const totalOrders = await Order.countDocuments(filter);
     const totalPages = Math.ceil(totalOrders / limit);
-     
+
     res.render('admin/order-list', {
       orders,
       page,
@@ -601,10 +591,10 @@ exports.getOrderList = async (req, res) => {
 
 exports.getOrderDetails = async (req, res) => {
   try {
-    const { orderId } = req.params; 
-   
-    const order = await Order.findOne({ _id:orderId })
-      .populate('userId', 'name email') 
+    const { orderId } = req.params;
+
+    const order = await Order.findOne({ _id: orderId })
+      .populate('userId', 'name email')
       .populate({
         path: 'orderedItems.variantId',
         model: 'Variant',
@@ -635,9 +625,9 @@ exports.updateOrderStatus = async (req, res) => {
     const order = await Order.findById(orderId);
 
     if (!order) {
-      return res.status(404).json({ 
-        success: false, 
-        message: 'Order not found' 
+      return res.status(404).json({
+        success: false,
+        message: 'Order not found'
       });
     }
 
@@ -651,13 +641,13 @@ exports.updateOrderStatus = async (req, res) => {
 
     order.status = newStatus;
 
-  
+
 
     await order.save();
 
     if (req.xhr || req.headers.accept.indexOf('json') > -1) {
-      return res.json({ 
-        success: true, 
+      return res.json({
+        success: true,
         order: {
           status: order.status,
           paymentStatus: order.paymentStatus
@@ -668,14 +658,14 @@ exports.updateOrderStatus = async (req, res) => {
     res.redirect('/admin/order-list');
   } catch (error) {
     console.error('Error updating order status:', error);
-    
+
     if (req.xhr || req.headers.accept.indexOf('json') > -1) {
-      return res.status(500).json({ 
-        success: false, 
-        message: 'Server error' 
+      return res.status(500).json({
+        success: false,
+        message: 'Server error'
       });
     }
-    
+
     res.status(500).send('Server error');
   }
 };
