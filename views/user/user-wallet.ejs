@@ -1,373 +1,366 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-    <meta charset="utf-8">
-    <title>Labelle</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link href="https://netdna.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <link rel="icon" href="img/core-img/favicon.ico">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Labelle — Wallet</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Jost:wght@300;400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
 
-    <style>
-        /* Keeping all existing styles */
-        body {
-            color: #797979;
-            background: #f1f2f7;
-            font-family: 'Open Sans', sans-serif;
-            padding: 0px !important;
-            margin: 0px !important;
-            font-size: 13px;
-            text-rendering: optimizeLegibility;
-            -webkit-font-smoothing: antialiased;
-            -moz-font-smoothing: antialiased;
-        }
+    :root {
+      --cream: #f9f4ee;
+      --warm-white: #fdf9f5;
+      --gold: #c9a96e;
+      --gold-light: #e8d5b0;
+      --dark: #1a1410;
+      --muted: #8a7968;
+      --border: rgba(201,169,110,0.25);
+      --panel-bg: #fff8f2;
+    }
 
-        .profile-nav,
-        .profile-info {
-            margin-top: 30px;
-        }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: 'Jost', sans-serif;
+      background: var(--warm-white);
+      color: var(--dark);
+      overflow-x: hidden;
+      min-height: 100vh;
+    }
 
-        .profile-nav .user-heading {
-            background: #fbb710;
-            color: #fff;
-            border-radius: 4px 4px 0 0;
-            -webkit-border-radius: 4px 4px 0 0;
-            padding: 30px;
-            text-align: center;
-        }
+    /* ── NAVBAR ── */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 5vw; height: 72px;
+      background: rgba(253,249,245,0.92);
+      backdrop-filter: blur(14px);
+      border-bottom: 1px solid var(--border);
+    }
+    .nav-logo { font-family: 'Cormorant Garamond', serif; font-size: 1.7rem; font-weight: 600; letter-spacing: 0.12em; color: var(--dark); text-decoration: none; }
+    .nav-logo span { color: var(--gold); }
+    .nav-links { display: flex; gap: 2.4rem; list-style: none; }
+    .nav-links a { text-decoration: none; font-size: 0.78rem; font-weight: 400; letter-spacing: 0.14em; text-transform: uppercase; color: var(--muted); transition: color 0.2s; }
+    .nav-links a:hover { color: var(--gold); }
+    .nav-actions { display: flex; align-items: center; gap: 1.4rem; }
+    .nav-actions a { text-decoration: none; font-size: 0.75rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); transition: color 0.2s; }
+    .nav-actions a:hover { color: var(--dark); }
 
-        .profile-nav .user-heading.round a {
-            border-radius: 50%;
-            -webkit-border-radius: 50%;
-            border: 10px solid rgba(255, 255, 255, 0.3);
-            display: inline-block;
-        }
+    /* ── PAGE ── */
+    .page-wrapper { padding-top: 72px; min-height: 100vh; }
 
-        .profile-nav .user-heading a img {
-            width: 112px;
-            height: 112px;
-            border-radius: 50%;
-            -webkit-border-radius: 50%;
-        }
+    .page-banner {
+      background: linear-gradient(135deg, #1a1410 0%, #2e1f10 40%, #4a2e18 70%, #1a1410 100%);
+      padding: 3.5rem 5vw 3rem; position: relative; overflow: hidden;
+    }
+    .page-banner::before {
+      content: ''; position: absolute; top: -60%; right: -5%; width: 50vw; height: 50vw;
+      border-radius: 50%; background: radial-gradient(circle, rgba(201,169,110,0.15) 0%, transparent 65%); pointer-events: none;
+    }
+    .banner-inner { position: relative; z-index: 1; }
+    .banner-eyebrow { font-size: 0.68rem; letter-spacing: 0.3em; text-transform: uppercase; color: var(--gold); margin-bottom: 0.6rem; }
+    .banner-title { font-family: 'Cormorant Garamond', serif; font-size: clamp(2rem, 4vw, 3rem); font-weight: 300; color: var(--cream); line-height: 1.1; }
+    .banner-title em { font-style: italic; color: var(--gold-light); }
 
-        .profile-nav .user-heading h1 {
-            font-size: 22px;
-            font-weight: 300;
-            margin-bottom: 5px;
-        }
+    /* ── LAYOUT ── */
+    .profile-layout {
+      display: grid; grid-template-columns: 280px 1fr;
+      gap: 2rem; padding: 2.5rem 5vw 4rem;
+      max-width: 1200px; margin: 0 auto; align-items: start;
+    }
 
-        .profile-nav .user-heading p {
-            font-size: 12px;
-        }
+    /* ── SIDEBAR ── */
+    .sidebar { position: sticky; top: 90px; animation: fadeUp 0.8s cubic-bezier(0.22,1,0.36,1) both; }
+    @keyframes fadeUp { from { opacity:0; transform:translateY(24px); } to { opacity:1; transform:translateY(0); } }
+    .sidebar-card { background: var(--panel-bg); border: 1px solid var(--border); overflow: hidden; }
+    .sidebar-avatar-area { background: linear-gradient(145deg,#1a1410,#2e1f10); padding: 2.2rem 1.5rem 1.8rem; text-align: center; position: relative; }
+    .sidebar-avatar-area::after { content:''; position:absolute; bottom:-1px; left:0; right:0; height:2px; background: linear-gradient(to right, transparent, var(--gold), transparent); }
+    .avatar-ring { width:96px; height:96px; border-radius:50%; border:2px solid var(--gold); padding:3px; display:inline-block; margin-bottom:1rem; }
+    .avatar-ring img { width:100%; height:100%; border-radius:50%; object-fit:cover; display:block; }
+    .sidebar-name { font-family:'Cormorant Garamond',serif; font-size:1.3rem; font-weight:400; color:var(--cream); margin-bottom:0.25rem; }
+    .sidebar-email { font-size:0.72rem; color:rgba(249,244,238,0.45); letter-spacing:0.04em; word-break:break-all; }
+    .sidebar-email a { color:inherit; text-decoration:none; }
+    .sidebar-nav { list-style:none; padding:0.5rem 0; }
+    .sidebar-nav li { border-bottom:1px solid var(--border); }
+    .sidebar-nav li:last-child { border-bottom:none; }
+    .sidebar-nav a { display:flex; align-items:center; gap:0.9rem; padding:0.85rem 1.4rem; text-decoration:none; font-size:0.78rem; letter-spacing:0.1em; text-transform:uppercase; color:var(--muted); transition:background 0.2s,color 0.2s; border-left:3px solid transparent; }
+    .sidebar-nav a:hover { background:rgba(201,169,110,0.06); color:var(--dark); border-left-color:var(--gold); }
+    .sidebar-nav li.active a { background:rgba(201,169,110,0.08); color:var(--dark); border-left-color:var(--gold); }
+    .sidebar-nav i { font-size:0.85rem; color:var(--gold); width:16px; text-align:center; }
 
-        .profile-nav ul {
-            margin-top: 1px;
-        }
+    /* ── MAIN ── */
+    .main-content { display:flex; flex-direction:column; gap:1.8rem; animation:fadeUp 0.8s 0.12s cubic-bezier(0.22,1,0.36,1) both; }
 
-        .profile-nav ul>li {
-            border-bottom: 1px solid #ebeae6;
-            margin-top: 0;
-            line-height: 30px;
-        }
+    /* ── WALLET BALANCE CARD ── */
+    .wallet-balance-card {
+      background: linear-gradient(135deg, #1a1410 0%, #2e1f10 50%, #4a2e18 100%);
+      border: 1px solid rgba(201,169,110,0.3);
+      padding: 2.4rem 2.4rem 2rem;
+      position: relative;
+      overflow: hidden;
+    }
+    .wallet-balance-card::before {
+      content: '';
+      position: absolute; top: -40%; right: -8%;
+      width: 260px; height: 260px; border-radius: 50%;
+      background: radial-gradient(circle, rgba(201,169,110,0.18) 0%, transparent 65%);
+      pointer-events: none;
+    }
+    .wallet-balance-card::after {
+      content: '';
+      position: absolute; bottom: -30%; left: 5%;
+      width: 180px; height: 180px; border-radius: 50%;
+      background: radial-gradient(circle, rgba(201,169,110,0.08) 0%, transparent 70%);
+      pointer-events: none;
+    }
+    .wallet-inner { position: relative; z-index: 1; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 1.5rem; }
+    .wallet-label-group {}
+    .wallet-eyebrow { font-size: 0.65rem; letter-spacing: 0.28em; text-transform: uppercase; color: rgba(249,244,238,0.45); margin-bottom: 0.5rem; }
+    .wallet-amount {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(2.2rem, 5vw, 3.5rem);
+      font-weight: 600;
+      color: var(--gold-light);
+      line-height: 1;
+    }
+    .wallet-amount sup { font-size: 1.2rem; font-weight: 300; color: var(--gold); vertical-align: super; margin-right: 0.2rem; }
+    .wallet-sub { font-size: 0.72rem; color: rgba(249,244,238,0.3); margin-top: 0.5rem; letter-spacing: 0.08em; }
 
-        .profile-nav ul>li:last-child {
-            border-bottom: none;
-        }
+    .wallet-icon-wrap {
+      width: 72px; height: 72px;
+      border: 1px solid rgba(201,169,110,0.3);
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      background: rgba(201,169,110,0.08);
+    }
+    .wallet-icon-wrap i { font-size: 1.6rem; color: var(--gold); }
 
-        .profile-nav ul>li>a {
-            border-radius: 0;
-            -webkit-border-radius: 0;
-            color: #89817f;
-            border-left: 5px solid #fff;
-        }
+    /* ── PANELS ── */
+    .content-panel { background: var(--panel-bg); border: 1px solid var(--border); overflow: hidden; }
+    .panel-header { padding: 1.4rem 2rem; border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; gap: 1rem; flex-wrap: wrap; }
+    .panel-eyebrow { font-size: 0.65rem; letter-spacing: 0.25em; text-transform: uppercase; color: var(--gold); margin-bottom: 0.2rem; }
+    .panel-title { font-family: 'Cormorant Garamond', serif; font-size: 1.5rem; font-weight: 300; color: var(--dark); }
+    .tx-count { font-size: 0.72rem; letter-spacing: 0.1em; color: var(--muted); background: rgba(201,169,110,0.1); border: 1px solid var(--border); padding: 0.3rem 0.9rem; }
 
-        .profile-nav ul>li>a:hover,
-        .profile-nav ul>li>a:focus,
-        .profile-nav ul li.active a {
-            background: #f8f7f5 !important;
-            border-left: 5px solid #fbb710;
-            color: #89817f !important;
-        }
+    /* ── TRANSACTION TABLE ── */
+    .table-scroll { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+    table { width: 100%; border-collapse: collapse; }
 
-        .navbar {
-            background-color: white;
-            padding: 10px 0;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-            margin-bottom: 0px;
-        }
+    thead tr { background: linear-gradient(to right, #1a1410, #2e1f10); }
+    thead th { padding: 1rem 1.4rem; font-size: 0.65rem; letter-spacing: 0.2em; text-transform: uppercase; color: rgba(249,244,238,0.55); font-weight: 400; white-space: nowrap; text-align: left; }
+    thead th:first-child { color: var(--gold); }
 
-        .navbar-links {
-            list-style-type: none;
-            display: flex;
-            justify-content: center;
-            padding: 15px 50px;
-            margin-left: 420px;
-        }
+    tbody tr { border-bottom: 1px solid var(--border); transition: background 0.2s; }
+    tbody tr:last-child { border-bottom: none; }
+    tbody tr:hover { background: rgba(201,169,110,0.04); }
+    tbody td { padding: 1rem 1.4rem; font-size: 0.82rem; color: var(--muted); font-weight: 300; vertical-align: middle; }
 
-        .navbar-links li {
-            margin: 0 20px;
-        }
+    .tx-date { color: var(--dark); font-weight: 400; font-size: 0.82rem; }
 
-        .navbar-links a {
-            text-decoration: none;
-            color: black;
-            font-size: 14px;
-            transition: color 0.3s ease, background-color 0.3s ease;
-            padding: 5px 10px;
-            border-radius: 4px;
-        }
+    .tx-amount {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.05rem; font-weight: 600; color: var(--dark);
+    }
 
-        .navbar-links a:hover {
-            color: white;
-            background-color: #FBB710;
-        }
+    .tx-mode {
+      display: inline-flex; align-items: center; gap: 0.4rem;
+      font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.08em;
+    }
+    .tx-mode i { color: var(--gold); font-size: 0.7rem; }
 
-        /* Sidebar Styles */
-      
-        /* Updated Orders Table Styles */
-        .cart-table-area {
-            margin-left: 280px;
-            padding: 30px;
-            width: calc(100% - 280px);
-        }
+    /* credit / debit badges */
+    .tx-type {
+      display: inline-flex; align-items: center; gap: 0.35rem;
+      padding: 0.28rem 0.8rem; font-size: 0.65rem;
+      letter-spacing: 0.12em; text-transform: uppercase; font-weight: 500;
+    }
+    .tx-type::before { content:''; width:6px; height:6px; border-radius:50%; display:inline-block; }
+    .type-credit { background: rgba(39,174,96,0.1); color: #27ae60; border: 1px solid rgba(39,174,96,0.25); }
+    .type-credit::before { background: #27ae60; }
+    .type-debit  { background: rgba(192,57,43,0.08); color: #c0392b; border: 1px solid rgba(192,57,43,0.2); }
+    .type-debit::before  { background: #c0392b; }
 
-        .cart-title {
-            margin-bottom: 20px;
-        }
+    /* ── EMPTY STATE ── */
+    .empty-state { text-align: center; padding: 4rem 2rem; }
+    .empty-state i { font-size: 2.8rem; color: var(--gold); opacity: 0.3; margin-bottom: 1rem; display: block; }
+    .empty-state p { font-family: 'Cormorant Garamond', serif; font-size: 1.3rem; font-weight: 300; color: var(--muted); margin-bottom: 0.4rem; }
+    .empty-state span { font-size: 0.8rem; color: rgba(138,121,104,0.6); }
 
-        .cart-title h2 {
-            font-size: 24px;
-            font-weight: 500;
-            color: #333;
-        }
-
-        .orders-table {
-            background: white;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
-        }
-
-        .table>thead>tr>th {
-            background: #f8f9fa;
-            padding: 15px;
-            font-weight: 600;
-            color: #333;
-            border-bottom: 2px solid #ebeae6;
-        }
-
-        .table>tbody>tr>td {
-            padding: 15px;
-            vertical-align: middle;
-            color: #555;
-        }
-
-        .status-badge {
-            padding: 5px 12px;
-            border-radius: 20px;
-            font-size: 12px;
-            font-weight: 500;
-        }
-
-        .status-delivered {
-            background: #d4edda;
-            color: #155724;
-        }
-
-        .status-pending {
-            background: #fff3cd;
-            color: #856404;
-        }
-
-        .status-cancelled {
-            background: #f8d7da;
-            color: #721c24;
-        }
-        .status-returned {
-    background: #e2e3e5; /* A light gray shade for neutrality */
-    color: #383d41;     /* A darker gray for text contrast */
-}
-.wallet-balance-container {
-  font-size: 18px; /* Adjust font size */
-  font-weight: bold; /* Make text bold */
-  color: #ffffff; /* Text color */
-  background-color: #fbb710; /* Green background */
-  padding: 10px 20px; /* Add padding */
-  border-radius: 8px; /* Rounded corners */
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Add shadow for depth */
-  text-align: center; /* Center the text */
-  display: inline-block; /* Adjust container size to fit content */
-  margin: 10px 0; /* Add margin for spacing */
-}
-
-
-        .action-buttons {
-            display: flex;
-            gap: 10px;
-        }
-
-        .btn-view,
-        .btn-cancel {
-            padding: 5px 15px;
-            border-radius: 4px;
-            font-size: 13px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            border: none;
-        }
-
-        .btn-view {
-            background: #fbb710;
-            color: white;
-        }
-
-        .btn-cancel {
-            background: #dc3545;
-            color: white;
-        }
-
-        .btn-view:hover,
-        .btn-cancel:hover {
-            opacity: 0.9;
-        }
-
-        /* Responsive Styles */
-        @media (max-width: 1200px) {
-            .container {
-                width: 100%;
-                padding: 0 15px;
-            }
-
-            .profile-nav {
-                position: static;
-                width: 100%;
-                margin-bottom: 30px;
-            }
-
-            .cart-table-area {
-                margin-left: 0;
-                width: 100%;
-                padding: 15px;
-            }
-        }
-    </style>
+    /* ── RESPONSIVE ── */
+    @media (max-width: 900px) { .profile-layout { grid-template-columns: 1fr; } .sidebar { position: static; } }
+    @media (max-width: 600px) {
+      .nav-links { display: none; }
+      thead th:nth-child(3), tbody td:nth-child(3) { display: none; }
+    }
+  </style>
 </head>
-
 <body>
-    <!-- Navbar -->
-    <nav class="navbar">
-        <ul class="navbar-links">
-            <li><a href="/">Home</a></li>
-            <li><a href="/shop">Shop</a></li>
-            <li><a href="#">Contact</a></li>
-        </ul>
-    </nav>
 
-    <div class="container">
-        <div class="row">
-            <!-- Sidebar -->
-            <div class="profile-nav col-md-3">
-                <div class="panel">
-                    <div class="user-heading round">
-                        <a href="#">
-                            <img src="<%= userData.gender === 'male' 
-                        ? 'https://www.bootdey.com/img/Content/avatar/avatar2.png' 
-                        : userData.gender === 'female' 
-                        ? 'https://www.bootdey.com/img/Content/avatar/avatar3.png' 
-                        : 'https://via.placeholder.com/150' %>" alt="User Avatar" id="profileAvatar">
-                        </a>
-                        <h1>
-                            <%= userData ? userData.name : 'Guest' %>
-                        </h1>
-                        <p>
-                            <a href="mailto:<%= userData ? userData.email : 'not available' %>">
-                                <%= userData ? userData.email : 'Email not available' %>
-                            </a>
-                        </p>
-                    </div>
+<!-- ── NAVBAR ── -->
+<nav>
+  <a href="/" class="nav-logo">La<span>belle</span></a>
+  <ul class="nav-links">
+    <li><a href="/">Home</a></li>
+    <li><a href="/shop">Shop</a></li>
+    <li><a href="#">Contact</a></li>
+  </ul>
+  <div class="nav-actions">
+    <% if (typeof user !== 'undefined' && user) { %>
+      <a href="#">Favourites</a>
+      <a href="/user-profile">Profile</a>
+    <% } else { %>
+      <a href="/login">Login</a>
+    <% } %>
+  </div>
+</nav>
 
-                    <ul class="nav nav-pills nav-stacked">
-                        <li id="profile"><a href="/user-profile"> <i class="fa fa-user"></i> Profile</a></li>
-                        <li id="address-book"><a href="/user-address"> <i class="fa fa-address-book"></i> Address
-                                Book</a></li>
-                        <li id="order-details"><a href="/user-order"> <i class="fa fa-shopping-basket"></i> Order
-                                Details</a></li>
-                        <li id="coupon"><a href="/user-coupon"> <i class="fa fa-ticket-alt"></i> Coupon</a></li>
-                        <li id="wallet"><a href="/user-wallet"> <i class="fa fa-wallet"></i> Wallet</a></li>
-                        <% if (typeof user !== 'undefined' && user) { %>
-                            <li id="logout"><a href="/logout"> <i class="fa fa-sign-out"></i>Logout</a></li>
-                            <% } %>
-                    </ul>
-                </div>
-            </div>
-            <script>
-                const currentPage = window.location.pathname;
+<div class="page-wrapper">
 
-                const pages = {
-                    "/user-profile": "profile",
-                    "/user-address": "address-book",
-                    "/user-order": "order-details",
-                    "/user-coupon": "coupon",
-                    "/user-wallet": "wallet"
-
-                };
-
-                for (let page in pages) {
-                    if (currentPage === page) {
-                        document.getElementById(pages[page]).classList.add('active');
-                    }
-                }
-            </script>
-            <!-- Orders Area -->
-            <div class="cart-table-area">
-                <div class="cart-title">
-                    <h2>Wallet</h2>
-                </div>
-                <div class="wallet-balance-container">
-                    Wallet Balance: <%= walletAmount %> 
-                  </div>
-                  
-                <div class="orders-table">
-                    <table class="table">
-                        <thead>
-                            <tr>
-                                <th>Transaction Date</th>
-                                <th>Transaction Amount</th>
-                                <th>Transaction Mode</th>
-                                <th>Credit/Debit</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <% if (transactions.length > 0) { %>
-                               
-                                <% transactions.forEach(transaction => { %>
-                                    <tr>
-                                        <td><%= transaction.date ? new Date(transaction.date).toLocaleDateString() : 'NO DATE MENTIONED' %></td>
-
-                                        <td>₹<%= transaction.amount %></td>
-                                        <td><%= transaction.mode %></td>
-                                        <td><%= transaction.type %></td>
-                                    </tr>
-                                <% }); %>
-                            <% } else { %>
-                                <tr>
-                                    <td colspan="4">No transactions available.</td>
-                                </tr>
-                            <% } %>
-                        </tbody>
-                    </table>
-                    
-                </div>
-            </div>
-
-        </div>
+  <!-- ── BANNER ── -->
+  <div class="page-banner">
+    <div class="banner-inner">
+      <p class="banner-eyebrow">Account</p>
+      <h1 class="banner-title">My <em>Wallet</em></h1>
     </div>
-    
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <script src="https://code.jquery.com/jquery-1.10.2.min.js"></script>
-    <script src="https://netdna.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
+  </div>
 
+  <!-- ── LAYOUT ── -->
+  <div class="profile-layout">
+
+    <!-- ── SIDEBAR ── -->
+    <aside class="sidebar">
+      <div class="sidebar-card">
+        <div class="sidebar-avatar-area">
+          <div class="avatar-ring">
+            <img src="<%= userData.gender === 'male'
+              ? 'https://www.bootdey.com/img/Content/avatar/avatar2.png'
+              : userData.gender === 'female'
+              ? 'https://www.bootdey.com/img/Content/avatar/avatar3.png'
+              : 'https://via.placeholder.com/150' %>" alt="User Avatar">
+          </div>
+          <div class="sidebar-name"><%= userData ? userData.name : 'Guest' %></div>
+          <div class="sidebar-email">
+            <a href="mailto:<%= userData ? userData.email : '' %>">
+              <%= userData ? userData.email : 'Email not available' %>
+            </a>
+          </div>
+        </div>
+        <ul class="sidebar-nav">
+          <li id="profile"><a href="/user-profile"><i class="fa fa-user"></i> Profile</a></li>
+          <li id="address-book"><a href="/user-address"><i class="fa fa-location-dot"></i> Address Book</a></li>
+          <li id="order-details"><a href="/user-order"><i class="fa fa-bag-shopping"></i> Order Details</a></li>
+          <li id="coupon"><a href="/user-coupon"><i class="fa fa-tag"></i> Coupons</a></li>
+          <li id="wallet"><a href="/user-wallet"><i class="fa fa-wallet"></i> Wallet</a></li>
+          <% if (typeof user !== 'undefined' && user) { %>
+          <li id="logout"><a href="/logout"><i class="fa fa-right-from-bracket"></i> Logout</a></li>
+          <% } %>
+        </ul>
+      </div>
+    </aside>
+
+    <!-- ── MAIN ── -->
+    <main class="main-content">
+
+      <!-- Wallet Balance Card -->
+      <div class="wallet-balance-card">
+        <div class="wallet-inner">
+          <div class="wallet-label-group">
+            <p class="wallet-eyebrow">Available Balance</p>
+            <div class="wallet-amount">
+              <sup>₹</sup><%= walletAmount %>
+            </div>
+            <p class="wallet-sub">Labelle Wallet · Redeemable at checkout</p>
+          </div>
+          <div class="wallet-icon-wrap">
+            <i class="fa fa-wallet"></i>
+          </div>
+        </div>
+      </div>
+
+      <!-- Transaction History -->
+      <div class="content-panel">
+        <div class="panel-header">
+          <div>
+            <p class="panel-eyebrow">History</p>
+            <h2 class="panel-title">Transactions</h2>
+          </div>
+          <% if (typeof transactions !== 'undefined') { %>
+            <span class="tx-count"><%= transactions.length %> transaction<%= transactions.length !== 1 ? 's' : '' %></span>
+          <% } %>
+        </div>
+
+        <% if (typeof transactions !== 'undefined' && transactions.length > 0) { %>
+        <div class="table-scroll">
+          <table>
+            <thead>
+              <tr>
+                <th>Date</th>
+                <th>Amount</th>
+                <th>Mode</th>
+                <th>Type</th>
+              </tr>
+            </thead>
+            <tbody>
+              <% transactions.forEach(function(transaction) { %>
+              <tr>
+                <td>
+                  <span class="tx-date">
+                    <%= transaction.date
+                        ? new Date(transaction.date).toLocaleDateString('en-IN', {day:'2-digit', month:'short', year:'numeric'})
+                        : 'N/A' %>
+                  </span>
+                </td>
+                <td>
+                  <span class="tx-amount">₹<%= transaction.amount %></span>
+                </td>
+                <td>
+                  <span class="tx-mode">
+                    <% if (transaction.mode && transaction.mode.toLowerCase().includes('wallet')) { %>
+                      <i class="fa fa-wallet"></i>
+                    <% } else if (transaction.mode && transaction.mode.toLowerCase().includes('refund')) { %>
+                      <i class="fa fa-rotate-left"></i>
+                    <% } else { %>
+                      <i class="fa fa-arrow-right-arrow-left"></i>
+                    <% } %>
+                    <%= transaction.mode %>
+                  </span>
+                </td>
+                <td>
+                  <%
+                    const typeLC = (transaction.type || '').toLowerCase();
+                    const isCredit = typeLC.includes('credit') || typeLC === 'credit';
+                  %>
+                  <span class="tx-type <%= isCredit ? 'type-credit' : 'type-debit' %>">
+                    <i class="fa fa-<%= isCredit ? 'arrow-down' : 'arrow-up' %>" style="font-size:0.6rem;"></i>
+                    <%= transaction.type %>
+                  </span>
+                </td>
+              </tr>
+              <% }); %>
+            </tbody>
+          </table>
+        </div>
+
+        <% } else { %>
+        <div class="empty-state">
+          <i class="fa fa-clock-rotate-left"></i>
+          <p>No transactions yet</p>
+          <span>Your wallet activity will appear here.</span>
+        </div>
+        <% } %>
+
+      </div>
+    </main>
+  </div>
+</div>
+
+<script>
+  const currentPage = window.location.pathname;
+  const pages = { "/user-profile":"profile", "/user-address":"address-book", "/user-order":"order-details", "/user-coupon":"coupon", "/user-wallet":"wallet" };
+  for (let p in pages) { if (currentPage === p) { const el = document.getElementById(pages[p]); if(el) el.classList.add('active'); } }
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </body>
-
 </html>

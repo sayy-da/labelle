@@ -1,548 +1,918 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
   <meta charset="UTF-8">
-  <meta name="description" content="">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-  <!-- The above 4 meta tags *must* come first in the head; any other head content must come *after* these tags -->
-
-  <!-- Title  -->
-  <title>Labelle</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cart — Labelle</title>
+  <link rel="icon" href="/img/core-img/favicon.ico">
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Jost:wght@300;400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
   <style>
-    .error-message {
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
 
-      color: #721c24;
-      /* Dark red text */
-      /* border: 1px solid #f5c6cb;  Light red border */
-      padding: 0px;
-      border-radius: 5px;
-      font-family: Arial, sans-serif;
-      font-size: 12px;
-      margin: 0px 0;
+    :root {
+      --cream: #f9f4ee;
+      --warm-white: #fdf9f5;
+      --gold: #c9a96e;
+      --gold-light: #e8d5b0;
+      --dark: #1a1410;
+      --muted: #8a7968;
+      --border: rgba(201,169,110,0.25);
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Jost', sans-serif;
+      background: var(--warm-white);
+      color: var(--dark);
+      overflow-x: hidden;
+    }
+
+    /* ── NAVBAR ── */
+    nav.main-nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 200;
+      height: 72px;
+      background: rgba(253,249,245,0.92);
+      backdrop-filter: blur(16px);
+      border-bottom: 1px solid var(--border);
       display: flex;
       align-items: center;
+      justify-content: space-between;
+      padding: 0 5vw;
     }
 
-    .error-message p {
-      margin: 0;
-      padding: 0;
-      display: inline;
+    .nav-logo {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.7rem;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      color: var(--dark);
+      text-decoration: none;
+    }
+    .nav-logo span { color: var(--gold); }
+
+    .nav-center { display: flex; align-items: center; }
+    .nav-item { position: relative; }
+    .nav-item > a {
+      display: flex; align-items: center;
+      padding: 0 1.4rem; height: 72px;
+      font-size: 0.75rem; letter-spacing: 0.14em; text-transform: uppercase;
+      color: var(--muted); text-decoration: none;
+      transition: color 0.2s; white-space: nowrap;
+    }
+    .nav-item > a:hover { color: var(--gold); }
+    .nav-item > a.active-page { color: var(--dark); }
+
+    .nav-right { display: flex; align-items: center; gap: 1.4rem; }
+    .nav-right a, .nav-right button {
+      font-size: 0.75rem; letter-spacing: 0.12em; text-transform: uppercase;
+      color: var(--muted); text-decoration: none; background: none;
+      border: none; cursor: pointer; font-family: 'Jost', sans-serif; transition: color 0.2s;
+    }
+    .nav-right a:hover, .nav-right button:hover { color: var(--dark); }
+
+    /* ── PAGE HEADER ── */
+    .page-header {
+      margin-top: 72px;
+      background: linear-gradient(135deg, #1a1410 0%, #2e1f10 60%, #1a1410 100%);
+      padding: 4rem 5vw 3rem;
+      position: relative;
+      overflow: hidden;
+    }
+    .page-header::before {
+      content: '';
+      position: absolute;
+      top: -30%; right: 0;
+      width: 50vw; height: 200%;
+      background: radial-gradient(circle at 70% 50%, rgba(201,169,110,0.1) 0%, transparent 60%);
+      pointer-events: none;
+    }
+    .page-header-inner { position: relative; }
+    .page-header-eyebrow {
+      font-size: 0.68rem;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 0.6rem;
+    }
+    .page-header h1 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(2rem, 4vw, 3rem);
+      font-weight: 300;
+      color: var(--cream);
+      line-height: 1.1;
+    }
+    .page-header h1 em { font-style: italic; color: var(--gold-light); }
+
+    /* ── BREADCRUMB ── */
+    .breadcrumb-bar {
+      padding: 1rem 5vw;
+      background: var(--cream);
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.72rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+    .breadcrumb-bar a { color: var(--muted); text-decoration: none; transition: color 0.2s; }
+    .breadcrumb-bar a:hover { color: var(--gold); }
+    .breadcrumb-bar .sep { opacity: 0.4; }
+    .breadcrumb-bar .current { color: var(--dark); }
+
+    /* ── MAIN LAYOUT ── */
+    .cart-body {
+      padding: 4rem 5vw;
+      display: grid;
+      grid-template-columns: 1fr 360px;
+      gap: 3rem;
+      align-items: start;
     }
 
-    .error-message::before {
+    /* ── EMPTY CART ── */
+    .empty-cart {
+      grid-column: 1 / -1;
+      text-align: center;
+      padding: 6rem 2rem;
+    }
+    .empty-cart-icon {
+      width: 72px; height: 72px;
+      margin: 0 auto 1.6rem;
+      background: var(--cream);
+      border: 1px solid var(--border);
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .empty-cart-icon svg { width: 28px; height: 28px; stroke: var(--muted); fill: none; }
+    .empty-cart h2 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 2rem;
+      font-weight: 300;
+      color: var(--dark);
+      margin-bottom: 0.6rem;
+    }
+    .empty-cart p {
+      font-size: 0.88rem;
+      color: var(--muted);
+      font-weight: 300;
+      margin-bottom: 2rem;
+    }
+    .btn-shop {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.6rem;
+      padding: 0.9rem 2.4rem;
+      background: var(--dark);
+      color: var(--cream);
+      text-decoration: none;
+      font-size: 0.75rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      transition: background 0.25s;
+    }
+    .btn-shop:hover { background: var(--gold); }
 
-      margin-right: 10px;
-      font-size: 20px;
+    /* ── CART TABLE ── */
+    .cart-section {}
+
+    .cart-section-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.6rem;
+      font-weight: 300;
+      color: var(--dark);
+      margin-bottom: 1.8rem;
+      padding-bottom: 1rem;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .cart-count {
+      font-family: 'Jost', sans-serif;
+      font-size: 0.72rem;
+      letter-spacing: 0.1em;
+      color: var(--muted);
+      font-weight: 300;
     }
 
-    .return-to-shop-btn {
-      background-color: #fbb710;
-      /* Green color */
-      color: white;
-      /* Text color */
+    /* cart table header */
+    .cart-header {
+      display: grid;
+      grid-template-columns: 100px 1fr 120px 120px 100px 40px;
+      gap: 1rem;
+      padding: 0 0 0.8rem;
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 0;
+    }
+    .cart-header span {
+      font-size: 0.62rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+
+    /* cart item row */
+    .cart-item {
+      display: grid;
+      grid-template-columns: 100px 1fr 120px 120px 100px 40px;
+      gap: 1rem;
+      align-items: center;
+      padding: 1.4rem 0;
+      border-bottom: 1px solid var(--border);
+      animation: fadeIn 0.3s ease;
+    }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+
+    /* product image */
+    .cart-img {
+      width: 100px; height: 100px;
+      overflow: hidden;
+      background: var(--cream);
+    }
+    .cart-img img { width: 100%; height: 100%; object-fit: cover; display: block; }
+
+    /* product name */
+    .cart-name {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.1rem;
+      font-weight: 400;
+      color: var(--dark);
+      margin-bottom: 0.3rem;
+    }
+    .cart-variant {
+      font-size: 0.72rem;
+      color: var(--muted);
+      letter-spacing: 0.06em;
+    }
+
+    /* price */
+    .cart-price {
+      font-size: 0.95rem;
+      color: var(--dark);
+      font-weight: 400;
+    }
+
+    /* qty controls */
+    .qty-control {
+      display: flex;
+      align-items: center;
+      border: 1px solid var(--border);
+      width: fit-content;
+    }
+    .qty-btn {
+      width: 32px; height: 32px;
+      background: none;
       border: none;
-      /* Remove borders */
-      padding: 1px 15px;
-      /* Add padding */
-      font-size: 13px;
-      /* Set font size */
-      font-weight: bold;
-      /* Bold text */
-      border-radius: 5px;
-      /* Rounded corners */
       cursor: pointer;
-      /* Pointer cursor on hover */
-      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-      /* Subtle shadow */
-      transition: background-color 0.3s ease, transform 0.2s ease;
-      /* Smooth transitions */
+      display: flex; align-items: center; justify-content: center;
+      color: var(--muted);
+      font-size: 0.7rem;
+      transition: background 0.15s, color 0.15s;
+    }
+    .qty-btn:hover { background: var(--cream); color: var(--dark); }
+    .qty-btn:disabled { opacity: 0.3; cursor: not-allowed; }
+    .qty-input {
+      width: 36px; height: 32px;
+      border: none;
+      border-left: 1px solid var(--border);
+      border-right: 1px solid var(--border);
+      text-align: center;
+      font-family: 'Jost', sans-serif;
+      font-size: 0.82rem;
+      color: var(--dark);
+      background: white;
+      outline: none;
     }
 
-    .return-to-shop-btn:hover {
-      background-color: #e5a609;
-      /* Darker green on hover */
-      transform: scale(1.05);
-      /* Slightly enlarge */
+    /* out of stock badge */
+    .out-of-stock-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.3rem;
+      font-size: 0.65rem;
+      color: #c0392b;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      margin-top: 0.4rem;
+    }
+    .out-of-stock-badge::before {
+      content: '';
+      width: 5px; height: 5px;
+      border-radius: 50%;
+      background: #e53935;
+      flex-shrink: 0;
     }
 
-    .return-to-shop-btn:active {
-      background-color: #cc9208;
-      /* Even darker green when clicked */
-      transform: scale(0.98);
-      /* Slightly shrink */
+    /* error message per item */
+    .qty-error {
+      font-size: 0.68rem;
+      color: #c0392b;
+      margin-top: 0.3rem;
+      min-height: 1em;
     }
 
-    .error {
-      color: red;
-      font-weight: bold;
-      font-size: 9px;
-      border: 1px solid red;
-      padding: 5px;
-      background-color: #ffe6e6;
+    /* line total */
+    .cart-total-price {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.1rem;
+      color: var(--dark);
+    }
+
+    /* remove btn */
+    .remove-btn {
+      background: none;
+      border: none;
+      cursor: pointer;
+      color: var(--muted);
+      font-size: 0.75rem;
+      width: 32px; height: 32px;
+      display: flex; align-items: center; justify-content: center;
+      transition: color 0.2s;
+    }
+    .remove-btn:hover { color: #c0392b; }
+
+    /* ── CONTINUE SHOPPING ── */
+    .continue-row {
+      margin-top: 1.4rem;
+    }
+    .btn-continue {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.72rem;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--muted);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+    .btn-continue:hover { color: var(--gold); }
+
+    /* ── CART SUMMARY ── */
+    .cart-summary {
+      background: var(--cream);
+      border: 1px solid var(--border);
+      padding: 2rem;
+      position: sticky;
+      top: 90px;
+    }
+
+    .summary-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.4rem;
+      font-weight: 300;
+      color: var(--dark);
+      margin-bottom: 1.6rem;
+      padding-bottom: 1rem;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .summary-line {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0.7rem 0;
+      border-bottom: 1px solid var(--border);
+    }
+    .summary-line:last-of-type { border-bottom: none; }
+
+    .summary-label {
+      font-size: 0.72rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+
+    .summary-value {
+      font-size: 0.95rem;
+      color: var(--dark);
+    }
+
+    .summary-total {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1.2rem 0 1.6rem;
+      margin-top: 0.4rem;
+    }
+    .summary-total .label {
+      font-size: 0.72rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--dark);
+      font-weight: 500;
+    }
+    .summary-total .value {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.6rem;
+      font-weight: 600;
+      color: var(--dark);
+    }
+
+    /* free delivery pill */
+    .free-delivery {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      font-size: 0.65rem;
+      color: #2e7d32;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      background: rgba(46,125,50,0.08);
+      padding: 0.25rem 0.7rem;
+    }
+    .free-delivery::before {
+      content: '';
+      width: 5px; height: 5px;
+      border-radius: 50%;
+      background: #43a047;
+    }
+
+    .btn-checkout {
+      display: block;
+      width: 100%;
+      padding: 1rem;
+      background: var(--dark);
+      color: var(--cream);
+      text-align: center;
+      text-decoration: none;
+      font-family: 'Jost', sans-serif;
+      font-size: 0.75rem;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      border: none;
+      cursor: pointer;
+      transition: background 0.25s, transform 0.2s;
+      margin-bottom: 1rem;
+    }
+    .btn-checkout:hover { background: var(--gold); transform: translateY(-1px); }
+    .btn-checkout:disabled { background: #ccc; cursor: not-allowed; transform: none; }
+
+    .secure-note {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      font-size: 0.68rem;
+      color: var(--muted);
+      letter-spacing: 0.06em;
+    }
+    .secure-note svg { width: 12px; height: 12px; stroke: var(--muted); fill: none; }
+
+    /* flash messages */
+    .flash-success {
+      background: rgba(46,125,50,0.08);
+      border: 1px solid rgba(46,125,50,0.25);
+      color: #2e7d32;
+      font-size: 0.8rem;
+      padding: 0.75rem 1rem;
+      margin-bottom: 1rem;
+    }
+    .flash-error {
+      background: rgba(220,53,69,0.08);
+      border: 1px solid rgba(220,53,69,0.3);
+      color: #c0392b;
+      font-size: 0.8rem;
+      padding: 0.75rem 1rem;
+      margin-bottom: 1rem;
+    }
+
+    /* ── FOOTER ── */
+    footer {
+      background: #130e09;
+      padding: 4rem 5vw 2rem;
+      border-top: 1px solid rgba(201,169,110,0.1);
+      margin-top: 3rem;
+    }
+    .footer-top {
+      display: grid; grid-template-columns: 1.8fr 1fr 1fr 1fr;
+      gap: 3rem; padding-bottom: 3rem;
+      border-bottom: 1px solid rgba(255,255,255,0.06); margin-bottom: 2rem;
+    }
+    .footer-brand-logo {
+      font-family: 'Cormorant Garamond', serif; font-size: 1.6rem;
+      font-weight: 600; letter-spacing: 0.1em; color: var(--cream); margin-bottom: 1rem;
+    }
+    .footer-brand-logo span { color: var(--gold); }
+    .footer-brand-text {
+      font-size: 0.82rem; line-height: 1.8; color: rgba(249,244,238,0.35);
+      font-weight: 300; max-width: 260px; margin-bottom: 1.6rem;
+    }
+    .social-links { display: flex; gap: 0.8rem; }
+    .social-link {
+      width: 34px; height: 34px; border: 1px solid rgba(201,169,110,0.25);
+      display: flex; align-items: center; justify-content: center;
+      transition: border-color 0.2s, background 0.2s; text-decoration: none;
+    }
+    .social-link:hover { border-color: var(--gold); background: rgba(201,169,110,0.1); }
+    .social-link svg { width: 14px; height: 14px; stroke: var(--gold); fill: none; }
+    .footer-col-title {
+      font-size: 0.68rem; letter-spacing: 0.22em; text-transform: uppercase;
+      color: var(--gold); margin-bottom: 1.4rem;
+    }
+    .footer-links { list-style: none; display: flex; flex-direction: column; gap: 0.7rem; }
+    .footer-links a {
+      text-decoration: none; font-size: 0.82rem; color: rgba(249,244,238,0.4);
+      font-weight: 300; transition: color 0.2s;
+    }
+    .footer-links a:hover { color: var(--gold); }
+    .footer-bottom {
+      display: flex; align-items: center; justify-content: space-between;
+      flex-wrap: wrap; gap: 1rem;
+    }
+    .footer-copy { font-size: 0.72rem; color: rgba(249,244,238,0.2); letter-spacing: 0.05em; }
+    .footer-legal { display: flex; gap: 1.6rem; }
+    .footer-legal a {
+      font-size: 0.72rem; color: rgba(249,244,238,0.2);
+      text-decoration: none; transition: color 0.2s;
+    }
+    .footer-legal a:hover { color: var(--gold); }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 1024px) {
+      .cart-body { grid-template-columns: 1fr; }
+      .cart-summary { position: static; }
+      .footer-top { grid-template-columns: 1fr 1fr; }
+    }
+    @media (max-width: 768px) {
+      .cart-header { display: none; }
+      .cart-item {
+        grid-template-columns: 80px 1fr 40px;
+        grid-template-rows: auto auto auto;
+      }
+      .cart-img { width: 80px; height: 80px; grid-row: 1 / 3; }
+      .cart-item-info { grid-column: 2; }
+      .cart-price { grid-column: 2; font-size: 0.85rem; }
+      .cart-qty-wrap { grid-column: 2; }
+      .cart-total-price { display: none; }
+      .remove-btn { grid-column: 3; grid-row: 1; }
+    }
+    @media (max-width: 640px) {
+      .footer-top { grid-template-columns: 1fr; gap: 2rem; }
     }
   </style>
-  <!-- Favicon  -->
-  <link rel="icon" href="img/core-img/favicon.ico">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-
-  <!-- Core Style CSS -->
-  <link rel="stylesheet" href="css/core-style.css">
-  <link rel="stylesheet" href="style.css">
-
 </head>
-
 <body>
 
+<!-- ── NAVBAR ── -->
+<nav class="main-nav">
+  <a href="/" class="nav-logo">La<span>belle</span></a>
+  <div class="nav-center">
+    <div class="nav-item"><a href="/">Home</a></div>
+    <div class="nav-item"><a href="/shop">Shop</a></div>
+    <div class="nav-item"><a href="/cart" class="active-page">Cart</a></div>
+  </div>
+  <div class="nav-right">
+    <a href="/wishlist"><i class="fa fa-heart-o"></i> Wishlist</a>
+    <% if (user) { %>
+      <a href="/logout">Logout</a>
+      <a href="/user-profile">Profile</a>
+    <% } else { %>
+      <a href="/login">Login</a>
+    <% } %>
+  </div>
+</nav>
 
-  <!-- ##### Main Content Wrapper Start ##### -->
-  <div class="main-content-wrapper d-flex clearfix">
+<!-- ── PAGE HEADER ── -->
+<div class="page-header">
+  <div class="page-header-inner">
+    <p class="page-header-eyebrow">Your Selection</p>
+    <h1>Shopping <em>Cart</em></h1>
+  </div>
+</div>
 
-    <!-- Mobile Nav (max width 767px)-->
-    <div class="mobile-nav">
-      <!-- Navbar Brand -->
+<!-- ── BREADCRUMB ── -->
+<div class="breadcrumb-bar">
+  <a href="/">Home</a>
+  <span class="sep">›</span>
+  <a href="/shop">Shop</a>
+  <span class="sep">›</span>
+  <span class="current">Cart</span>
+</div>
 
-      <div class="amado-navbar-brand">
-        <a href="/"><img src="img/core-img/logo.png" alt=" "></a>
-      </div>
-      <!-- Navbar Toggler -->
-      <div class="amado-navbar-toggler">
-        <span></span><span></span><span></span>
-      </div>
+<!-- ── CART BODY ── -->
+<div class="cart-body">
+
+  <% if (cart == null || cart.items.length === 0) { %>
+
+  <!-- EMPTY STATE -->
+  <div class="empty-cart">
+    <div class="empty-cart-icon">
+      <svg viewBox="0 0 24 24" stroke-width="1.5"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4zM3 6h18M16 10a4 4 0 01-8 0" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </div>
+    <h2>Your cart is empty</h2>
+    <p>Discover our premium fragrances and find your signature scent.</p>
+    <a href="/shop" class="btn-shop">
+      <svg viewBox="0 0 24 24" width="14" height="14" stroke="currentColor" fill="none" stroke-width="1.5"><path d="M19 12H5M12 5l-7 7 7 7" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      Return to Shop
+    </a>
+  </div>
+
+  <% } else { %>
+
+  <!-- CART ITEMS -->
+  <div class="cart-section">
+    <div class="cart-section-title">
+      <span>Your Items</span>
+      <span class="cart-count"><%= cart.items.length %> item<%= cart.items.length !== 1 ? 's' : '' %></span>
     </div>
 
-    <!-- Header Area Start -->
-    <header class="header-area clearfix">
-      <!-- Close Icon -->
-      <div class="nav-close">
-        <i class="fa fa-close" aria-hidden="true"></i>
+    <!-- Table Header -->
+    <div class="cart-header">
+      <span></span>
+      <span>Product</span>
+      <span>Price</span>
+      <span>Quantity</span>
+      <span>Total</span>
+      <span></span>
+    </div>
+
+    <!-- Items -->
+    <% cart.items.forEach(item => {
+      const offerPercent = item.variantId.offer >= fragranceOffers[item.productId.fragranceType]
+        ? item.variantId.offer
+        : fragranceOffers[item.productId.fragranceType];
+      const unitPrice = item.variantId.price - (item.variantId.price * offerPercent / 100);
+      const lineTotal = unitPrice * item.quantity;
+    %>
+    <div class="cart-item" id="item-row-<%= item.variantId._id %>">
+
+      <!-- Image -->
+      <div class="cart-img">
+        <a href="/product-details/<%= item.variantId._id %>">
+          <img src="<%= item.productId.images[0] %>" alt="<%= item.productId.name %>">
+        </a>
       </div>
-      <!-- Logo -->
-      <div class="logo">
-        <a href="/"><img style="width: 700px !important; height: 150px;" src="img/core-img/logo.png" alt=""></a>
+
+      <!-- Info -->
+      <div class="cart-item-info">
+        <div class="cart-name"><%= item.productId.name %></div>
+        <div class="cart-variant"><%= item.variantId.milliliter %> ml</div>
+        <% if (item.variantId.stock <= 0) { %>
+          <div class="out-of-stock-badge">Out of Stock</div>
+        <% } %>
       </div>
-      <!-- Amado Nav -->
-      <nav class="amado-nav">
-        <ul>
-          <li><a href="/">Home</a></li>
-          <li><a href="/shop">Shop</a></li>
-          <li class="active"><a href="/cart">Cart</a></li>
 
-        </ul>
-      </nav>
-      <!-- Button Group -->
-      <div class="amado-btn-group mt-30 mb-100">
-        <% if (user ) { %>
-          <button class="btn amado-btn mb-15" onclick="window.location.href='/logout'">Logout</button>
-          <% } else { %>
-            <button class="btn amado-btn mb-15" onclick="window.location.href='/login'">Login</button>
-            <% } %>
-              <a href="/user-profile" class="btn amado-btn active">Profile</a>
-      </div>
-      <!-- Cart Menu -->
-      <div class="cart-fav-search mb-100">
+      <!-- Unit Price -->
+      <div class="cart-price">₹<span class="item-price"><%= unitPrice.toFixed(2) %></span></div>
 
-        <a href="/wishlist" class="fav-nav"><img src="img/core-img/favorites.png" alt=""> Favourite</a>
-
-      </div>
-      <!-- Social Button -->
-      <div class="social-info d-flex justify-content-between">
-
-      </div>
-    </header>
-    <!-- Header Area End -->
-
-    <div class="cart-table-area section-padding-100">
-      <div class="container-fluid">
-        <div class="row">
-
-          <div class="col-12 col-lg-8">
-            <div class="cart-title mt-50">
-              <h2>Shopping Cart</h2>
-            </div>
-
-            <div class="cart-table clearfix">
-              <table class="table table-responsive">
-                <thead>
-                  <tr>
-                    <th></th>
-                    <th>Name</th>
-                    <th>Price</th>
-                    <th>Quantity</th>
-                    <th style="background-color:#f5f7fa ;">totalPrice</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <%if(cart==null){%>
-                    <th style="size: 20px;">Cart is empty</th>
-                    <th><a href="/shop"> <button class="return-to-shop-btn">Return to Shop <span> →</span></button></a>
-                    </th>
-                    <%}else{%>
-                      <% cart.items.forEach(item=> { %>
-                        <tr id="item-row-<%= item.variantId._id %>" style="margin-left: -130px;">
-                          <td style="padding: 0; margin: 0; text-align: end;  ">
-                            <i style="padding: 0; margin: 0; cursor: pointer;" class="fa fa-close"
-                              id="remove-item-<%= item.variantId._id %>"
-                              onclick="removeItem('<%= item.variantId._id %>')"></i>
-                          </td>
-
-                          <td class="cart_product_img">
-                            <a href="#"><img style="width: 100px; height: auto;" src="<%= item.productId.images[0] %>"
-                                alt="Product"></a>
-                          </td>
-                          <td class="cart_product_desc">
-                            <h5 style="margin-left: -33px;">
-                              <%= item.productId.name %>
-                            </h5>
-                          </td>
-                          <td class="price">
-                            <% if(item.variantId.offer>=fragranceOffers[item.productId.fragranceType]){ %>
-                              <span style="margin-left: -33px;" class="item-price">
-                                <%= item.variantId.price-(item.variantId.price*item.variantId.offer/100)%>
-                              </span>
-                              <% }else{ %>
-                                <span style="margin-left: -33px;" class="item-price">
-                                  <%=
-                                    item.variantId.price-(item.variantId.price*fragranceOffers[item.productId.fragranceType]/100)%>
-                                </span>
-                                <% } %>
-                          </td>
-
-
-                          <td class="qty">
-                            <div class="qty-btn d-flex">
-                              <div class="quantity">
-
-                                <span class="qty-minus" onclick="updateQuantity(this, -1, '<%= item.variantId._id %>')"
-                                  <% if (item.variantId.stock <=0) { %> disabled <% } %>>
-                                    <i class="fa fa-minus" aria-hidden="true"></i>
-                                </span>
-
-
-                                <input type="number" class="qty-text" id="qty-<%= item.variantId._id %>" step="1"
-                                  min="1" name="quantity" readonly value="<%= item.quantity %>"
-                                  data-stock="<%= item.variantId.stock %>"
-                                  onchange="validateQuantity(this,'<%= item.variantId._id %>')" <% if
-                                  (item.variantId.stock <=0) { %> disabled <% } %>>
-
-                                  <!-- Plus Button -->
-                                  <span class="qty-plus" onclick="updateQuantity(this, 1, '<%= item.variantId._id %>')"
-                                    <% if (item.variantId.stock <=0) { %> disabled <% } %>>
-                                      <i class="fa fa-plus" aria-hidden="true"></i>
-                                  </span>
-                              </div>
-                              <% if (item.variantId.stock <=0) { %>
-                                <p class="out-of-stock-msg" style=" color: rgb(251, 7, 7); font-size: 10px;  font-weight: bold;  margin-top: 2px; padding: 0px; background-color: #f8d7da; border: 1px solid #f5c6cb; border-radius: 4px;text-align: center;">
-                                  Out of Stock
-                                </p>
-                                <% } %>
-                            </div>
-                            <div id="error-message-<%= item.variantId._id %>" class="error-message"></div>
-                          </td>
-
-
-                          <td>
-                            <% if(item.variantId.offer>=fragranceOffers[item.productId.fragranceType]){ %>
-                              <p id="total-price-<%= item.variantId._id %>">
-                                <%= (item.variantId.price-(item.variantId.price*item.variantId.offer/100)) *
-                                  item.quantity %>
-                              </p>
-                              <% }else{ %>
-                                <p id="total-price-<%= item.variantId._id %>">
-                                  <%=
-                                    (item.variantId.price-(item.variantId.price*fragranceOffers[item.productId.fragranceType]/100))
-                                    * item.quantity %>
-                                </p>
-                                <% } %>
-                          </td>
-                        </tr>
-
-                        <% }); %>
-                          <%}%>
-                </tbody>
-              </table>
-            </div>
-          </div>
-
-
-          <div class="col-12 col-lg-4">
-            <div class="cart-summary">
-              <h5>Cart Total</h5>
-              <ul class="summary-table">
-                <li><span>subtotal:</span> <span id="cart-subtotal"></span></li>
-                <li><span>delivery:</span> <span>Free</span></li>
-                <li><span>total:</span> <span id="cart-total"></span></li>
-              </ul>
-              <div class="cart-btn mt-100">
-                <a href="/checkout" class="btn amado-btn w-100" id="checkout">Checkout</a>
-              </div>
-            </div>
-            <% if (successMessages.length> 0) { %>
-              <div class="alert alert-success">
-                <% successMessages.forEach(msg=> { %>
-                  <p>
-                    <%= msg %>
-                  </p>
-                  <% }) %>
-              </div>
-              <% } %>
-                <% if (errorMessages.length> 0) { %>
-                  <div class="error">
-                    <% errorMessages.forEach(msg=> { %>
-                      <p>
-                        <%= msg %>
-                      </p>
-                      <% }) %>
-                  </div>
-                  <% } %>
-          </div>
+      <!-- Qty -->
+      <div class="cart-qty-wrap">
+        <div class="qty-control">
+          <button class="qty-btn" onclick="updateQuantity(this, -1, '<%= item.variantId._id %>')"
+            <%= item.variantId.stock <= 0 ? 'disabled' : '' %>>
+            <i class="fa fa-minus"></i>
+          </button>
+          <input type="number" class="qty-input" id="qty-<%= item.variantId._id %>"
+            value="<%= item.quantity %>" min="1" step="1" readonly
+            data-stock="<%= item.variantId.stock %>"
+            onchange="validateQuantity(this, '<%= item.variantId._id %>')"
+            <%= item.variantId.stock <= 0 ? 'disabled' : '' %>>
+          <button class="qty-btn" onclick="updateQuantity(this, 1, '<%= item.variantId._id %>')"
+            <%= item.variantId.stock <= 0 ? 'disabled' : '' %>>
+            <i class="fa fa-plus"></i>
+          </button>
         </div>
+        <div class="qty-error" id="error-message-<%= item.variantId._id %>"></div>
       </div>
+
+      <!-- Line Total -->
+      <div class="cart-total-price">
+        ₹<span id="total-price-<%= item.variantId._id %>"><%= lineTotal.toFixed(2) %></span>
+      </div>
+
+      <!-- Remove -->
+      <button class="remove-btn" onclick="removeItem('<%= item.variantId._id %>')" title="Remove">
+        <i class="fa fa-times"></i>
+      </button>
+
+    </div>
+    <% }); %>
+
+    <!-- Continue Shopping -->
+    <div class="continue-row">
+      <a href="/shop" class="btn-continue">
+        <i class="fa fa-arrow-left" style="font-size:0.65rem;"></i>
+        Continue Shopping
+      </a>
     </div>
   </div>
 
+  <!-- CART SUMMARY -->
+  <div class="cart-summary">
+    <h2 class="summary-title">Order Summary</h2>
 
+    <% if (successMessages && successMessages.length > 0) { %>
+      <% successMessages.forEach(msg => { %>
+        <div class="flash-success"><%= msg %></div>
+      <% }); %>
+    <% } %>
+    <% if (errorMessages && errorMessages.length > 0) { %>
+      <% errorMessages.forEach(msg => { %>
+        <div class="flash-error"><%= msg %></div>
+      <% }); %>
+    <% } %>
 
-  <footer class="footer_area clearfix" style="padding: 0;">
-    <div class="container">
-      <div class="row align-items-center">
-        <!-- Single Widget Area -->
-        <div class="col-12 col-lg-4">
-          <div class="single_widget_area">
-            <!-- Logo -->
-            <div class="footer-logo mr-50">
-              <h4>labelle</h4>
-              <a href="/"><img style="height: 250px; width: 400px; margin: 0px; padding: 0px;"
-                  src="/img/core-img/logo2.png" alt=""></a>
-            </div>
-            <!-- Copywrite Text -->
-
-          </div>
-        </div>
-        <!-- Single Widget Area -->
-        <div class="col-12 col-lg-8">
-          <div class="single_widget_area">
-            <!-- Footer Menu -->
-            <div class="footer_menu">
-              <nav class="navbar navbar-expand-lg justify-content-end">
-                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#footerNavContent"
-                  aria-controls="footerNavContent" aria-expanded="false" aria-label="Toggle navigation"><i
-                    class="fa fa-bars"></i></button>
-                <div class="collapse navbar-collapse" id="footerNavContent">
-                  <ul class="navbar-nav ml-auto">
-                    <li class="nav-item active">
-                      <a class="nav-link" href="/">Home</a>
-                    </li>
-                    <li class="nav-item">
-                      <a class="nav-link" href="/shop">Shop</a>
-                    </li>
-                    <li class="nav-item">
-                      <a class="nav-link" href="/cart">Cart</a>
-                    </li>
-                  </ul>
-                </div>
-              </nav>
-            </div>
-          </div>
-        </div>
-      </div>
-      <!-- ##### Main Content Wrapper Start ##### -->
+    <div class="summary-line">
+      <span class="summary-label">Subtotal</span>
+      <span class="summary-value">₹<span id="cart-subtotal">0.00</span></span>
     </div>
-  </footer>
-  <!-- ##### Footer Area End ##### -->
+    <div class="summary-line">
+      <span class="summary-label">Delivery</span>
+      <span class="free-delivery">Free</span>
+    </div>
 
-  <script>
-    function removeItem(itemId) {
+    <div class="summary-total">
+      <span class="label">Total</span>
+      <span class="value">₹<span id="cart-total">0.00</span></span>
+    </div>
+
+    <a href="/checkout" class="btn-checkout" id="checkout">
+      Proceed to Checkout
+    </a>
+
+    <div class="secure-note">
+      <svg viewBox="0 0 24 24" stroke-width="1.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      Secure & Encrypted Checkout
+    </div>
+  </div>
+
+  <% } %>
+</div>
+
+<!-- ── FOOTER ── -->
+<footer>
+  <div class="footer-top">
+    <div>
+      <div class="footer-brand-logo">La<span>belle</span></div>
+      <p class="footer-brand-text">Premium fragrances crafted to express your personality. Elegance, confidence, and beauty — in every drop.</p>
+      <div class="social-links">
+        <a href="#" class="social-link">
+          <svg viewBox="0 0 24 24" stroke-width="1.5"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1112.63 8 4 4 0 0116 11.37zM17.5 6.5h.01" stroke-linecap="round"/></svg>
+        </a>
+        <a href="#" class="social-link">
+          <svg viewBox="0 0 24 24" stroke-width="1.5"><path d="M18 2h-3a5 5 0 00-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 011-1h3z"/></svg>
+        </a>
+        <a href="#" class="social-link">
+          <svg viewBox="0 0 24 24" stroke-width="1.5"><path d="M23 3a10.9 10.9 0 01-3.14 1.53 4.48 4.48 0 00-7.86 3v1A10.66 10.66 0 013 4s-4 9 5 13a11.64 11.64 0 01-7 2c9 5 20 0 20-11.5a4.5 4.5 0 00-.08-.83A7.72 7.72 0 0023 3z" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </a>
+      </div>
+    </div>
+    <div>
+      <p class="footer-col-title">Shop</p>
+      <ul class="footer-links">
+        <li><a href="#">New Arrivals</a></li>
+        <li><a href="#">Bestsellers</a></li>
+        <li><a href="#">Collections</a></li>
+        <li><a href="#">Gift Sets</a></li>
+      </ul>
+    </div>
+    <div>
+      <p class="footer-col-title">Help</p>
+      <ul class="footer-links">
+        <li><a href="#">Track Order</a></li>
+        <li><a href="#">Returns</a></li>
+        <li><a href="#">FAQ</a></li>
+        <li><a href="#">Contact Us</a></li>
+      </ul>
+    </div>
+    <div>
+      <p class="footer-col-title">Company</p>
+      <ul class="footer-links">
+        <li><a href="#">About Labelle</a></li>
+        <li><a href="#">Sustainability</a></li>
+        <li><a href="#">Careers</a></li>
+        <li><a href="#">Press</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <p class="footer-copy">© 2025 Labelle. All rights reserved.</p>
+    <div class="footer-legal">
+      <a href="#">Privacy Policy</a>
+      <a href="#">Terms of Service</a>
+    </div>
+  </div>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+  // ── Init totals on load
+  window.addEventListener('DOMContentLoaded', updateCartTotal);
+
+  // ── Remove item
+  function removeItem(itemId) {
+    Swal.fire({
+      title: 'Remove item?',
+      text: 'Are you sure you want to remove this from your cart?',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#1a1410',
+      cancelButtonColor: '#8a7968',
+      confirmButtonText: 'Remove',
+      cancelButtonText: 'Keep it',
+    }).then(result => {
+      if (!result.isConfirmed) return;
+
       fetch(`/cart-remove/${itemId}`, {
         method: 'DELETE',
-        headers: {
-          'Content-Type': 'application/json',
-        },
+        headers: { 'Content-Type': 'application/json' },
       })
-        .then(response => {
-          if (!response.ok) {
-            throw new Error('Network response was not ok');
-          }
-          return response.json();
-        })
-        .then(data => {
-          if (data.success) {
-            Swal.fire({
-              title: 'Item Removed',
-              text: 'The item has been successfully removed from your cart.',
-              icon: 'success',
-              confirmButtonText: 'OK',
-            }).then(() => {
-              const row = document.getElementById(`item-row-${itemId}`);
-              if (row) {
-                row.remove();
-              }
-
+      .then(r => r.json())
+      .then(data => {
+        if (data.success) {
+          const row = document.getElementById(`item-row-${itemId}`);
+          if (row) {
+            row.style.transition = 'opacity 0.3s, transform 0.3s';
+            row.style.opacity = '0';
+            row.style.transform = 'translateX(20px)';
+            setTimeout(() => {
+              row.remove();
               if (data.remainingItems === 0) {
-                document.getElementById('cart-subtotal').innerText = '0.00';
-                document.getElementById('cart-total').innerText = '0.00';
-                const cartTable = document.querySelector('.cart-table');
-                if (cartTable) {
-                  cartTable.innerHTML = '<p>Your cart is empty</p>';
-                }
+                location.reload();
               } else {
                 updateCartTotal();
+                // update item count in title
+                const countEl = document.querySelector('.cart-count');
+                if (countEl) countEl.textContent = `${data.remainingItems} item${data.remainingItems !== 1 ? 's' : ''}`;
               }
-            });
-          } else {
-            Swal.fire({
-              title: 'Error!',
-              text: 'Failed to remove the item from the cart.',
-              icon: 'error',
-              confirmButtonText: 'OK',
-            });
+            }, 300);
           }
-        })
-        .catch(error => {
-          console.error('Error:', error);
-          Swal.fire({
-            title: 'Error!',
-            text: 'An error occurred while trying to remove the item. Please try again.',
-            icon: 'error',
-            confirmButtonText: 'OK',
-          });
-        });
-    }
-
-    function updateQuantity(element, change, itemId) {
-      const qtyInput = element.parentElement.querySelector('.qty-text');
-      const stock = parseInt(qtyInput.getAttribute('data-stock'), 10);
-      const errorMessage = document.getElementById(`error-message-${itemId}`);
-      const price = parseFloat(document.querySelector(`#qty-${itemId}`).closest('tr').querySelector('.item-price').innerText);
-      const totalPriceElement = document.getElementById(`total-price-${itemId}`);
-      const checkoutButton = document.getElementById('checkout')
-
-      let qty = parseInt(qtyInput.value, 10);
-
-
-      qty += change;
-
-      if (stock === 0) {
-        Swal.fire({
-          icon: 'error',
-          title: 'Out of Stock',
-          text: 'This item is currently out of stock.',
-        });
-        return;
-      }
-
-      if (qty > stock) {
-
-        errorMessage.textContent = `Maximum stock available: ${stock}`;
-      } else if (qty > 10) {
-
-        errorMessage.textContent = `Maximum stock you can purchase:10`;
-      } else if (qty < 1) {
-
-        errorMessage.textContent = `Minimum quantity is 1`;
-      } else if (qty == 0) {
-
-        errorMessage.textContent = `stock is unavailable .Please remove this product`;
-        checkoutButton.disabled = true;
-      } else {
-
-        qtyInput.value = qty;
-        errorMessage.textContent = '';
-
-
-        totalPriceElement.textContent = (qty * price).toFixed(2);
-
-
-        updateCartTotal();
-
-        fetch('/cart-update-quantity', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify({
-            itemId: itemId,
-            quantity: qty
-
-
-          })
-        })
-
-          .then(response => {
-
-            if (!response.ok) {
-              throw new Error('Failed to update quantity on the server');
-            }
-            return response.json();
-          })
-          .then(data => {
-
-          })
-          .catch(error => {
-            console.error('Error updating quantity:', error);
-            errorMessage.textContent = 'Failed to update quantity. Please try again.';
-          });
-      }
-    }
-
-    function validateQuantity(input, itemId) {
-      const qty = parseInt(input.value, 10);
-      const stock = parseInt(input.getAttribute('data-stock'), 10);
-      const errorMessage = document.getElementById(`error-message-${itemId}`);
-      const price = parseFloat(document.querySelector(`#qty-${itemId}`).closest('tr').querySelector('.item-price').innerText);
-      const totalPriceElement = document.getElementById(`total-price-${itemId}`);
-
-
-      if (qty > stock) {
-        errorMessage.textContent = `Maximum stock available: ${stock}`;
-      } else if (qty < 1) {
-
-        errorMessage.textContent = `Minimum quantity is 1`;
-      } else {
-        errorMessage.textContent = '';
-
-
-        totalPriceElement.textContent = (qty * price).toFixed(2);
-
-
-        updateCartTotal();
-      }
-    }
-    window.onload = function () {
-      updateCartTotal();
-    };
-
-    function updateCartTotal() {
-      let cartSubtotal = 0;
-      const totalPriceElements = document.querySelectorAll('[id^="total-price-"]');
-
-      totalPriceElements.forEach((element) => {
-        cartSubtotal += parseFloat(element.innerText);
+        } else {
+          Swal.fire({ title: 'Error!', text: 'Failed to remove item.', icon: 'error' });
+        }
+      })
+      .catch(() => {
+        Swal.fire({ title: 'Error!', text: 'Something went wrong. Please try again.', icon: 'error' });
       });
+    });
+  }
 
-      document.getElementById('cart-subtotal').innerText = cartSubtotal.toFixed(2);
+  // ── Update quantity
+  function updateQuantity(btn, change, itemId) {
+    const qtyInput = document.getElementById(`qty-${itemId}`);
+    const stock = parseInt(qtyInput.getAttribute('data-stock'), 10);
+    const errorEl = document.getElementById(`error-message-${itemId}`);
+    const priceEl = document.querySelector(`#item-row-${itemId} .item-price`);
+    const totalEl = document.getElementById(`total-price-${itemId}`);
+    const price = parseFloat(priceEl.innerText);
+    let qty = parseInt(qtyInput.value, 10) + change;
 
-      const deliveryCost = 0;
-      const cartTotal = cartSubtotal + deliveryCost;
+    errorEl.textContent = '';
 
-      document.getElementById('cart-total').innerText = cartTotal.toFixed(2);
+    if (stock === 0) {
+      Swal.fire({ icon: 'error', title: 'Out of Stock', text: 'This item is currently out of stock.', confirmButtonColor: '#1a1410' });
+      return;
     }
+    if (qty < 1) { errorEl.textContent = 'Minimum quantity is 1'; return; }
+    if (qty > 10) { errorEl.textContent = 'Maximum 10 per order'; return; }
+    if (qty > stock) { errorEl.textContent = `Only ${stock} in stock`; return; }
 
-  </script>
+    qtyInput.value = qty;
+    totalEl.textContent = (qty * price).toFixed(2);
+    updateCartTotal();
 
-  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-  <!-- ##### jQuery (Necessary for All JavaScript Plugins) ##### -->
-  <script src="/js/jquery/jquery-2.2.4.min.js"></script>
-  <!-- Popper js -->
-  <script src="/js/popper.min.js"></script>
-  <!-- Bootstrap js -->
-  <script src="/js/bootstrap.min.js"></script>
-  <!-- Plugins js -->
-  <script src="/js/plugins.js"></script>
-  <!-- Active js -->
-  <script src="/js/active.js"></script>
+    fetch('/cart-update-quantity', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ itemId, quantity: qty }),
+    }).catch(() => {
+      errorEl.textContent = 'Failed to update. Please try again.';
+    });
+  }
 
+  // ── Validate direct input
+  function validateQuantity(input, itemId) {
+    const qty = parseInt(input.value, 10);
+    const stock = parseInt(input.getAttribute('data-stock'), 10);
+    const errorEl = document.getElementById(`error-message-${itemId}`);
+    const priceEl = document.querySelector(`#item-row-${itemId} .item-price`);
+    const totalEl = document.getElementById(`total-price-${itemId}`);
+    const price = parseFloat(priceEl.innerText);
+
+    errorEl.textContent = '';
+    if (qty < 1) { errorEl.textContent = 'Minimum quantity is 1'; return; }
+    if (qty > stock) { errorEl.textContent = `Only ${stock} in stock`; return; }
+    if (qty > 10) { errorEl.textContent = 'Maximum 10 per order'; return; }
+
+    totalEl.textContent = (qty * price).toFixed(2);
+    updateCartTotal();
+  }
+
+  // ── Recalculate cart totals
+  function updateCartTotal() {
+    let subtotal = 0;
+    document.querySelectorAll('[id^="total-price-"]').forEach(el => {
+      subtotal += parseFloat(el.textContent) || 0;
+    });
+    document.getElementById('cart-subtotal').textContent = subtotal.toFixed(2);
+    document.getElementById('cart-total').textContent = subtotal.toFixed(2);
+  }
+</script>
 </body>
-
 </html>

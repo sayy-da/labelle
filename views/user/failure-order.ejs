@@ -3,95 +3,359 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Labelle</title>
+  <title>Payment Failed — Labelle</title>
+  <link rel="icon" href="/img/core-img/favicon.ico">
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
   <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --cream: #f9f4ee;
+      --warm: #fdf9f5;
+      --gold: #c9a96e;
+      --gold-lt: #e8d5b0;
+      --dark: #1a1410;
+      --muted: #8a7968;
+      --border: rgba(201,169,110,0.2);
+      --red: #c0392b;
+      --red-lt: rgba(192,57,43,0.08);
+    }
+
     body {
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-      margin: 0;
-      padding: 20px;
+      font-family: 'DM Sans', sans-serif;
+      background: #f4efe9;
+      color: var(--dark);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
     }
 
-    .animation-ctn {
+    /* ── NAV ── */
+    nav {
+      height: 64px;
+      background: rgba(253,249,245,0.97);
+      border-bottom: 1px solid var(--border);
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 5vw;
+    }
+    .logo {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.6rem; font-weight: 600; letter-spacing: 0.1em;
+      color: var(--dark); text-decoration: none;
+    }
+    .logo span { color: var(--gold); }
+    .nav-links { display: flex; gap: 2rem; }
+    .nav-links a {
+      font-size: 0.75rem; letter-spacing: 0.12em; text-transform: uppercase;
+      color: var(--muted); text-decoration: none; transition: color 0.2s;
+    }
+    .nav-links a:hover { color: var(--dark); }
+
+    /* ── PROGRESS ── */
+    .progress-wrap {
+      background: #fff;
+      border-bottom: 1px solid var(--border);
+      padding: 1.2rem 5vw;
+      display: flex; align-items: center;
+    }
+    .prog-step {
+      display: flex; align-items: center; gap: 0.6rem;
+      font-size: 0.7rem; letter-spacing: 0.1em; text-transform: uppercase;
+    }
+    .prog-num {
+      width: 26px; height: 26px; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 0.65rem; font-weight: 500; flex-shrink: 0;
+      background: var(--border); color: var(--muted);
+    }
+    .prog-step.done .prog-num { background: var(--gold); color: #fff; }
+    .prog-step.failed .prog-num { background: var(--red); color: #fff; }
+    .prog-label { color: var(--muted); }
+    .prog-step.failed .prog-label { color: var(--red); font-weight: 500; }
+    .prog-line { flex: 1; height: 1px; background: var(--border); margin: 0 1rem; max-width: 60px; }
+
+    /* ── MAIN ── */
+    .main {
+      flex: 1;
+      display: flex; align-items: center; justify-content: center;
+      padding: 4rem 5vw;
+    }
+
+    .failure-card {
+      background: #fff;
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      max-width: 520px;
+      width: 100%;
+      overflow: hidden;
       text-align: center;
-      margin: 5em auto;
+      box-shadow: 0 8px 40px rgba(26,20,16,0.08);
+      animation: fadeUp 0.6s ease both;
     }
 
-    .icon--order-failure {
-      animation: appear 0.5s ease-in-out;
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(24px); }
+      to   { opacity: 1; transform: translateY(0); }
     }
 
-    .icon--order-failure circle {
-      animation: circle-draw 1s ease-in-out forwards;
+    /* ── TOP SECTION ── */
+    .failure-top {
+      background: var(--dark);
+      padding: 2.5rem 2rem 2rem;
+      position: relative;
+      overflow: hidden;
+    }
+    .failure-top::before {
+      content: '';
+      position: absolute; top: -40%; left: -10%;
+      width: 200px; height: 200px;
+      background: radial-gradient(circle, rgba(192,57,43,0.12) 0%, transparent 70%);
+      pointer-events: none;
     }
 
-    .icon--order-failure line:nth-child(2) {
-      animation: cross-draw 0.5s ease-in-out 0.5s forwards;
-    }
-
-    .icon--order-failure line:nth-child(3) {
-      animation: cross-draw 0.5s ease-in-out 0.7s forwards;
-    }
-
-    @keyframes appear {
-      0% { opacity: 0; }
-      100% { opacity: 1; }
+    /* ── X ANIMATION ── */
+    .x-wrap {
+      width: 90px; height: 90px;
+      margin: 0 auto 1.2rem;
     }
 
     @keyframes circle-draw {
-      0% { stroke-dashoffset: 480px; }
-      100% { stroke-dashoffset: 0; }
+      from { stroke-dashoffset: 283px; }
+      to   { stroke-dashoffset: 0; }
+    }
+    @keyframes circle-fill {
+      0%   { opacity: 0; }
+      60%  { opacity: 0; }
+      100% { opacity: 1; }
+    }
+    @keyframes line1-draw {
+      from { stroke-dashoffset: 80px; }
+      to   { stroke-dashoffset: 0; }
+    }
+    @keyframes line2-draw {
+      from { stroke-dashoffset: 80px; }
+      to   { stroke-dashoffset: 0; }
     }
 
-    @keyframes cross-draw {
-      0% { stroke-dashoffset: 100px; }
-      100% { stroke-dashoffset: 0; }
+    .x-wrap svg .outer-circle {
+      stroke-dasharray: 283px;
+      stroke-dashoffset: 283px;
+      animation: circle-draw 0.7s cubic-bezier(0.4,0,0.2,1) 0.1s forwards;
+    }
+    .x-wrap svg .fill-circle {
+      opacity: 0;
+      animation: circle-fill 0.9s ease 0.1s forwards;
+    }
+    .x-wrap svg .line1 {
+      stroke-dasharray: 80px;
+      stroke-dashoffset: 80px;
+      animation: line1-draw 0.35s ease 0.75s forwards;
+    }
+    .x-wrap svg .line2 {
+      stroke-dasharray: 80px;
+      stroke-dashoffset: 80px;
+      animation: line2-draw 0.35s ease 0.95s forwards;
     }
 
-    h1 {
-      color: #333;
-      margin: 30px 0;
-      font-size: 24px;
+    .failure-top-eyebrow {
+      font-size: 0.62rem; letter-spacing: 0.3em; text-transform: uppercase;
+      color: rgba(192,57,43,0.8); margin-bottom: 0.4rem;
+    }
+    .failure-top h1 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 2rem; font-weight: 300; color: var(--cream); line-height: 1.2;
+    }
+    .failure-top h1 em { font-style: italic; color: var(--gold-lt); }
+
+    /* ── BODY ── */
+    .failure-body { padding: 2rem; }
+
+    .failure-message {
+      font-size: 0.88rem; color: var(--muted);
+      line-height: 1.7; margin-bottom: 1.8rem;
     }
 
-    .btn {
-      background-color: #fbb710;
-      color: white;
-      border: none;
-      padding: 12px 24px;
-      border-radius: 8px;
-      font-size: 16px;
-      font-weight: bold;
-      cursor: pointer;
-      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-      transition: all 0.3s ease;
-      text-decoration: none;
-      display: inline-block;
+    /* info tiles */
+    .info-grid {
+      display: grid; grid-template-columns: 1fr 1fr;
+      gap: 0.8rem; margin-bottom: 1.8rem;
+    }
+    .info-tile {
+      background: var(--cream);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      padding: 0.9rem 1rem;
+      text-align: left;
+    }
+    .info-tile.full { grid-column: 1 / -1; }
+    .info-tile-label {
+      font-size: 0.58rem; letter-spacing: 0.18em; text-transform: uppercase;
+      color: var(--muted); margin-bottom: 0.3rem;
+    }
+    .info-tile-value {
+      font-size: 0.85rem; color: var(--dark); font-weight: 500;
+    }
+    .info-tile-value.red { color: var(--red); }
+    .info-tile-value.gold { color: var(--gold); }
+
+    /* timer */
+    .timer-tile {
+      background: var(--red-lt);
+      border: 1px solid rgba(192,57,43,0.2);
+      border-radius: 4px;
+      padding: 0.9rem 1rem;
+      text-align: left;
+      grid-column: 1 / -1;
+      display: flex; align-items: center; gap: 0.8rem;
+    }
+    .timer-icon {
+      width: 34px; height: 34px; border-radius: 50%;
+      background: rgba(192,57,43,0.12);
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0; color: var(--red); font-size: 0.85rem;
+    }
+    .timer-text { font-size: 0.78rem; color: var(--red); line-height: 1.5; }
+    .timer-text strong { font-weight: 500; }
+
+    .divider {
+      height: 1px; background: var(--border); margin: 0 0 1.8rem;
     }
 
-    .btn:hover {
-      background-color: #e5a60f;
-      transform: translateY(-2px);
-      box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15);
+    /* buttons */
+    .btn-primary {
+      display: block; width: 100%; padding: 0.95rem;
+      background: var(--gold); color: var(--dark);
+      border: none; border-radius: 2px;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.75rem; letter-spacing: 0.18em; text-transform: uppercase; font-weight: 500;
+      cursor: pointer; text-decoration: none;
+      transition: all 0.2s; margin-bottom: 0.7rem;
     }
+    .btn-primary:hover { background: var(--dark); color: var(--cream); transform: translateY(-1px); }
+
+    .btn-secondary {
+      display: block; width: 100%; padding: 0.9rem;
+      background: transparent; color: var(--muted);
+      border: 1px solid var(--border); border-radius: 2px;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.72rem; letter-spacing: 0.15em; text-transform: uppercase;
+      cursor: pointer; text-decoration: none;
+      transition: all 0.2s;
+    }
+    .btn-secondary:hover { border-color: var(--gold); color: var(--gold); }
+
+    /* ── FOOTER ── */
+    footer {
+      background: #130e09; padding: 2rem 5vw;
+      border-top: 1px solid rgba(201,169,110,0.1);
+      display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;
+    }
+    .footer-logo { font-family: 'Cormorant Garamond', serif; font-size: 1.3rem; font-weight: 600; letter-spacing: 0.1em; color: var(--cream); }
+    .footer-logo span { color: var(--gold); }
+    .footer-copy { font-size: 0.7rem; color: rgba(249,244,238,0.2); }
+    .footer-legal { display: flex; gap: 1.4rem; }
+    .footer-legal a { font-size: 0.7rem; color: rgba(249,244,238,0.2); text-decoration: none; transition: color 0.2s; }
+    .footer-legal a:hover { color: var(--gold); }
   </style>
 </head>
 <body>
-  <div class="animation-ctn">
-    <div class="icon icon--order-failure">
-      <svg xmlns="http://www.w3.org/2000/svg" width="154px" height="154px">
-        <g fill="none" stroke="#FF0000" stroke-width="2">
-          <circle cx="77" cy="77" r="72" style="stroke-dasharray: 480px, 480px;"></circle>
-          <line x1="50" y1="50" x2="104" y2="104" stroke="#FF0000" stroke-width="10" style="stroke-dasharray: 100px, 100px;"></line>
-          <line x1="104" y1="50" x2="50" y2="104" stroke="#FF0000" stroke-width="10" style="stroke-dasharray: 100px, 100px;"></line>
-        </g>
-      </svg>
-    </div>
-    <h1 style="margin-bottom: 0px;">We are unable to process your order this time</h1>
-    <h4 style="color: #868282;">You have 24 hours to complete the payment. After that, the order will be automatically canceled.</h4>
-    <p style="color: #ada2a2;">See Orders to retry your payment</p>
-    <a href="/user-order-details/<%= orderId %>" class="btn">
-      View Orders →
-    </a>
+
+<!-- NAV -->
+<nav>
+  <a href="/" class="logo">La<span>belle</span></a>
+  <div class="nav-links">
+    <a href="/">Home</a>
+    <a href="/shop">Shop</a>
+    <a href="/user-profile">Profile</a>
   </div>
+</nav>
+
+<!-- PROGRESS -->
+<div class="progress-wrap">
+  <div class="prog-step done">
+    <div class="prog-num"><i class="fa fa-check" style="font-size:0.5rem;"></i></div>
+    <span class="prog-label">Cart</span>
+  </div>
+  <div class="prog-line"></div>
+  <div class="prog-step done">
+    <div class="prog-num"><i class="fa fa-check" style="font-size:0.5rem;"></i></div>
+    <span class="prog-label">Checkout</span>
+  </div>
+  <div class="prog-line"></div>
+  <div class="prog-step failed">
+    <div class="prog-num"><i class="fa fa-times" style="font-size:0.55rem;"></i></div>
+    <span class="prog-label">Payment Failed</span>
+  </div>
+</div>
+
+<!-- MAIN -->
+<div class="main">
+  <div class="failure-card">
+
+    <!-- Top dark section with X animation -->
+    <div class="failure-top">
+      <div class="x-wrap">
+        <svg viewBox="0 0 90 90" fill="none" xmlns="http://www.w3.org/2000/svg" width="90" height="90">
+          <!-- Red fill circle -->
+          <circle class="fill-circle" cx="45" cy="45" r="40" fill="#c0392b"/>
+          <!-- Animated border circle -->
+          <circle class="outer-circle" cx="45" cy="45" r="40" stroke="#c0392b" stroke-width="2" fill="none"/>
+          <!-- X lines -->
+          <line class="line1" x1="30" y1="30" x2="60" y2="60" stroke="#fff" stroke-width="5" stroke-linecap="round"/>
+          <line class="line2" x1="60" y1="30" x2="30" y2="60" stroke="#fff" stroke-width="5" stroke-linecap="round"/>
+        </svg>
+      </div>
+      <p class="failure-top-eyebrow">Payment Failed</p>
+      <h1>Unable to process your <em>payment</em></h1>
+    </div>
+
+    <!-- Body -->
+    <div class="failure-body">
+      <p class="failure-message">
+        Don't worry — your order has been saved. You can retry the payment within 24 hours before the order is automatically cancelled.
+      </p>
+
+      <div class="info-grid">
+        <div class="info-tile">
+          <div class="info-tile-label">Order Status</div>
+          <div class="info-tile-value red">Pending Payment</div>
+        </div>
+        <div class="info-tile">
+          <div class="info-tile-label">Payment</div>
+          <div class="info-tile-value red">Failed</div>
+        </div>
+        <div class="timer-tile">
+          <div class="timer-icon"><i class="fa fa-clock-o"></i></div>
+          <div class="timer-text">
+            <strong>You have 24 hours to complete the payment.</strong>
+            After that, the order will be automatically cancelled.
+          </div>
+        </div>
+      </div>
+
+      <div class="divider"></div>
+
+      <a href="/user-order-details/<%= orderId %>" class="btn-primary">
+        Retry Payment &nbsp;<i class="fa fa-refresh" style="font-size:0.7rem;"></i>
+      </a>
+      <a href="/shop" class="btn-secondary">
+        Continue Shopping
+      </a>
+    </div>
+
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-logo">La<span>belle</span></div>
+  <p class="footer-copy">© 2025 Labelle. All rights reserved.</p>
+  <div class="footer-legal">
+    <a href="#">Privacy Policy</a>
+    <a href="#">Terms</a>
+  </div>
+</footer>
+
 </body>
 </html>

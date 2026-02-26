@@ -1,534 +1,724 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-    <meta charset="utf-8">
-    <title>Labelle</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="icon" href="img/core-img/favicon.ico">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Labelle — My Orders</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Jost:wght@300;400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
 
-    <link href="https://netdna.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <style>
-        /* Keeping all existing styles */
-        body {
-            color: #797979;
-            background: #f1f2f7;
-            font-family: 'Open Sans', sans-serif;
-            padding: 0px !important;
-            margin: 0px !important;
-            font-size: 13px;
-            text-rendering: optimizeLegibility;
-            -webkit-font-smoothing: antialiased;
-            -moz-font-smoothing: antialiased;
-        }
+    :root {
+      --cream: #f9f4ee;
+      --warm-white: #fdf9f5;
+      --gold: #c9a96e;
+      --gold-light: #e8d5b0;
+      --dark: #1a1410;
+      --muted: #8a7968;
+      --border: rgba(201,169,110,0.25);
+      --panel-bg: #fff8f2;
+    }
 
-        .profile-nav,
-        .profile-info {
-            margin-top: 30px;
-        }
+    html { scroll-behavior: smooth; }
 
-        .profile-nav .user-heading {
-            background: #fbb710;
-            color: #fff;
-            border-radius: 4px 4px 0 0;
-            -webkit-border-radius: 4px 4px 0 0;
-            padding: 30px;
-            text-align: center;
-        }
+    body {
+      font-family: 'Jost', sans-serif;
+      background: var(--warm-white);
+      color: var(--dark);
+      overflow-x: hidden;
+      min-height: 100vh;
+    }
 
-        .profile-nav .user-heading.round a {
-            border-radius: 50%;
-            -webkit-border-radius: 50%;
-            border: 10px solid rgba(255, 255, 255, 0.3);
-            display: inline-block;
-        }
+    /* ── NAVBAR ── */
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 5vw;
+      height: 72px;
+      background: rgba(253,249,245,0.92);
+      backdrop-filter: blur(14px);
+      border-bottom: 1px solid var(--border);
+    }
+    .nav-logo {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.7rem;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      color: var(--dark);
+      text-decoration: none;
+    }
+    .nav-logo span { color: var(--gold); }
+    .nav-links { display: flex; gap: 2.4rem; list-style: none; }
+    .nav-links a {
+      text-decoration: none;
+      font-size: 0.78rem;
+      font-weight: 400;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--muted);
+      transition: color 0.2s;
+    }
+    .nav-links a:hover { color: var(--gold); }
+    .nav-actions { display: flex; align-items: center; gap: 1.4rem; }
+    .nav-actions a {
+      text-decoration: none;
+      font-size: 0.75rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--muted);
+      transition: color 0.2s;
+    }
+    .nav-actions a:hover { color: var(--dark); }
 
-        .profile-nav .user-heading a img {
-            width: 112px;
-            height: 112px;
-            border-radius: 50%;
-            -webkit-border-radius: 50%;
-        }
+    /* ── PAGE ── */
+    .page-wrapper { padding-top: 72px; min-height: 100vh; }
 
-        .profile-nav .user-heading h1 {
-            font-size: 22px;
-            font-weight: 300;
-            margin-bottom: 5px;
-        }
+    .page-banner {
+      background: linear-gradient(135deg, #1a1410 0%, #2e1f10 40%, #4a2e18 70%, #1a1410 100%);
+      padding: 3.5rem 5vw 3rem;
+      position: relative;
+      overflow: hidden;
+    }
+    .page-banner::before {
+      content: '';
+      position: absolute;
+      top: -60%; right: -5%;
+      width: 50vw; height: 50vw;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(201,169,110,0.15) 0%, transparent 65%);
+      pointer-events: none;
+    }
+    .banner-inner { position: relative; z-index: 1; }
+    .banner-eyebrow {
+      font-size: 0.68rem;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 0.6rem;
+    }
+    .banner-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(2rem, 4vw, 3rem);
+      font-weight: 300;
+      color: var(--cream);
+      line-height: 1.1;
+    }
+    .banner-title em { font-style: italic; color: var(--gold-light); }
 
-        .profile-nav .user-heading p {
-            font-size: 12px;
-        }
+    /* ── LAYOUT ── */
+    .profile-layout {
+      display: grid;
+      grid-template-columns: 280px 1fr;
+      gap: 2rem;
+      padding: 2.5rem 5vw 4rem;
+      max-width: 1200px;
+      margin: 0 auto;
+      align-items: start;
+    }
 
-        .profile-nav ul {
-            margin-top: 1px;
-        }
+    /* ── SIDEBAR ── */
+    .sidebar {
+      position: sticky;
+      top: 90px;
+      animation: fadeUp 0.8s cubic-bezier(0.22,1,0.36,1) both;
+    }
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(24px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    .sidebar-card { background: var(--panel-bg); border: 1px solid var(--border); overflow: hidden; }
+    .sidebar-avatar-area {
+      background: linear-gradient(145deg, #1a1410, #2e1f10);
+      padding: 2.2rem 1.5rem 1.8rem;
+      text-align: center;
+      position: relative;
+    }
+    .sidebar-avatar-area::after {
+      content: '';
+      position: absolute;
+      bottom: -1px; left: 0; right: 0;
+      height: 2px;
+      background: linear-gradient(to right, transparent, var(--gold), transparent);
+    }
+    .avatar-ring {
+      width: 96px; height: 96px;
+      border-radius: 50%;
+      border: 2px solid var(--gold);
+      padding: 3px;
+      display: inline-block;
+      margin-bottom: 1rem;
+    }
+    .avatar-ring img {
+      width: 100%; height: 100%;
+      border-radius: 50%;
+      object-fit: cover;
+      display: block;
+    }
+    .sidebar-name {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.3rem;
+      font-weight: 400;
+      color: var(--cream);
+      margin-bottom: 0.25rem;
+    }
+    .sidebar-email {
+      font-size: 0.72rem;
+      color: rgba(249,244,238,0.45);
+      letter-spacing: 0.04em;
+      word-break: break-all;
+    }
+    .sidebar-email a { color: inherit; text-decoration: none; }
+    .sidebar-nav { list-style: none; padding: 0.5rem 0; }
+    .sidebar-nav li { border-bottom: 1px solid var(--border); }
+    .sidebar-nav li:last-child { border-bottom: none; }
+    .sidebar-nav a {
+      display: flex;
+      align-items: center;
+      gap: 0.9rem;
+      padding: 0.85rem 1.4rem;
+      text-decoration: none;
+      font-size: 0.78rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--muted);
+      transition: background 0.2s, color 0.2s;
+      border-left: 3px solid transparent;
+    }
+    .sidebar-nav a:hover {
+      background: rgba(201,169,110,0.06);
+      color: var(--dark);
+      border-left-color: var(--gold);
+    }
+    .sidebar-nav li.active a {
+      background: rgba(201,169,110,0.08);
+      color: var(--dark);
+      border-left-color: var(--gold);
+    }
+    .sidebar-nav i { font-size: 0.85rem; color: var(--gold); width: 16px; text-align: center; }
 
-        .profile-nav ul>li {
-            border-bottom: 1px solid #ebeae6;
-            margin-top: 0;
-            line-height: 30px;
-        }
+    /* ── MAIN CONTENT ── */
+    .main-content {
+      display: flex;
+      flex-direction: column;
+      gap: 1.8rem;
+      animation: fadeUp 0.8s 0.12s cubic-bezier(0.22,1,0.36,1) both;
+    }
+    .content-panel { background: var(--panel-bg); border: 1px solid var(--border); overflow: hidden; }
+    .panel-header {
+      padding: 1.4rem 2rem;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+    .panel-eyebrow {
+      font-size: 0.65rem;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 0.2rem;
+    }
+    .panel-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.5rem;
+      font-weight: 300;
+      color: var(--dark);
+    }
 
-        .profile-nav ul>li:last-child {
-            border-bottom: none;
-        }
+    /* ── ORDER COUNT BADGE ── */
+    .order-count {
+      font-size: 0.72rem;
+      letter-spacing: 0.1em;
+      color: var(--muted);
+      background: rgba(201,169,110,0.1);
+      border: 1px solid var(--border);
+      padding: 0.3rem 0.9rem;
+    }
 
-        .profile-nav ul>li>a {
-            border-radius: 0;
-            -webkit-border-radius: 0;
-            color: #89817f;
-            border-left: 5px solid #fff;
-        }
+    /* ── TABLE WRAPPER ── */
+    .table-scroll {
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+    }
 
-        .profile-nav ul>li>a:hover,
-        .profile-nav ul>li>a:focus,
-        .profile-nav ul li.active a {
-            background: #f8f7f5 !important;
-            border-left: 5px solid #fbb710;
-            color: #89817f !important;
-        }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
 
-        .navbar {
-            background-color: white;
-            padding: 10px 0;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-            margin-bottom: 0px;
-        }
+    thead tr {
+      background: linear-gradient(to right, #1a1410, #2e1f10);
+    }
+    thead th {
+      padding: 1rem 1.2rem;
+      font-size: 0.65rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: rgba(249,244,238,0.6);
+      font-weight: 400;
+      white-space: nowrap;
+      text-align: left;
+    }
+    thead th:first-child { color: var(--gold); }
 
-        .navbar-links {
-            list-style-type: none;
-            display: flex;
-            justify-content: center;
-            padding: 15px 50px;
-            margin-left: 420px;
-        }
+    tbody tr {
+      border-bottom: 1px solid var(--border);
+      transition: background 0.2s;
+    }
+    tbody tr:last-child { border-bottom: none; }
+    tbody tr:hover { background: rgba(201,169,110,0.04); }
 
-        .navbar-links li {
-            margin: 0 20px;
-        }
+    tbody td {
+      padding: 1rem 1.2rem;
+      font-size: 0.82rem;
+      color: var(--muted);
+      font-weight: 300;
+      vertical-align: middle;
+    }
 
-        .navbar-links a {
-            text-decoration: none;
-            color: black;
-            font-size: 14px;
-            transition: color 0.3s ease, background-color 0.3s ease;
-            padding: 5px 10px;
-            border-radius: 4px;
-        }
+    .order-id {
+      font-family: 'Jost', sans-serif;
+      font-size: 0.72rem;
+      color: var(--gold);
+      letter-spacing: 0.04em;
+      max-width: 120px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      display: block;
+    }
 
-        .navbar-links a:hover {
-            color: white;
-            background-color: #FBB710;
-        }
+    .order-date { color: var(--dark); font-weight: 400; }
 
-        /* Sidebar Styles */
-      
-        /* Updated Orders Table Styles */
-        .cart-table-area {
-            margin-left: 280px;
-            padding: 30px;
-            width: calc(100% - 230px);
-        }
+    .order-amount {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1rem;
+      font-weight: 600;
+      color: var(--dark);
+    }
 
-        .cart-title {
-            margin-bottom: 20px;
-        }
+    .payment-method {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      font-size: 0.75rem;
+    }
 
-        .cart-title h2 {
-            font-size: 24px;
-            font-weight: 500;
-            color: #333;
-        }
+    /* ── STATUS BADGES ── */
+    .status-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      padding: 0.3rem 0.8rem;
+      font-size: 0.65rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      font-weight: 500;
+      white-space: nowrap;
+    }
+    .status-badge::before {
+      content: '';
+      width: 6px; height: 6px;
+      border-radius: 50%;
+      display: inline-block;
+    }
 
-        .orders-table {
-            background: white;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
-        }
+    .status-delivered  { background: rgba(39,174,96,0.1);  color: #27ae60; border: 1px solid rgba(39,174,96,0.25); }
+    .status-delivered::before  { background: #27ae60; }
 
-        .table>thead>tr>th {
-            background: #f8f9fa;
-            padding: 15px;
-            font-weight: 600;
-            color: #333;
-            border-bottom: 2px solid #ebeae6;
-        }
+    .status-pending    { background: rgba(201,169,110,0.12); color: #a07840; border: 1px solid rgba(201,169,110,0.3); }
+    .status-pending::before    { background: var(--gold); }
 
-        .table>tbody>tr>td {
-            padding: 15px;
-            vertical-align: middle;
-            color: #555;
-        }
+    .status-cancelled  { background: rgba(192,57,43,0.08);  color: #c0392b; border: 1px solid rgba(192,57,43,0.2); }
+    .status-cancelled::before  { background: #c0392b; }
 
-        .status-badge {
-            padding: 5px 12px;
-            border-radius: 20px;
-            font-size: 12px;
-            font-weight: 500;
-        }
+    .status-returned   { background: rgba(138,121,104,0.1); color: var(--muted); border: 1px solid var(--border); }
+    .status-returned::before   { background: var(--muted); }
 
-        .status-delivered {
-            background: #d4edda;
-            color: #155724;
-        }
+    /* ── PAYMENT STATUS ── */
+    .pay-success { color: #27ae60; font-size: 0.75rem; font-weight: 500; }
+    .pay-failed  { color: #c0392b; font-size: 0.75rem; font-weight: 500; }
 
-        .status-pending {
-            background: #fff3cd;
-            color: #856404;
-        }
+    /* ── ACTION BUTTONS ── */
+    .action-cell { display: flex; gap: 0.5rem; align-items: center; flex-wrap: wrap; }
 
-        .status-cancelled {
-            background: #f8d7da;
-            color: #721c24;
-        }
-        .status-returned {
-    background: #e2e3e5; /* A light gray shade for neutrality */
-    color: #383d41;     /* A darker gray for text contrast */
-}
+    .btn-view {
+      padding: 0.4rem 1rem;
+      background: var(--gold);
+      color: var(--dark);
+      border: none;
+      font-family: 'Jost', sans-serif;
+      font-size: 0.7rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      font-weight: 500;
+      cursor: pointer;
+      transition: background 0.2s;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.3rem;
+    }
+    .btn-view:hover { background: var(--gold-light); }
 
-        .action-buttons {
-            display: flex;
-            gap: 10px;
-        }
+    .btn-cancel-order {
+      padding: 0.4rem 1rem;
+      background: transparent;
+      color: #c0392b;
+      border: 1px solid rgba(192,57,43,0.35);
+      font-family: 'Jost', sans-serif;
+      font-size: 0.7rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      font-weight: 400;
+      cursor: pointer;
+      transition: background 0.2s, color 0.2s;
+    }
+    .btn-cancel-order:hover { background: rgba(192,57,43,0.08); }
+    .btn-cancel-order:disabled {
+      opacity: 0.4;
+      cursor: not-allowed;
+    }
 
-        .btn-view,
-        .btn-cancel {
-            padding: 5px 15px;
-            border-radius: 4px;
-            font-size: 13px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            border: none;
-        }
+    .btn-return {
+      padding: 0.4rem 1rem;
+      background: transparent;
+      color: var(--muted);
+      border: 1px solid var(--border);
+      font-family: 'Jost', sans-serif;
+      font-size: 0.7rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      font-weight: 400;
+      cursor: pointer;
+      transition: background 0.2s, color 0.2s;
+    }
+    .btn-return:hover { background: rgba(138,121,104,0.1); color: var(--dark); }
 
-        .btn-view {
-            background: #fbb710;
-            color: white;
-        }
+    .btn-retry {
+      padding: 0.4rem 1rem;
+      background: transparent;
+      color: #e67e22;
+      border: 1px solid rgba(230,126,34,0.35);
+      font-family: 'Jost', sans-serif;
+      font-size: 0.7rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      font-weight: 400;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    .btn-retry:hover { background: rgba(230,126,34,0.08); }
 
-        .btn-cancel {
-            background: #dc3545;
-            color: white;
-        }
+    /* ── EMPTY STATE ── */
+    .empty-orders {
+      text-align: center;
+      padding: 4rem 2rem;
+    }
+    .empty-orders i {
+      font-size: 3rem;
+      color: var(--gold);
+      opacity: 0.3;
+      margin-bottom: 1rem;
+      display: block;
+    }
+    .empty-orders p {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.3rem;
+      font-weight: 300;
+      color: var(--muted);
+      margin-bottom: 0.5rem;
+    }
+    .empty-orders span {
+      font-size: 0.8rem;
+      color: rgba(138,121,104,0.6);
+    }
 
-        .btn-view:hover,
-        .btn-cancel:hover {
-            opacity: 0.9;
-        }
+    /* ── GOLD DIVIDER ── */
+    .gold-divider {
+      height: 1px;
+      background: linear-gradient(to right, transparent, var(--gold), transparent);
+    }
 
-        /* Responsive Styles */
-        @media (max-width: 1200px) {
-            .container {
-                width: 100%;
-                padding: 0 15px;
-            }
-
-            .profile-nav {
-                position: static;
-                width: 100%;
-                margin-bottom: 30px;
-            }
-
-            .cart-table-area {
-                margin-left: 0;
-                width: 100%;
-                padding: 15px;
-            }
-        }
-    </style>
+    /* ── RESPONSIVE ── */
+    @media (max-width: 900px) {
+      .profile-layout { grid-template-columns: 1fr; }
+      .sidebar { position: static; }
+    }
+    @media (max-width: 600px) {
+      .nav-links { display: none; }
+      thead th:nth-child(3),
+      tbody td:nth-child(3) { display: none; }
+    }
+  </style>
 </head>
-
 <body>
-    <!-- Navbar -->
-    <nav class="navbar">
-        <ul class="navbar-links">
-            <li><a href="/">Home</a></li>
-            <li><a href="/shop">Shop</a></li>
-            <li><a href="#">Contact</a></li>
-        </ul>
-    </nav>
 
-    <div class="container">
-        <div class="row">
-            <!-- Sidebar -->
-            <div class="profile-nav col-md-3">
-                <div class="panel">
-                    <div class="user-heading round">
-                        <a href="#">
-                            <img src="<%= userData.gender === 'male' 
-                        ? 'https://www.bootdey.com/img/Content/avatar/avatar2.png' 
-                        : userData.gender === 'female' 
-                        ? 'https://www.bootdey.com/img/Content/avatar/avatar3.png' 
-                        : 'https://via.placeholder.com/150' %>" alt="User Avatar" id="profileAvatar">
-                        </a>
-                        <h1>
-                            <%= userData ? userData.name : 'Guest' %>
-                        </h1>
-                        <p>
-                            <a href="mailto:<%= userData ? userData.email : 'not available' %>">
-                                <%= userData ? userData.email : 'Email not available' %>
-                            </a>
-                        </p>
-                    </div>
+<!-- ── NAVBAR ── -->
+<nav>
+  <a href="/" class="nav-logo">La<span>belle</span></a>
+  <ul class="nav-links">
+    <li><a href="/">Home</a></li>
+    <li><a href="/shop">Shop</a></li>
+    <li><a href="#">Contact</a></li>
+  </ul>
+  <div class="nav-actions">
+    <% if (typeof user !== 'undefined' && user) { %>
+      <a href="#">Favourites</a>
+      <a href="/user-profile">Profile</a>
+    <% } else { %>
+      <a href="/login">Login</a>
+    <% } %>
+  </div>
+</nav>
 
-                    <ul class="nav nav-pills nav-stacked">
-                        <li id="profile"><a href="/user-profile"> <i class="fa fa-user"></i> Profile</a></li>
-                        <li id="address-book"><a href="/user-address"> <i class="fa fa-address-book"></i> Address
-                                Book</a></li>
-                        <li id="order-details"><a href="/user-order"> <i class="fa fa-shopping-basket"></i> Order
-                                Details</a></li>
-                        <li id="coupon"><a href="/user-coupon"> <i class="fa fa-ticket-alt"></i> Coupon</a></li>
-                        <li id="wallet"><a href="/user-wallet"> <i class="fa fa-wallet"></i> Wallet</a></li>
-                        <% if (typeof user !== 'undefined' && user) { %>
-                            <li id="logout"><a href="/logout"> <i class="fa fa-sign-out"></i>Logout</a></li>
-                            <% } %>
-                    </ul>
-                </div>
-            </div>
-            <script>
-                const currentPage = window.location.pathname;
+<div class="page-wrapper">
 
-                const pages = {
-                    "/user-profile": "profile",
-                    "/user-address": "address-book",
-                    "/user-order": "order-details",
-                    "/user-coupon": "coupon",
-                    "/user-wallet": "wallet"
-
-                };
-
-                for (let page in pages) {
-                    if (currentPage === page) {
-                        document.getElementById(pages[page]).classList.add('active');
-                    }
-                }
-            </script>
-            <!-- Orders Area -->
-            <div class="cart-table-area">
-                <div class="cart-title">
-                    <h2>My Orders</h2>
-                </div>
-                <div class="orders-table">
-                    <table class="table">
-                        <thead>
-                            <tr>
-                                <th>Order ID</th>
-                                <th>Date</th>
-                                <th>Payment Method</th>
-                                <th>Total Amount</th>
-                                <th>Status</th>
-                                <th>Payment status</th>
-                                <th>Action</th>
-
-                            </tr>
-                        </thead>
-                        <h6></h6>
-                        <tbody>
-                            <% orders.forEach(order=> { %> 
-                                <tr>
-                                    <td>
-                                        <%= order._id %>
-                                    </td>
-                                    <td>
-                                        <%= new Date(order.date).toLocaleDateString() %>
-                                    </td>
-                                    <td>
-                                        <%=order.paymentMethod%>
-                                    </td>
-                                    <td>
-                                        <%= order.totalAmount %>
-                                    </td>
-                                    <td>
-                                        <% if (order.status==='Delivered' ) { %>
-                                            <span class="status-badge status-delivered">Delivered</span>
-                                            <% } else if (order.status==='Pending' ) { %>
-                                                <span class="status-badge status-pending">Pending</span>
-                                                <% } else if (order.status==='Cancelled' ) { %>
-                                                    <span class="status-badge status-cancelled">Cancelled</span>
-                                                    <% } else if (order.status==='Returned' ) { %>
-                                                        <span class="status-badge status-returned">Returned</span>
-                                                        <% } %>
-                                    </td>
-                                    <td>
-                                        <% if(order.paymentStatus=='true'){ %>
-                                            success 
-                                        <% }else if(order.paymentStatus=='false'){ %>
-                                             failed
-                                            <% } %>
-                                    </td>
-                                  
-                                    <td>
-                                        <div class="action-buttons">
-                                            <a href="/user-order-details/<%= order._id %>">
-                                                <button class="btn-view">View</button>
-                                            </a>
-                                            <% if(order.paymentStatus == 'true'){ %>
-                                            <% if (order.status==='Pending' ) { %>
-                                                <button class="btn-cancel"
-                                                    onclick="cancelOrder('<%= order._id %>')">Cancel</button>
-                                                <% } else if (order.status==='Cancelled' ) { %>
-                                                    <button class="btn-cancel" disabled><%= order.status %></button>
-                                                    <% } %>
-
-                                                    <% if (order.status==='Delivered' ) { %>
-                                                        <button class="btn-cancel"
-                                                            onclick="cancelOrder('<%= order._id %>')">Return</button>
-                                                        <% } else if (order.status==='Returned' ) { %>
-                                                            <button class="btn-cancel" disabled><%= order.status %></button>
-                                                            <% } %>
-
-                                         <% }else if(order.paymentStatus == 'false'){ %>
-                                            <button class="btn-cancel retry-btn" data-order-id="<%= order._id %>">Retry</button>
-                                                    <% } %>
-                                        </div>
-                                    </td>
-                                    
-                                </tr>
-                                
-                                <% }) %>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-
-        </div>
+  <!-- ── BANNER ── -->
+  <div class="page-banner">
+    <div class="banner-inner">
+      <p class="banner-eyebrow">Account</p>
+      <h1 class="banner-title">My <em>Orders</em></h1>
     </div>
-  
-    <script>
+  </div>
 
-document.querySelectorAll('.retry-btn').forEach(button => {
-  button.addEventListener('click', async event => {
-    const orderId = event.target.getAttribute('data-order-id');
+  <!-- ── LAYOUT ── -->
+  <div class="profile-layout">
 
-    if (!orderId) {
-      Swal.fire({
-        title: 'Error!',
-        text: 'Order ID is missing.',
-        icon: 'error',
-        confirmButtonText: 'OK',
-      });
-      return;
-    }
+    <!-- ── SIDEBAR ── -->
+    <aside class="sidebar">
+      <div class="sidebar-card">
+        <div class="sidebar-avatar-area">
+          <div class="avatar-ring">
+            <img src="<%= userData.gender === 'male'
+              ? 'https://www.bootdey.com/img/Content/avatar/avatar2.png'
+              : userData.gender === 'female'
+              ? 'https://www.bootdey.com/img/Content/avatar/avatar3.png'
+              : 'https://via.placeholder.com/150' %>"
+              alt="User Avatar">
+          </div>
+          <div class="sidebar-name"><%= userData ? userData.name : 'Guest' %></div>
+          <div class="sidebar-email">
+            <a href="mailto:<%= userData ? userData.email : '' %>">
+              <%= userData ? userData.email : 'Email not available' %>
+            </a>
+          </div>
+        </div>
+        <ul class="sidebar-nav">
+          <li id="profile"><a href="/user-profile"><i class="fa fa-user"></i> Profile</a></li>
+          <li id="address-book"><a href="/user-address"><i class="fa fa-location-dot"></i> Address Book</a></li>
+          <li id="order-details"><a href="/user-order"><i class="fa fa-bag-shopping"></i> Order Details</a></li>
+          <li id="coupon"><a href="/user-coupon"><i class="fa fa-tag"></i> Coupons</a></li>
+          <li id="wallet"><a href="/user-wallet"><i class="fa fa-wallet"></i> Wallet</a></li>
+          <% if (typeof user !== 'undefined' && user) { %>
+          <li id="logout"><a href="/logout"><i class="fa fa-right-from-bracket"></i> Logout</a></li>
+          <% } %>
+        </ul>
+      </div>
+    </aside>
 
-    try {
-      const response = await fetch('/razorpay', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ orderId }),
-      });
+    <!-- ── MAIN ── -->
+    <main class="main-content">
+      <div class="content-panel">
+        <div class="panel-header">
+          <div>
+            <p class="panel-eyebrow">Purchase History</p>
+            <h2 class="panel-title">Order Details</h2>
+          </div>
+          <% if (typeof orders !== 'undefined') { %>
+            <span class="order-count"><%= orders.length %> order<%= orders.length !== 1 ? 's' : '' %></span>
+          <% } %>
+        </div>
 
-      if (response.ok) {
-        const data = await response.json();
-        callRazorpayFunction(data.orderId, data.key, orderId);
-      } else {
-        const errorData = await response.json();
-        Swal.fire({
-          title: 'Error!',
-          text: errorData.message || 'Retry failed.',
-          icon: 'error',
-          confirmButtonText: 'OK',
+        <% if (typeof orders !== 'undefined' && orders.length > 0) { %>
+        <div class="table-scroll">
+          <table>
+            <thead>
+              <tr>
+                <th>Order ID</th>
+                <th>Date</th>
+                <th>Payment</th>
+                <th>Amount</th>
+                <th>Status</th>
+                <th>Payment Status</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              <% orders.forEach(function(order) { %>
+              <tr>
+                <td><span class="order-id" title="<%= order._id %>"><%= order._id %></span></td>
+
+                <td><span class="order-date"><%= new Date(order.date).toLocaleDateString('en-IN', { day:'2-digit', month:'short', year:'numeric' }) %></span></td>
+
+                <td>
+                  <span class="payment-method">
+                    <% if(order.paymentMethod === 'razorpay') { %>
+                      <i class="fa fa-credit-card" style="color:var(--gold);font-size:0.75rem;"></i>
+                    <% } else if(order.paymentMethod === 'cod') { %>
+                      <i class="fa fa-money-bill" style="color:var(--gold);font-size:0.75rem;"></i>
+                    <% } else { %>
+                      <i class="fa fa-wallet" style="color:var(--gold);font-size:0.75rem;"></i>
+                    <% } %>
+                    <%= order.paymentMethod %>
+                  </span>
+                </td>
+
+                <td><span class="order-amount">₹<%= order.totalAmount %></span></td>
+
+                <td>
+                  <% if (order.status === 'Delivered') { %>
+                    <span class="status-badge status-delivered">Delivered</span>
+                  <% } else if (order.status === 'Pending') { %>
+                    <span class="status-badge status-pending">Pending</span>
+                  <% } else if (order.status === 'Cancelled') { %>
+                    <span class="status-badge status-cancelled">Cancelled</span>
+                  <% } else if (order.status === 'Returned') { %>
+                    <span class="status-badge status-returned">Returned</span>
+                  <% } %>
+                </td>
+
+                <td>
+                  <% if (order.paymentStatus == 'true') { %>
+                    <span class="pay-success"><i class="fa fa-circle-check" style="margin-right:0.3rem;"></i>Success</span>
+                  <% } else if (order.paymentStatus == 'false') { %>
+                    <span class="pay-failed"><i class="fa fa-circle-xmark" style="margin-right:0.3rem;"></i>Failed</span>
+                  <% } %>
+                </td>
+
+                <td>
+                  <div class="action-cell">
+                    <a href="/user-order-details/<%= order._id %>" class="btn-view">
+                      <i class="fa fa-eye"></i> View
+                    </a>
+
+                    <% if (order.paymentStatus == 'true') { %>
+                      <% if (order.status === 'Pending') { %>
+                        <button class="btn-cancel-order" onclick="cancelOrder('<%= order._id %>')">
+                          Cancel
+                        </button>
+                      <% } else if (order.status === 'Cancelled') { %>
+                        <button class="btn-cancel-order" disabled>Cancelled</button>
+                      <% } %>
+
+                      <% if (order.status === 'Delivered') { %>
+                        <button class="btn-return" onclick="cancelOrder('<%= order._id %>')">
+                          Return
+                        </button>
+                      <% } else if (order.status === 'Returned') { %>
+                        <button class="btn-return" disabled>Returned</button>
+                      <% } %>
+
+                    <% } else if (order.paymentStatus == 'false') { %>
+                      <button class="btn-retry retry-btn" data-order-id="<%= order._id %>">
+                        <i class="fa fa-rotate-right"></i> Retry
+                      </button>
+                    <% } %>
+                  </div>
+                </td>
+              </tr>
+              <% }); %>
+            </tbody>
+          </table>
+        </div>
+
+        <% } else { %>
+        <div class="empty-orders">
+          <i class="fa fa-bag-shopping"></i>
+          <p>No orders yet</p>
+          <span>Your fragrance journey begins with your first order.</span>
+        </div>
+        <% } %>
+
+      </div>
+    </main>
+  </div>
+</div>
+
+<script>
+  // Active sidebar
+  const currentPage = window.location.pathname;
+  const pages = { "/user-profile":"profile", "/user-address":"address-book", "/user-order":"order-details", "/user-coupon":"coupon", "/user-wallet":"wallet" };
+  for (let p in pages) { if (currentPage === p) { const el = document.getElementById(pages[p]); if(el) el.classList.add('active'); } }
+
+  // Retry payment
+  document.querySelectorAll('.retry-btn').forEach(button => {
+    button.addEventListener('click', async e => {
+      const orderId = e.currentTarget.getAttribute('data-order-id');
+      if (!orderId) { Swal.fire({ title:'Error!', text:'Order ID missing.', icon:'error', confirmButtonColor:'#c9a96e' }); return; }
+      try {
+        const res = await fetch('/razorpay', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ orderId })
         });
-      }
-    } catch (error) {
-      console.error('Error:', error);
-      Swal.fire({
-        title: 'Error!',
-        text: 'An unexpected error occurred. Please try again.',
-        icon: 'error',
-        confirmButtonText: 'OK',
-      });
-    }
-  });
-});
-
-function callRazorpayFunction(orderId, key, ordderId) {
-  const options = {
-    key,
-    currency: 'INR',
-    order_id: orderId,
-    handler: function (response) {
-      window.location.href = `/success-order/${ordderId}`;
-    },
-    theme: {
-      color: '#F37254',
-    },
-    modal: {
-      escape: false,
-      ondismiss: function () {
-        window.location.href = `/failure-order/${ordderId}`;
-      },
-    },
-  };
-
-  const rzp2 = new Razorpay(options);
-
-  rzp2.on('payment.failed', function (response) {
-    Swal.fire({
-      title: 'Payment Failed!',
-      text: response.error.description || 'An unexpected error occurred.',
-      icon: 'error',
-      confirmButtonText: 'OK',
-    });
-  });
-
-  rzp2.open();
-}
-function cancelOrder(orderId) {
-    Swal.fire({
-        title: 'Are you sure?',
-        text: 'Do you want to cancel this order?',
-        icon: 'warning',
-        showCancelButton: true,
-        confirmButtonText: 'Yes, cancel it!',
-        cancelButtonText: 'No, keep it',
-    }).then((result) => {
-        if (result.isConfirmed) {
-            fetch(`/cancel-order/${orderId}`, {
-                method: 'POST',
-            })
-            .then(response => {
-                if (response.ok) {
-                    Swal.fire({
-                        title: 'Success!',
-                        text: 'Order cancelled successfully.',
-                        icon: 'success',
-                        confirmButtonText: 'OK'
-                    });
-                    window.location.reload();
-                } else {
-                    return response.json().then(data => {
-                        Swal.fire({
-                            title: 'Error!',
-                            text: data.message || 'Failed to cancel the order.',
-                            icon: 'error',
-                            confirmButtonText: 'OK'
-                        });
-                    });
-                }
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                Swal.fire({
-                    title: 'Error!',
-                    text: 'An unexpected error occurred. Please try again later.',
-                    icon: 'error',
-                    confirmButtonText: 'OK'
-                });
-            });
+        if (res.ok) {
+          const data = await res.json();
+          callRazorpay(data.orderId, data.key, orderId);
+        } else {
+          const err = await res.json();
+          Swal.fire({ title:'Error!', text: err.message || 'Retry failed.', icon:'error', confirmButtonColor:'#c9a96e' });
         }
+      } catch (err) {
+        Swal.fire({ title:'Error!', text:'Unexpected error. Please try again.', icon:'error', confirmButtonColor:'#c9a96e' });
+      }
     });
-}
-           </script>
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
-    <script src="https://code.jquery.com/jquery-1.10.2.min.js"></script>
-    <script src="https://netdna.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
+  });
 
+  function callRazorpay(razorOrderId, key, ourOrderId) {
+    const options = {
+      key,
+      currency: 'INR',
+      order_id: razorOrderId,
+      handler: () => { window.location.href = `/success-order/${ourOrderId}`; },
+      theme: { color: '#c9a96e' },
+      modal: {
+        escape: false,
+        ondismiss: () => { window.location.href = `/failure-order/${ourOrderId}`; }
+      }
+    };
+    const rzp = new Razorpay(options);
+    rzp.on('payment.failed', res => {
+      Swal.fire({ title:'Payment Failed!', text: res.error.description || 'Unexpected error.', icon:'error', confirmButtonColor:'#c9a96e' });
+    });
+    rzp.open();
+  }
+
+  function cancelOrder(orderId) {
+    Swal.fire({
+      title: 'Cancel this order?',
+      text: 'This action cannot be undone.',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#c9a96e',
+      cancelButtonColor: '#8a7968',
+      confirmButtonText: 'Yes, cancel it',
+      cancelButtonText: 'Keep order'
+    }).then(result => {
+      if (result.isConfirmed) {
+        fetch(`/cancel-order/${orderId}`, { method: 'POST' })
+          .then(res => {
+            if (res.ok) {
+              Swal.fire({ title:'Cancelled', text:'Your order has been cancelled.', icon:'success', confirmButtonColor:'#c9a96e', timer:2000, showConfirmButton:false })
+                .then(() => location.reload());
+            } else {
+              return res.json().then(d => Swal.fire({ title:'Error!', text: d.message || 'Failed.', icon:'error', confirmButtonColor:'#c9a96e' }));
+            }
+          })
+          .catch(() => Swal.fire({ title:'Error!', text:'Unexpected error.', icon:'error', confirmButtonColor:'#c9a96e' }));
+      }
+    });
+  }
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
 </body>
-
 </html>
